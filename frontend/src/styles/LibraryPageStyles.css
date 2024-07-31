@@ -1,0 +1,484 @@
+.the-library {
+  color: #adb0b7;
+  border-bottom: 1px solid #292f41;
+}
+
+.intro-library {
+  padding: 2rem 13px 0 13px;
+  padding-inline: 2rem;
+}
+
+.above-desc {
+  font-weight: 600;
+  font-size: 1.25rem;
+  margin-top: 0;
+}
+
+.description p {
+  margin: 0;
+  margin-top: 0.5rem;
+}
+
+.action-guide {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid #292f41;
+  text-align: left;
+  padding: 0.2rem 13px 0.5rem;
+  margin-top: 1rem;
+}
+
+.action-guide p {
+  margin: 0;
+  margin-top: 0.5rem;
+}
+
+.btn-container {
+  display: flex;
+  margin: 1rem 2rem 1rem 2rem;
+  border-bottom: 1px solid #292f41;
+  padding-bottom: 1rem;
+  margin-left: 1rem;
+  justify-content: space-between;
+}
+
+.filterbtn,
+.filterbtn-ns {
+  background-color: #3c59bc;
+  border: none;
+  border-bottom: 3px solid #2b3f85;
+  padding: 0.5rem 1rem;
+  color: #fff;
+  font-weight: 500;
+  font-size: 1rem;
+  border-radius: 4px;
+  cursor: pointer;
+  flex-grow: 1;
+  margin-right: 13px;
+  text-align: center;
+}
+
+.filterbtn-ns {
+  background-color: #2b3f85;
+}
+
+.filterbtn-ns.last {
+  margin-right: 0;
+}
+
+.sortbtn.selected {
+  background-color: #292f41;
+  border: 1px solid #3c59bc;
+  font-weight: 600;
+  color: #5071df;
+  font-size: 1rem;
+  line-height: 1;
+  cursor: pointer;
+  margin-right: 1rem;
+  padding: 6px 10px;
+  border-radius: 4px;
+}
+
+.sort-buttons {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 1rem 0;
+  margin-left: 13px;
+}
+
+.sortbtn {
+  background-color: #292f41;
+  border: 1px solid #3c59bc;
+  font-weight: 600;
+  color: #5071df;
+  font-size: 1rem;
+  line-height: 1;
+  cursor: pointer;
+  margin-right: 1rem;
+  padding: 6px 10px;
+  border-radius: 4px;
+  flex-grow: 1;
+  width: auto;
+}
+
+.sortbtn.ns {
+  background-color: #292f41;
+  border: none;
+  color: #737783;
+  font-size: 1rem;
+  line-height: 1;
+  cursor: pointer;
+  margin-right: 1rem;
+  padding: 6px 10px;
+  border-radius: 4px;
+  width: auto;
+}
+
+ul {
+  padding: 0;
+  margin: 0;
+}
+
+.novel-header {
+  display: none;
+}
+
+.novel-card {
+  display: flex;
+  align-items: center;
+  color: #737783;
+  font-weight: 500;
+  /* margin: 0 13px 0.3rem; */
+  border-bottom: 1px solid #292f41;
+  padding-bottom: 0.5rem;
+  font-size: 0.8rem;
+  line-height: 1.25;
+  height: 96px;
+}
+
+.novel-cover {
+  flex: 0 0 68px;
+  overflow: hidden;
+  position: relative;
+  border-radius: 4px;
+  height: 80px;
+  padding-right: 0.5rem;
+}
+.novel-cover img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  position: absolute;
+  left: 0;
+  top: 0;
+  border-radius: 4px;
+  color: transparent;
+}
+.novel-coverfig {
+  display: block;
+  font-size: 0;
+  background-color: rgba(215, 216, 224, 0.32);
+  box-shadow: 0 0 1px rgba(0, 0, 0, 0.4);
+  padding-top: 134%;
+  overflow: hidden;
+  position: relative;
+  border-radius: 4px;
+}
+
+/* .novel-cover img {
+  width: 56px;
+  height: 100%;
+} */
+
+.novel-content {
+  display: flex;
+  flex-direction: column;
+  height: 90px;
+  flex: 1 1 auto;
+  margin-top: 0.5rem;
+}
+
+.novel-info {
+  display: flex;
+  flex-direction: column;
+  font-size: 0.825rem;
+}
+
+.novel-title {
+  display: flex;
+  flex-direction: column;
+}
+
+.ntitle {
+  margin: 0;
+  color: #adb0b7;
+  font-weight: 650;
+  font-size: 1rem;
+  overflow: hidden;
+}
+
+.arrow {
+  display: flex;
+  justify-content: center;
+  text-align: center;
+  align-items: center;
+  padding-top: 1px;
+}
+
+.lastchap {
+  display: flex;
+  align-items: center;
+  margin: 0;
+}
+
+.lastchap span {
+  padding-left: 0.2rem;
+}
+
+.chappro {
+  margin: 0;
+  font-size: 13px;
+  flex: 0 0 26%;
+  margin-bottom: 0.3rem;
+}
+
+.newchap {
+  font-size: 0.9rem;
+  color: #48905b;
+  padding: 2px 4px;
+  border-radius: 2px;
+  font-weight: 600;
+  background-color: rgba(72, 144, 91, 0.12);
+  width: auto;
+}
+
+.the-library .novel-card .newchap,
+.the-library .novel-card .noupdates {
+  font-weight: 600;
+}
+
+.noupdates {
+  font-size: 12px;
+  color: #737783;
+  background-color: #292f41;
+  padding: 2px 4px;
+  border-radius: 2px;
+  width: auto;
+}
+
+.novel-side {
+  flex: 0 0 40px;
+}
+
+.items {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  padding: 0.3rem 0;
+  height: auto;
+}
+
+.bellimg {
+  min-height: 14px;
+  max-width: 16px;
+}
+
+.hambmenu {
+  width: 18px;
+  min-height: 18px;
+  height: 22px;
+  max-width: 23px;
+}
+
+.novel-card.last-card {
+  margin-bottom: 1rem;
+}
+@media (min-width: 768px) {
+  .user-panel-body {
+    background-color: #1f2639;
+    border-radius: 0.475rem;
+    margin-top: 1rem;
+    width: 100%;
+  }
+  .intro-library {
+    margin-left: 13px;
+  }
+
+  .action-guide {
+    background-color: #161d31;
+    padding: 0;
+    padding: 1rem;
+  }
+  .action-guide p:nth-child(1) {
+    margin-top: 0;
+  }
+
+  .btn-container {
+    justify-content: flex-start;
+    margin-left: 3rem;
+  }
+  .the-library .filterbtn,
+  .filterbtn-ns {
+    padding: 0.5rem 1rem;
+    flex-grow: 0;
+    margin-right: 13px;
+  }
+
+  .sort-buttons {
+    justify-content: flex-start;
+    margin-top: 1rem;
+  }
+  .sort-buttons .sortbtn,
+  .sort-buttons .sortbtn.ns {
+    font-size: 0.7rem;
+    margin-right: 0.5rem;
+    max-width: 100px;
+    max-height: 30px;
+  }
+  .the-library .novel-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-left: 13px;
+    margin-right: 13px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #242b3d;
+    color: #adb0b7;
+    font-weight: 700;
+  }
+
+  .h-title {
+    flex: 1 1 auto;
+  }
+  .h-prog {
+    flex: 0 0 100px;
+  }
+  .h-status {
+    flex: 0 0 100px;
+  }
+  .h-action {
+    flex: 0 0 40px;
+    text-align: right;
+    margin-right: 0.2rem;
+  }
+  .the-library .novel-card {
+    line-height: 1.4;
+    height: auto;
+    margin: 0 13px 0.3rem;
+    margin-block: 0;
+    padding-block: 0.5rem;
+    display: flex;
+    justify-content: center;
+    transition: 0.3s;
+  }
+  .the-library .novel-card:hover {
+    background-color: var(--bg-color);
+  }
+
+  .novel-card .novel-cover {
+    flex: 0 0 42px;
+    position: relative;
+    height: auto;
+    margin-bottom: 0;
+  }
+
+  .novel-card .novel-coverfig {
+    display: block;
+    font-size: 0;
+    background-color: rgba(215, 216, 224, 0.32);
+    box-shadow: 0 0 1px rgba(0, 0, 0, 0.4);
+    padding-top: 134%;
+    overflow: hidden;
+    position: relative;
+    border-radius: 4px;
+  }
+
+  .novel-cover img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    position: absolute;
+    left: 0;
+    top: 0;
+    border-radius: 4px;
+    color: transparent;
+  }
+  .novel-card .novel-content {
+    flex-direction: row;
+    height: 100%;
+    align-items: center;
+    margin-bottom: 0;
+  }
+  .novel-content {
+    flex-direction: row;
+    height: 100%;
+    align-items: center;
+    margin-bottom: 0;
+    margin-top: 0;
+    padding-right: 0.6rem;
+  }
+  .the-library .novel-title {
+    flex: 1 1 auto;
+    justify-content: flex-start;
+    font-weight: 600;
+    text-align: left;
+    gap: 0.5rem;
+  }
+  .ntitle {
+    font-weight: 600;
+  }
+  .the-library .novel-card .novel-content .lastchap span {
+    font-size: 0.9rem;
+  }
+  .the-library .chptpro {
+    display: flex;
+    flex-direction: column;
+    padding-left: 13px;
+    /* margin-right: 1.5rem; */
+  }
+  .the-library .chappro {
+    display: flex;
+    flex-direction: column;
+  }
+  .chappro span:nth-child(1) {
+    display: none;
+  }
+
+  .updates {
+    display: flex;
+    flex: 0 0 100px;
+    font-size: 13px;
+    height: auto;
+    padding-left: 13px;
+  }
+
+  .updates .newchap {
+    color: #48905b;
+    padding: 2px 4px;
+    border-radius: 2px;
+    font-style: normal;
+    font-weight: 600;
+    width: auto;
+    background-color: rgba(72, 144, 91, 0.12);
+  }
+  .updates .noupdates {
+    padding: 2px 4px;
+    border-radius: 2px;
+    font-style: normal;
+    width: auto;
+    display: inline-block;
+    vertical-align: middle;
+  }
+
+  /* Keep the existing styles */
+
+  .the-library .novel-card {
+    height: auto;
+  }
+
+  /* Use flexbox to align the progress spans under the progress */
+  .the-library .novel-info {
+    display: flex;
+    flex-direction: row;
+    align-items: center; /* Align items horizontally */
+    margin-top: 0.2rem; /* Add some margin to separate from the title */
+  }
+
+  .the-library .novel-card .novel-content .chptpro {
+    flex: 0 0 100px;
+  }
+  .the-library .novel-card .novel-content .chappro {
+    font-size: 0.9rem;
+    text-align: left;
+  }
+  /* Make all buttons the same size */
+  .the-library .newchap,
+  .the-library .noupdates {
+    padding: 2px 4px; /* Add padding on the sides to increase button size */
+    border-radius: 2px;
+    font-size: 13px;
+    font-weight: 500;
+    display: inline-block;
+  }
+}
