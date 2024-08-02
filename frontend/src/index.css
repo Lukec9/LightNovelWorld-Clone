@@ -54,6 +54,10 @@
   box-sizing: border-box;
 }
 
+html {
+  font-size: 16px;
+}
+
 body {
   margin: 0;
   padding: 0;
@@ -65,18 +69,17 @@ body {
   background-color: var(--bg-color-main);
 }
 
-.container {
+main .container {
   background-color: #161d31;
   display: flex;
   flex-direction: column;
-  /* padding-left: 13px;
-  padding-right: 13px; */
+  padding-left: 13px;
+  padding-right: 13px;
   width: 100%;
   font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
     Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
   align-items: center;
   justify-content: center;
-  padding: 0;
   margin-left: auto;
   margin-right: auto;
   padding-top: 13px;
@@ -90,8 +93,30 @@ body {
   padding-inline: 1rem;
 }
 
+.novel-coverfig img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  position: absolute;
+  left: 0;
+  top: 0;
+  border-radius: 4px;
+  color: transparent;
+}
+.novel-coverfig {
+  display: block;
+  font-size: 0;
+  background-color: rgba(215, 216, 224, 0.32);
+  box-shadow: 0 0 1px rgba(0, 0, 0, 0.4);
+  padding-top: 134%;
+  overflow: hidden;
+  position: relative;
+  border-radius: 4px;
+  margin-bottom: 0.425rem;
+}
+
 @media screen and (min-width: 768px) {
-  .container {
+  .app main .container {
     width: 728px;
   }
   .saved-novels {
@@ -103,7 +128,7 @@ body {
 }
 
 @media (min-width: 1024px) {
-  .container {
+  .app main .container {
     width: 970px;
   }
 }
@@ -131,4 +156,23 @@ body {
 figure {
   margin: 0;
   padding: 0;
+}
+
+p {
+  line-height: 1.4;
+}
+
+a,
+button,
+label {
+  cursor: pointer;
+  outline: 0;
+  -webkit-backface-visibility: hidden;
+  -webkit-transition: all 0.1s;
+  -moz-transition: all 0.1s;
+  transition: all 0.1s;
+}
+
+h5 {
+  margin: 0;
 }

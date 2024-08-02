@@ -1,6 +1,6 @@
 footer {
   background-color: var(--bg-primary);
-  border-top: 1px solid var(--border-primary);
+  border-top: 1px solid var(--border-color-3);
 }
 
 footer .wrapper {
