@@ -1,0 +1,81 @@
+.popular-novels {
+  margin-inline: 1rem;
+}
+.popular-novels h2 {
+  color: var(--text-color);
+  padding-bottom: 0.9rem;
+  border-bottom: 2px solid var(--border-color-2);
+}
+
+section.popular-novels .novel-list .novel-item {
+  width: calc(33.33333333% - 13px);
+}
+section.popular-novels .novel-list .novel-item a {
+  color: var(--text-color);
+}
+section.popular-novels .novel-list .novel-item h4 {
+  margin-bottom: 0.5rem;
+}
+section.popular-novels .novel-list .novel-item span {
+  margin-bottom: 0.4rem;
+}
+section.popular-novels .novel-list .novel-item span.num-rate {
+  margin-bottom: 0;
+}
+
+.search-container form {
+  margin-top: 0.5rem;
+  margin-bottom: 150px;
+}
+
+.search-container form .form-group {
+  position: relative;
+}
+
+.search-container label {
+  width: 3rem;
+  height: 2.5rem;
+  border-radius: 2rem 0 0 2rem;
+  color: rgba(18, 18, 23, 0.24);
+  position: absolute;
+  z-index: 1;
+  top: 0;
+  left: 0;
+}
+.search-container label svg {
+  position: absolute;
+  margin: auto;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  vertical-align: middle;
+  display: inline-block;
+  color: rgba(18, 18, 23, 0.24);
+}
+
+form input[type="search"] {
+  width: 100%;
+  border-radius: 60px;
+  height: 2.5rem;
+  font-weight: 600;
+  line-height: 1.5rem;
+  padding: 0.25rem 1rem 0.25rem 3rem;
+  font-size: 0.925rem;
+  display: block;
+  /* -webkit-appearance: none;
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0); */
+  background-image: none;
+  background-color: var(--bg-color-7);
+  border: 1px solid var(--border-color-4);
+  color: var(--text-color);
+}
+
+@media screen and (min-width: 768px) {
+  .search-container {
+    padding: 30px 10%;
+  }
+  section.popular-novels .novel-list .novel-item {
+    width: calc(20% - 20px);
+  }
+}

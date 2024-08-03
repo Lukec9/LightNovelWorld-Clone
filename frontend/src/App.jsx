@@ -5,6 +5,8 @@ import LibraryPage from "./pages/LibraryPage";
 import Footer from "./components/Footer";
 import HomePage from "./pages/HomePage";
 import AccountLayout from "./components/layouts/AccountLayout";
+import SearchPage from "./pages/SearchPage";
+import BrowsePage from "./pages/BrowsePage";
 
 function App() {
   return (
@@ -18,6 +20,8 @@ function App() {
           <Route path="/account" element={<AccountLayout />}>
             <Route path="library" element={<LibraryPage />} />
           </Route>
+          <Route path="search" element={<SearchPage />} />
+          <Route path="browse" element={<BrowsePage />} />
         </Routes>
         {/* </div> */}
       </main>

@@ -6,7 +6,7 @@ const Header = () => {
     <header id="header">
       <div className="wrapper">
         <div className="header-icon">
-          <a href="https://www.google.com">
+          <a href="/">
             <img
               src="/assets/logo-dark.webp"
               alt="Light Novel World"
@@ -41,7 +41,7 @@ const Header = () => {
                 <a
                   className="nav-link"
                   title="Explore the Recently Added Light Novels"
-                  href="/browse/genre-all-25060123/order-new/status-all"
+                  href="/browse"
                 >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"

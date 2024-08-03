@@ -1,0 +1,130 @@
+.action-panel {
+  width: 100%;
+}
+
+h4.title {
+  display: inline-block;
+  font-size: 1.3rem;
+  color: var(--text-color);
+  padding-bottom: 0.4rem;
+  margin-top: 0;
+  margin-bottom: 1rem;
+  border-bottom: 2px solid var(--border-color-2);
+}
+
+.category-list {
+  width: 100%;
+  overflow-x: auto;
+}
+
+.action-list {
+  width: 1000px;
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.action-list li {
+  display: inline-block;
+  margin-right: 0.7rem;
+  margin-bottom: 0.7rem;
+}
+.action-list li a {
+  display: inline-block;
+  text-decoration: none;
+  padding: 3px 6px;
+  border: 1px solid var(--bg-color-secondary);
+  background-color: var(--bg-color-secondary);
+  color: var(--text-color-secondary);
+  border-radius: 5px;
+  font-size: 0.875rem;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+.action-list li a:hover {
+  border: 1px solid var(--bg-color-secondary-2);
+}
+
+.order-by,
+.status {
+  margin-top: 0.5rem;
+}
+
+.action-panel .action-list li.active a {
+  color: #e7e7e7;
+  background-color: var(--bg-color-secondary-2);
+}
+
+.action-header {
+  width: 100%;
+  border-bottom: 2px solid var(--border-color-2);
+}
+
+.action-header h1 {
+  color: var(--text-color);
+  font-size: 1.2rem;
+  line-height: 1.4;
+  font-weight: 600;
+}
+
+.novel-list .novel-item a {
+  color: var(--text-color-2);
+}
+
+.paging {
+  display: flex;
+  border-top: 1px solid var(--border-color-4);
+  padding-top: 0.8rem;
+  width: 100%;
+  margin-bottom: 1.5rem;
+}
+
+.pag-container {
+  margin-inline: auto;
+}
+
+.pag {
+  display: flex;
+}
+
+.pag > li:first-child > a,
+.pag > li:first-child > span {
+  margin-left: 0;
+  border-bottom-left-radius: 4px;
+  border-top-left-radius: 4px;
+}
+
+.pag > li > a,
+.pag > li > span {
+  position: relative;
+  float: left;
+  padding: 0.5rem 0.7rem;
+  margin-left: -1px;
+  line-height: 1.428571429;
+  text-decoration: none;
+  background-color: var(--bg-color-3);
+  border: 1px solid var(--border-color-4);
+  font-size: 0.85rem;
+}
+
+.pag .active span {
+  z-index: 2;
+  color: #f1f1f1;
+  cursor: default;
+  background-color: var(--bg-color-secondary-2);
+  border-color: var(--bg-color-secondary-4);
+}
+
+.explore {
+  padding-bottom: 50px;
+}
+
+@media screen and (min-width: 768px) {
+  .explore .container {
+    background-color: var(--bg-color-2);
+  }
+
+  .novel-list .novel-item {
+    width: calc(20% - 20px);
+  }
+}

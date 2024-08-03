@@ -176,3 +176,6 @@ label {
 h5 {
   margin: 0;
 }
+a {
+  color: var(--anchor-color);
+}
