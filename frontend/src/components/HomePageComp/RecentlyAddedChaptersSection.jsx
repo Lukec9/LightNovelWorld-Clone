@@ -23,7 +23,7 @@ const RecentlyAddedChapteresSection = () => {
                 title={"Author's pov"}
                 rank={1}
                 chapters={"1000"}
-                img={"assets/01485-lightning-is-the-only-way.jpg"}
+                img={"/assets/01485-lightning-is-the-only-way.jpg"}
               />
             ))}
         </div>

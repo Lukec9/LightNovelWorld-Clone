@@ -63,6 +63,7 @@ body {
   padding: 0;
   font-family: "Nunito Sans", "SF Pro Text", "SF Pro Icons", Roboto,
     "Helvetica Neue", Helvetica, Arial, sans-serif;
+  counter-reset: ranking-counter;
 }
 
 .app {

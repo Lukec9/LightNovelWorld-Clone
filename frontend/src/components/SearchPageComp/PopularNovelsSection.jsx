@@ -13,7 +13,7 @@ const PopularNovelsSection = () => {
               rank={i + 1}
               key={i}
               title={"Infinite Mana In The Apocalypse"}
-              img={"assets/00732-infinite-mana-in-the-apocalypse-novel.jpg"}
+              img={"/assets/00732-infinite-mana-in-the-apocalypse-novel.jpg"}
             />
           ))}
       </ul>

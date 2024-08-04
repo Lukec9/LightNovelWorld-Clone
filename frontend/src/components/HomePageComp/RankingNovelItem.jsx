@@ -25,7 +25,11 @@ const RankingNovelItem = ({
                 <span className="star-box" role="presentation">
                   <svg className="star star-on">
                     <use xlinkHref="#star">
-                      <symbol class="icon" viewBox="0 0 1024 1024" id="star">
+                      <symbol
+                        className="icon"
+                        viewBox="0 0 1024 1024"
+                        id="star"
+                      >
                         <path d="M512 798.134857L195.584 1024 302.08 637.805714 0 391.168l382.244571-12.873143L512 0l129.755429 378.294857L1024 391.168 721.92 637.805714 828.416 1024z"></path>
                       </symbol>
                     </use>
@@ -34,7 +38,11 @@ const RankingNovelItem = ({
                 <span className="star-box" role="presentation">
                   <svg className="star star-on">
                     <use xlinkHref="#star">
-                      <symbol class="icon" viewBox="0 0 1024 1024" id="star">
+                      <symbol
+                        className="icon"
+                        viewBox="0 0 1024 1024"
+                        id="star"
+                      >
                         <path d="M512 798.134857L195.584 1024 302.08 637.805714 0 391.168l382.244571-12.873143L512 0l129.755429 378.294857L1024 391.168 721.92 637.805714 828.416 1024z"></path>
                       </symbol>
                     </use>
@@ -43,7 +51,11 @@ const RankingNovelItem = ({
                 <span className="star-box" role="presentation">
                   <svg className="star star-on">
                     <use xlinkHref="#star">
-                      <symbol class="icon" viewBox="0 0 1024 1024" id="star">
+                      <symbol
+                        className="icon"
+                        viewBox="0 0 1024 1024"
+                        id="star"
+                      >
                         <path d="M512 798.134857L195.584 1024 302.08 637.805714 0 391.168l382.244571-12.873143L512 0l129.755429 378.294857L1024 391.168 721.92 637.805714 828.416 1024z"></path>
                       </symbol>
                     </use>
@@ -52,7 +64,11 @@ const RankingNovelItem = ({
                 <span className="star-box" role="presentation">
                   <svg className="star star-on">
                     <use xlinkHref="#star">
-                      <symbol class="icon" viewBox="0 0 1024 1024" id="star">
+                      <symbol
+                        className="icon"
+                        viewBox="0 0 1024 1024"
+                        id="star"
+                      >
                         <path d="M512 798.134857L195.584 1024 302.08 637.805714 0 391.168l382.244571-12.873143L512 0l129.755429 378.294857L1024 391.168 721.92 637.805714 828.416 1024z"></path>
                       </symbol>
                     </use>
@@ -61,7 +77,11 @@ const RankingNovelItem = ({
                 <span className="star-box" role="presentation">
                   <svg className="star star-on">
                     <use xlinkHref="#star">
-                      <symbol class="icon" viewBox="0 0 1024 1024" id="star">
+                      <symbol
+                        className="icon"
+                        viewBox="0 0 1024 1024"
+                        id="star"
+                      >
                         <path d="M512 798.134857L195.584 1024 302.08 637.805714 0 391.168l382.244571-12.873143L512 0l129.755429 378.294857L1024 391.168 721.92 637.805714 828.416 1024z"></path>
                       </symbol>
                     </use>

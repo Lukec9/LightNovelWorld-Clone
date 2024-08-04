@@ -25,7 +25,7 @@ const CompletedStoriesSection = () => {
                 rank={1}
                 chapters={"1000"}
                 completedS={true}
-                img={"assets/01238-the-authors-pov.jpg"}
+                img={"/assets/01238-the-authors-pov.jpg"}
               />
             ))}
         </div>

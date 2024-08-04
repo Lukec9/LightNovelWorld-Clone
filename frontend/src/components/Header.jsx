@@ -57,11 +57,7 @@ const Header = () => {
                 </a>
               </li>
               <li className="nav-item">
-                <a
-                  className="nav-link"
-                  title="Novel Ranking"
-                  href="/ranking-29071230"
-                >
+                <a className="nav-link" title="Novel Ranking" href="/ranking">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     width={16}

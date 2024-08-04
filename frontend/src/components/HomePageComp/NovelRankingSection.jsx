@@ -40,7 +40,7 @@ const NovelRankingSection = () => {
                     title={"Steward demonic emperor"}
                     rank={"1"}
                     chapters={"1000"}
-                    img={"assets/01296-grand-ancestral-bloodlines.jpg"}
+                    img={"/assets/01296-grand-ancestral-bloodlines.jpg"}
                   />
                 ))}
             </ul>
@@ -59,7 +59,7 @@ const NovelRankingSection = () => {
                     rank={"1"}
                     chapters={"1000"}
                     newTrends={true}
-                    img={"assets/01132-supremacy-games.jpg"}
+                    img={"/assets/01132-supremacy-games.jpg"}
                   />
                 ))}
             </ul>

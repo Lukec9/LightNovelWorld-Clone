@@ -23,7 +23,7 @@ const NewNovelSection = () => {
                 title={"Steward demonic emperor"}
                 rank={"1"}
                 chapters={"1000"}
-                img={"assets/01296-grand-ancestral-bloodlines.jpg"}
+                img={"/assets/01296-grand-ancestral-bloodlines.jpg"}
               />
             ))}
         </ul>

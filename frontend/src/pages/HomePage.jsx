@@ -1,9 +1,21 @@
-import CompletedStoriesSection from "../components/HomePageComp/CompletedStoriesSection";
-import NewNovelSection from "../components/HomePageComp/NewNovelSection";
-import NovelRankingSection from "../components/HomePageComp/NovelRankingSection";
-import RecentlyAddedChapteresSection from "../components/HomePageComp/RecentlyAddedChaptersSection";
-import WeeklyMostActiveSection from "../components/HomePageComp/WeeklyMostActiveSection";
+import { lazy, Suspense } from "react";
 import "../styles/HomePageStyles.css";
+import Spinner from "../components/Spinner";
+const CompletedStoriesSection = lazy(() =>
+  import("../components/HomePageComp/CompletedStoriesSection")
+);
+const NewNovelSection = lazy(() =>
+  import("../components/HomePageComp/NewNovelSection")
+);
+const NovelRankingSection = lazy(() =>
+  import("../components/HomePageComp/NovelRankingSection")
+);
+const RecentlyAddedChaptersSection = lazy(() =>
+  import("../components/HomePageComp/RecentlyAddedChaptersSection")
+);
+const WeeklyMostActiveSection = lazy(() =>
+  import("../components/HomePageComp/WeeklyMostActiveSection")
+);
 const HomePage = () => {
   return (
     <div className="home-container">
@@ -11,7 +23,7 @@ const HomePage = () => {
         <div
           className="background"
           style={{
-            backgroundImage: `url("assets/lnw-slider-banner-bg6.jpg")`,
+            backgroundImage: `url("/assets/lnw-slider-banner-bg6.jpg")`,
           }}
         ></div>
         <div className="head-content">
@@ -34,11 +46,21 @@ const HomePage = () => {
           </div>
         </div>
       </section>
-      <NewNovelSection />
-      <NovelRankingSection />
-      <WeeklyMostActiveSection />
-      <CompletedStoriesSection />
-      <RecentlyAddedChapteresSection />
+      <Suspense fallback={<Spinner />}>
+        <CompletedStoriesSection />
+      </Suspense>
+      <Suspense fallback={<Spinner />}>
+        <NewNovelSection />
+      </Suspense>
+      <Suspense fallback={<Spinner />}>
+        <NovelRankingSection />
+      </Suspense>
+      <Suspense fallback={<Spinner />}>
+        <RecentlyAddedChaptersSection />
+      </Suspense>
+      <Suspense fallback={<Spinner />}>
+        <WeeklyMostActiveSection />
+      </Suspense>
     </div>
   );
 };

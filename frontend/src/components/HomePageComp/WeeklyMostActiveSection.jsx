@@ -24,7 +24,7 @@ const WeeklyMostActiveSection = () => {
                 title={"Steward demonic emperor"}
                 rank={i + 1}
                 chapters={"1000"}
-                img={"assets/00892-the-steward-demonic-emperor.jpg"}
+                img={"/assets/00892-the-steward-demonic-emperor.jpg"}
               />
             ))}
         </div>

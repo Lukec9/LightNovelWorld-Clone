@@ -1,4 +1,9 @@
-import PopularNovelsSection from "../components/SearchPageComp/PopularNovelsSection";
+import { lazy, Suspense } from "react";
+import Spinner from "../components/Spinner";
+
+const PopularNovelsSection = lazy(() =>
+  import("../components/SearchPageComp/PopularNovelsSection")
+);
 
 const SearchPage = () => {
   return (
@@ -30,7 +35,9 @@ const SearchPage = () => {
             />
           </div>
         </form>
-        <PopularNovelsSection />
+        <Suspense fallback={<Spinner />}>
+          <PopularNovelsSection />
+        </Suspense>
       </div>
     </div>
   );
