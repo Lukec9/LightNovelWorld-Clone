@@ -1,0 +1,209 @@
+#adv-search {
+  color: var(--text-color);
+}
+
+.adv-select .lbl {
+  font-size: 1rem;
+  font-weight: 700;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  margin-bottom: 0.5rem;
+}
+
+.adv-check {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.adv-check .chk-item {
+  display: flex;
+  align-items: center;
+  position: relative;
+  cursor: pointer;
+  font-size: 0.8rem;
+  clear: both;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  margin-right: 1rem;
+}
+
+.adv-check .chk-item input {
+  position: absolute;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.adv-check .chk-item .checkmark {
+  position: relative;
+  display: inline-block;
+  height: 18px;
+  width: 18px;
+  background-color: var(--bg-color-2);
+  border-radius: 3px;
+  border: 1px solid var(--border-color-5);
+  margin-right: 0.2rem;
+}
+
+.adv-check .chk-item .checkmark::after {
+  position: absolute;
+  content: "";
+  left: 10px;
+  top: 10px;
+  height: 0;
+  width: 0;
+  border-radius: 3px;
+  border: solid #009bff;
+  border-width: 0 3px 3px 0;
+  -webkit-transform: rotate(0deg) scale(0);
+  -ms-transform: rotate(0deg) scale(0);
+  transform: rotate(0deg) scale(0);
+  opacity: 1;
+}
+
+.adv-check .chk-item input:checked ~ .checkmark::after {
+  -webkit-transform: rotate(45deg) scale(1);
+  -ms-transform: rotate(45deg) scale(1);
+  transform: rotate(45deg) scale(1);
+  opacity: 1;
+  left: 5px;
+  top: 1px;
+  width: 6px;
+  height: 12px;
+  border: solid #009bff;
+  border-top-width: medium;
+  border-right-width: medium;
+  border-bottom-width: medium;
+  border-left-width: medium;
+  border-width: 0 3px 3px 0;
+  background-color: transparent;
+  border-radius: 0;
+}
+
+div.adv {
+  display: flex;
+  flex-direction: column;
+  margin-block: 1rem;
+}
+.adv-w > select {
+  display: none;
+}
+
+::placeholder {
+  color: var(--text-color-4);
+  opacity: 1;
+}
+
+.adv-page input,
+.adv-page select {
+  background-color: var(--bg-color-2);
+  color: var(--text-color);
+  border: 1px solid black;
+  font-size: 14px;
+  border-radius: 5px;
+}
+
+.adv-page input {
+  min-height: 34px;
+}
+
+.select-andor {
+  display: flex;
+  flex-direction: column;
+  padding-bottom: 0.5rem;
+}
+.select-andor div {
+  display: flex;
+  align-items: center;
+  padding-bottom: 0.3rem;
+}
+.select-andor div span {
+  margin-right: 0.5rem;
+}
+.select-andor div select {
+  color: var(--text-color);
+  border: 1px solid white;
+}
+
+.adv-rating > select {
+  min-height: 34px;
+  display: block;
+}
+.adv-translation > select {
+  margin-top: 0.5rem;
+  min-height: 34px;
+  display: block;
+}
+.adv-sort-results > select {
+  margin-top: 0.5rem;
+  min-height: 34px;
+  display: block;
+}
+
+@media screen and (min-width: 768px) {
+  #adv-search-filter .container {
+    background-color: var(--bg-color-2);
+    padding: 26px;
+  }
+  #adv-filter-form {
+    padding: 26px;
+    background-color: var(--bg-color);
+  }
+
+  .adv-rating > select {
+    max-width: 250px;
+  }
+  .adv-translation > select {
+    max-width: 250px;
+  }
+  .adv-sort-results > select {
+    max-width: 250px;
+  }
+}
+
+.button {
+  position: relative;
+  overflow: hidden;
+  height: 2rem;
+  position: relative;
+  display: -webkit-inline-box;
+  display: -ms-inline-flexbox;
+  display: inline-flex;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  border: 0;
+  border-radius: 5px;
+  moz-transition: all 0.4s ease-in-out;
+  -o-transition: all 0.4s ease-in-out;
+  -webkit-transition: all 0.4s ease-in-out;
+  transition: all 0.4s ease-in-out;
+  outline: 0;
+  text-align: center;
+  text-decoration: none;
+  vertical-align: middle;
+  font-size: 0.825rem;
+  line-height: 1;
+  text-transform: uppercase;
+  padding: 0.5rem 1rem 0.5rem;
+  border-radius: 6px;
+  background-color: var(--button-bg);
+  background-image: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.15),
+    rgba(255, 255, 255, 0)
+  );
+  box-shadow: 0 2px 4px -2px rgba(0, 0, 0, 0.3);
+  color: #f1f1f1;
+  transition: all 0.4s ease-in-out;
+  height: 38px;
+  padding: 0 40px;
+  font-size: 14px;
+}
+
+.button:hover {
+  box-shadow: rgba(0, 0, 0, 0.2) 0 2px 4px -1px, rgba(0, 0, 0, 0.14) 0 4px 5px 0,
+    rgba(0, 0, 0, 0.12) 0 1px 10px 0;
+}

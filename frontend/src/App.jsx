@@ -9,6 +9,8 @@ import SearchPage from "./pages/SearchPage";
 import BrowsePage from "./pages/BrowsePage";
 import RankingPage from "./pages/RankingPage";
 import RankingLayout from "./components/layouts/RankingLayout";
+import UpdatesPage from "./pages/UpdatesPage";
+import AdvancedSearchPage from "./pages/AdvancedSearchPage";
 
 function App() {
   return (
@@ -19,7 +21,7 @@ function App() {
         {/* <div className="container"> */}
         <Routes>
           <Route index element={<HomePage />} />
-          <Route path="/account" element={<AccountLayout />}>
+          <Route path="account" element={<AccountLayout />}>
             <Route path="library" element={<LibraryPage />} />
           </Route>
           <Route path="search" element={<SearchPage />} />
@@ -32,6 +34,8 @@ function App() {
             <Route path="comments" element={<RankingPage />} />
             <Route path="collections" element={<RankingPage />} />
           </Route>
+          <Route path="latest-updates" element={<UpdatesPage />} />
+          <Route path="searchadv" element={<AdvancedSearchPage />} />
         </Routes>
         {/* </div> */}
       </main>

@@ -1,8 +1,11 @@
-import { useState } from "react";
+import { lazy, Suspense, useState } from "react";
 import CategoryBtn from "../components/BrowsePageComp/CategoryBtn";
 import "../styles/BrowsePageStyles.css";
-import RankingNovelItem from "../components/HomePageComp/RankingNovelItem";
+const RankingNovelItem = lazy(() =>
+  import("../components/HomePageComp/RankingNovelItem")
+);
 import Pagination from "../components/BrowsePageComp/Pagination";
+import Spinner from "../components/Spinner";
 
 const BrowsePage = () => {
   const [activeCategory, setActiveCategory] = useState({
@@ -82,12 +85,16 @@ const BrowsePage = () => {
           {Array(15)
             .fill(null)
             .map((_, i) => (
-              <RankingNovelItem
-                lastChapter={"2 days ago"}
-                key={i}
-                title={"Infinite Mana In The Apocalypse"}
-                img={"/assets/00732-infinite-mana-in-the-apocalypse-novel.jpg"}
-              />
+              <Suspense key={i} fallback={<Spinner />}>
+                <RankingNovelItem
+                  lastChapter={"2 days ago"}
+                  key={i}
+                  title={"Infinite Mana In The Apocalypse"}
+                  img={
+                    "/assets/00732-infinite-mana-in-the-apocalypse-novel.jpg"
+                  }
+                />
+              </Suspense>
             ))}
         </ul>
         <Pagination />

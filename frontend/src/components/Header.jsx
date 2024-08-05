@@ -75,7 +75,7 @@ const Header = () => {
                 <a
                   className="nav-link"
                   title="Check out the recently added novel chapters"
-                  href="/latest-updates-29071230"
+                  href="/latest-updates"
                 >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"

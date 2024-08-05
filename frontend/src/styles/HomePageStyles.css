@@ -369,7 +369,7 @@ section.recent-chap .novel-list .novel-item h5 {
     margin-right: auto;
   }
 
-  .novel-list .novel-item {
+  .container .novel-list .novel-item {
     width: calc(16.66666666667% - 13px);
   }
 

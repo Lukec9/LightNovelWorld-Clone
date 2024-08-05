@@ -124,7 +124,7 @@ h4.title {
     background-color: var(--bg-color-2);
   }
 
-  .novel-list .novel-item {
-    width: calc(20% - 20px);
+  .explore .novel-list .novel-item {
+    width: calc(20% - 13px);
   }
 }

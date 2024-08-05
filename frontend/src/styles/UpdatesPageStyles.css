@@ -1,0 +1,41 @@
+.latest-updates .novel-item .novel-stats {
+  display: flex;
+}
+.latest-updates .novel-item .item-stats {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+.latest-updates .novel-item .novel-stats > span {
+  margin-right: 0.5rem;
+}
+
+.latest-updates .section-header {
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+  padding-bottom: 0.3rem;
+  border-bottom: 1px solid var(--border-color-4);
+}
+.latest-updates .section-header > h1 {
+  font-size: 24px;
+  margin: 0;
+  color: var(--text-color);
+}
+.latest-updates .section-header > p {
+  margin-block: 0.5rem;
+  color: var(--text-color);
+}
+
+@media screen and (min-width: 768px) {
+  .latest-updates > .container {
+    padding: 26px;
+    background-color: var(--bg-color-2);
+    margin-bottom: 2rem;
+  }
+}
+@media screen and (min-width: 1024px) {
+  .latest-updates .container section.recent-chap .novel-list .novel-item {
+    width: calc(50% - 13px);
+  }
+}
