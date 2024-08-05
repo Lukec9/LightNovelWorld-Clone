@@ -1,0 +1,404 @@
+.user-panel-body {
+  width: 100%;
+  padding-top: 1rem;
+  color: var(--text-color);
+}
+
+.upanel {
+  display: flex;
+  flex-direction: column;
+}
+
+.uhead {
+  background-color: var(--bg-color-4);
+  border-bottom: 2px solid var(--border-color-4);
+  display: flex;
+  align-items: center;
+}
+
+.upanel .info-list {
+  padding: 6px 13px;
+}
+
+.upanel ul li {
+  display: flex;
+  flex-direction: row;
+  font-size: 0.85rem;
+  line-height: 1.5rem;
+  padding: 6px 0;
+}
+
+.upanel ul li:not(:last-child) {
+  border-bottom: 1px solid var(--border-color-3);
+}
+
+.col-1 {
+  width: 35%;
+  font-weight: 601;
+}
+
+.upanel__buttons {
+  border-top: 1px solid var(--border-color-2);
+  padding: 13px 13px 0;
+  text-align: center;
+}
+
+.signout {
+  overflow: hidden;
+  height: 2rem;
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  transition: all 0.4s ease-in-out;
+  outline: 0;
+  text-align: center;
+  text-decoration: none;
+  vertical-align: middle;
+  font-size: 0.825rem;
+  line-height: 1;
+  text-transform: uppercase;
+  padding: 0.5rem 1rem 0.5rem;
+  border-radius: 6px;
+  background-color: var(--button-bg);
+  background-image: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.15),
+    rgba(255, 255, 255, 0)
+  );
+  box-shadow: 0 2px 4px -2px rgba(0, 0, 0, 0.3);
+  background-color: transparent;
+  border: 2px solid var(--button-bg);
+  color: var(--anchor-color);
+}
+
+.updateprof.button {
+  height: 32px;
+  padding: 0.5rem 1rem;
+  margin-left: 0.5rem;
+}
+
+.delete {
+  text-decoration: underline;
+  margin-block: 0.5rem;
+  text-decoration-color: var(--anchor-color);
+}
+
+.stat-group-collection {
+  display: flex;
+  margin: 0;
+  flex-wrap: wrap;
+}
+
+.stat-group-collection .stat-group {
+  flex-basis: 100%;
+  flex-shrink: 0;
+  flex-grow: 1;
+  margin: 0.4em 0;
+}
+
+.stat-group-collection .stat-group .stat-title {
+  font-size: 1em;
+  font-weight: 600;
+  margin-bottom: 0.3em;
+}
+
+.stat-items {
+  display: flex;
+}
+
+.stat-items .item {
+  flex: 1;
+  padding: 0.4em 0.6em;
+  border-radius: 0.5rem;
+  border: 2px solid var(--border-color-4);
+  background-color: var(--bg-color-3);
+}
+.stat-items .item:not(:first-child) {
+  margin-left: 1rem;
+}
+
+.stat-name {
+  font-size: 0.75em;
+  line-height: 1;
+  margin-bottom: 0.5em;
+}
+.stat-value {
+  font-size: 1.2em;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.restriction-warning-panel > div {
+  border-radius: 0.4rem;
+  padding: 0.5rem 0.7rem;
+  background-color: var(--bg-color-secondary);
+  color: var(--text-color-secondary);
+  border: 1px solid var(--bg-color-secondary-3);
+}
+.restriction-warning-panel > div p {
+  margin: 0;
+  font-size: 0.8rem;
+}
+.restriction-warning-panel > div strong {
+  font-size: 1rem;
+}
+
+.stat-info .reminder {
+  border-top: 1px solid var(--border-color-2);
+  font-size: 0.8rem;
+  display: block;
+  font-style: italic;
+  padding: 13px;
+}
+
+.uhead h3 {
+  padding-left: 13px;
+  padding-block: 0.3rem;
+  margin: 0;
+}
+
+#theme-setting .color-select {
+  margin: 13px 0;
+  padding: 0 13px;
+}
+#theme-setting .color-select h4 {
+  font-size: 1rem;
+  font-weight: 700;
+  margin-top: 1rem;
+}
+#theme-setting .color-select p {
+  font-size: 0.8rem;
+}
+#theme-setting .color-select .color-list {
+  display: flex;
+  flex-wrap: wrap;
+  margin: 13px 0;
+}
+#theme-setting .color-select .color-list .color-item input {
+  display: none;
+}
+#theme-setting .color-select .color-list .color-item label {
+  display: block;
+  width: 40px;
+  height: 40px;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 0.357rem;
+  margin: 0 13px 13px 0;
+}
+#theme-setting
+  .color-select
+  .color-list
+  .color-item
+  label[data-hgcolor="gray"] {
+  background-color: var(--hg-gray);
+}
+#theme-setting
+  .color-select
+  .color-list
+  .color-item
+  label[data-hgcolor="purple"] {
+  background-color: var(--hg-purple);
+}
+#theme-setting
+  .color-select
+  .color-list
+  .color-item
+  label[data-hgcolor="darkpurple"] {
+  background-color: var(--hg-darkpurple);
+}
+#theme-setting
+  .color-select
+  .color-list
+  .color-item
+  label[data-hgcolor="grayblue"] {
+  background-color: var(--hg-grayblue);
+}
+#theme-setting
+  .color-select
+  .color-list
+  .color-item
+  label[data-hgcolor="blue"] {
+  background-color: var(--hg-blue);
+}
+#theme-setting
+  .color-select
+  .color-list
+  .color-item
+  label[data-hgcolor="blue2"] {
+  background-color: var(--hg-blue2);
+}
+#theme-setting
+  .color-select
+  .color-list
+  .color-item
+  label[data-hgcolor="green"] {
+  background-color: var(--hg-green);
+}
+#theme-setting
+  .color-select
+  .color-list
+  .color-item
+  label[data-hgcolor="green2"] {
+  background-color: var(--hg-green2);
+}
+#theme-setting
+  .color-select
+  .color-list
+  .color-item
+  label[data-hgcolor="yellow"] {
+  background-color: var(--hg-yellow);
+}
+#theme-setting .color-select .color-list .color-item label[data-hgcolor="red"] {
+  background-color: var(--hg-red);
+}
+#theme-setting
+  .color-select
+  .color-list
+  .color-item
+  label[data-hgcolor="orange"] {
+  background-color: var(--hg-orange);
+}
+#theme-setting
+  .color-select
+  .color-list
+  .color-item
+  label[data-hgcolor="pink"] {
+  background-color: var(--hg-pink);
+}
+#theme-setting
+  .color-select
+  .color-list
+  .color-item
+  label[data-bgcolor="black"] {
+  background-color: var(--bg-black);
+}
+#theme-setting
+  .color-select
+  .color-list
+  .color-item
+  label[data-bgcolor="gray"] {
+  background-color: var(--bg-gray);
+}
+#theme-setting
+  .color-select
+  .color-list
+  .color-item
+  label[data-bgcolor="darkgray"] {
+  background-color: var(--bg-darkgray);
+}
+#theme-setting
+  .color-select
+  .color-list
+  .color-item
+  label[data-bgcolor="darkblue"] {
+  background-color: var(--bg-darkblue);
+}
+#theme-setting
+  .color-select
+  .color-list
+  .color-item
+  label[data-bgcolor="darkblue2"] {
+  background-color: var(--bg-darkblue2);
+}
+#theme-setting
+  .color-select
+  .color-list
+  .color-item
+  label[data-bgcolor="darkblue3"] {
+  background-color: var(--bg-darkblue3);
+}
+#theme-setting
+  .color-select
+  .color-list
+  .color-item
+  label[data-bgcolor="darkblue4"] {
+  background-color: var(--bg-darkblue4);
+}
+#theme-setting
+  .color-select
+  .color-list
+  .color-item
+  label[data-bgcolor="darkblue5"] {
+  background-color: var(--bg-darkblue5);
+}
+#theme-setting
+  .color-select
+  .color-list
+  .color-item
+  label[data-bgcolor="darkgreen"] {
+  background-color: var(--bg-darkgreen);
+}
+#theme-setting
+  .color-select
+  .color-list
+  .color-item
+  label[data-bgcolor="darkbrown"] {
+  background-color: var(--bg-darkbrown);
+}
+#theme-setting
+  .color-select
+  .color-list
+  .color-item
+  label[data-bgcolor="darkpurple"] {
+  background-color: var(--bg-darkpurple);
+}
+#theme-setting
+  .color-select
+  .color-list
+  .color-item
+  label[data-bgcolor="darkyellow"] {
+  background-color: var(--bg-darkyellow);
+}
+#theme-setting .color-select .color-list .color-item input:checked + label {
+  border: 3px solid rgba(255, 255, 255, 0.5);
+  position: relative;
+}
+#theme-setting
+  .color-select
+  .color-list
+  .color-item
+  input:checked
+  + label:after {
+  margin: 4px auto;
+  content: "";
+  display: block;
+  transform: rotate(45deg);
+  height: 20px;
+  width: 12px;
+  border-bottom: 4px solid rgba(255, 255, 255, 0.6);
+  border-right: 4px solid rgba(255, 255, 255, 0.6);
+}
+
+@media screen and (min-width: 768px) {
+  .upanel {
+    border: 1px solid var(--border-color-4);
+  }
+  .profile-info,
+  .stat-info,
+  #theme-setting {
+    margin-right: 0;
+    margin-left: 0;
+    padding: 2rem 1.75rem;
+    background-color: var(--bg-color-2);
+    border-radius: 0.475rem;
+    margin-bottom: 1rem;
+  }
+
+  .stat-group-collection {
+    padding: 6px 13px;
+    display: flex;
+    margin: 0 13px;
+    flex-wrap: wrap;
+  }
+  .stat-group-collection .stat-group:nth-child(2n + 1) {
+    padding-right: 1em;
+  }
+  .stat-group-collection .stat-group {
+    flex-basis: 50%;
+    margin: 0.4em 0;
+  }
+  .stat-group-collection .stat-group:nth-child(2n + 2) {
+    border-left: 2px solid var(--border-color-4);
+    padding-left: 1em;
+  }
+}

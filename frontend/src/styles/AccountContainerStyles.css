@@ -92,21 +92,19 @@ a {
   margin-right: 0;
 }
 
-.library-card a {
+.page-item.active a {
   padding-bottom: 6px;
   border-bottom: 2px solid var(--anchor-color);
   color: var(--anchor-color);
 }
 
 .page-item a {
+  color: var(--text-color-2);
   background-color: 2px solid transparent;
   cursor: pointer;
   font-weight: 600;
 }
 
-.page-item a:visited {
-  color: #737783;
-}
 /* .page-item:nth-of-type(3) {
   margin-right: 0;
 } */

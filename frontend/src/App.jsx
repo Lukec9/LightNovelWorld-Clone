@@ -1,16 +1,24 @@
 import "./App.css";
 import { Route, Routes } from "react-router-dom";
+
 import Header from "./components/Header";
-import LibraryPage from "./pages/LibraryPage";
 import Footer from "./components/Footer";
+
+import LibraryPage from "./pages/LibraryPage";
 import HomePage from "./pages/HomePage";
-import AccountLayout from "./components/layouts/AccountLayout";
 import SearchPage from "./pages/SearchPage";
 import BrowsePage from "./pages/BrowsePage";
 import RankingPage from "./pages/RankingPage";
-import RankingLayout from "./components/layouts/RankingLayout";
 import UpdatesPage from "./pages/UpdatesPage";
 import AdvancedSearchPage from "./pages/AdvancedSearchPage";
+import AccountPage from "./pages/AccountPages/AccountPage";
+import AccountHistoryPage from "./pages/AccountPages/AccountHistoryPage";
+import AccountCommentsPage from "./pages/AccountPages/AccountCommentsPage";
+
+import AccountLayout from "./layouts/AccountLayout";
+import RankingLayout from "./layouts/RankingLayout";
+import AccountReviewsPage from "./pages/AccountPages/AccountReviewsPage";
+import AccountInboxPage from "./pages/AccountPages/AccountInboxPage";
 
 function App() {
   return (
@@ -22,7 +30,12 @@ function App() {
         <Routes>
           <Route index element={<HomePage />} />
           <Route path="account" element={<AccountLayout />}>
+            <Route index element={<AccountPage />} />
             <Route path="library" element={<LibraryPage />} />
+            <Route path="history" element={<AccountHistoryPage />} />
+            <Route path="comments" element={<AccountCommentsPage />} />
+            <Route path="reviews" element={<AccountReviewsPage />} />
+            <Route path="inbox" element={<AccountInboxPage />} />
           </Route>
           <Route path="search" element={<SearchPage />} />
           <Route path="browse" element={<BrowsePage />} />

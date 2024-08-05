@@ -1,4 +1,14 @@
+import { lazy, Suspense, useState } from "react";
+import Spinner from "../Spinner";
+
+const NovelCard = lazy(() => import("./NovelCard"));
+
 const TheLibrary = () => {
+  const [activeFilters, setActiveFilters] = useState({
+    filter: "All",
+    sort: "last updated",
+  });
+
   return (
     <div className="user-panel-body the-library">
       <div className="user-panel-libraryfilt">
@@ -57,22 +67,85 @@ const TheLibrary = () => {
         </div>
         <div className="buttons-novels">
           <div className="btn-container">
-            <button className="filterbtn">All</button>
-            <div className="filterbtn-ns">Updated</div>
-            <div className="filterbtn-ns">Favorites</div>
-            <div className="filterbtn-ns last">Completed</div>
+            <div className="fieldset">
+              <input
+                type="radio"
+                id="filter_all"
+                name="libfilter"
+                defaultValue={1}
+                defaultChecked={true}
+              />
+              <label htmlFor="filter_all">All</label>
+            </div>
+            <div className="fieldset">
+              <input
+                type="radio"
+                id="filter_updated"
+                name="libfilter"
+                defaultValue={2}
+              />
+              <label htmlFor="filter_updated">Updated</label>
+            </div>
+            <div className="fieldset">
+              <input
+                type="radio"
+                id="filter_favorite"
+                name="libfilter"
+                defaultValue={3}
+              />
+              <label htmlFor="filter_favorite">Favorites</label>
+            </div>
+            <div className="fieldset">
+              <input
+                type="radio"
+                id="filter_completed"
+                name="libfilter"
+                defaultValue={4}
+              />
+              <label htmlFor="filter_completed">Completed</label>
+            </div>
           </div>
         </div>
       </div>
       <section className="saved-novels">
         <div className="sort-buttons">
-          <button className="sortbtn selected">
+          <button
+            onClick={() =>
+              setActiveFilters(prevState => ({
+                ...prevState,
+                sort: "last updated",
+              }))
+            }
+            className={`sortbtn ${
+              activeFilters.sort === "last updated" ? "selected" : ""
+            }`}
+          >
             <span>LAST UPDATE</span>
           </button>
-          <button className="sortbtn ns">
+          <button
+            onClick={() =>
+              setActiveFilters(prevState => ({
+                ...prevState,
+                sort: "last added",
+              }))
+            }
+            className={`sortbtn ${
+              activeFilters.sort === "last added" ? "selected" : ""
+            }`}
+          >
             <span>LAST ADDED</span>
           </button>
-          <button className="sortbtn ns">
+          <button
+            onClick={() =>
+              setActiveFilters(prevState => ({
+                ...prevState,
+                sort: "last read",
+              }))
+            }
+            className={`sortbtn ${
+              activeFilters.sort === "last read" ? "selected" : ""
+            }`}
+          >
             <span>LAST READ</span>
           </button>
         </div>
@@ -83,978 +156,18 @@ const TheLibrary = () => {
           <li className="h-action">...</li>
         </ul>
         <ul>
-          <li className="novel-card">
-            <div className="novel-cover">
-              <figure className="novel-coverfig">
-                <img
-                  src="/assets/00892-the-steward-demonic-emperor.jpg"
-                  alt=""
-                />
-              </figure>
-            </div>
-            <div className="novel-content">
-              <div className="novel-title">
-                <p className="ntitle">The Steward Demonic Emperor</p>
-                <p className="lastchap">
-                  <small>
-                    <svg
-                      className="arrow"
-                      xmlns="http://www.w3.org/2000/svg"
-                      width={16}
-                      height={16}
-                      fill="currentColor"
-                      viewBox="0 0 16 16"
-                    >
-                      <path
-                        fillRule="evenodd"
-                        d="M8 3a5 5 0 1 1-4.546 2.914.5.5 0 0 0-.908-.417A6 6 0 1 0 8 2v1z"
-                      />
-                      <path d="M8 4.466V.534a.25.25 0 0 0-.41-.192L5.23 2.308a.25.25 0 0 0 0 .384l2.36 1.966A.25.25 0 0 0 8 4.466z" />
-                    </svg>
-                  </small>
-                  <span>4 Hours ago</span>
-                </p>
-              </div>
-              <div className="chptpro">
-                <p className="chappro">
-                  <span>Progress:</span>
-                  <span>874 / 997 </span>
-                  <span>(87.7%)</span>
-                </p>
-              </div>
-              <div className="updates">
-                <span className="newchap">New Chapters</span>
-              </div>
-            </div>
-            <div className="novel-side">
-              <div className="items">
-                <svg
-                  className="bellimg"
-                  xmlns="http://www.w3.org/2000/svg"
-                  width={16}
-                  height={16}
-                  fill="currentColor"
-                  viewBox="0 0 16 16"
-                >
-                  <path d="M8 16a2 2 0 0 0 2-2H6a2 2 0 0 0 2 2zM8 1.918l-.797.161A4.002 4.002 0 0 0 4 6c0 .628-.134 2.197-.459 3.742-.16.767-.376 1.566-.663 2.258h10.244c-.287-.692-.502-1.49-.663-2.258C12.134 8.197 12 6.628 12 6a4.002 4.002 0 0 0-3.203-3.92L8 1.917zM14.22 12c.223.447.481.801.78 1H1c.299-.199.557-.553.78-1C2.68 10.2 3 6.88 3 6c0-2.42 1.72-4.44 4.005-4.901a1 1 0 1 1 1.99 0A5.002 5.002 0 0 1 13 6c0 .88.32 4.2 1.22 6z" />
-                </svg>
-                <svg
-                  className="hambmenu"
-                  xmlns="http://www.w3.org/2000/svg"
-                  width={16}
-                  height={16}
-                  fill="#5071df"
-                  viewBox="0 0 16 16"
-                >
-                  <path
-                    fillRule="evenodd"
-                    d="M2.5 12a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5z"
-                  />
-                </svg>
-              </div>
-            </div>
-          </li>
-          <li className="novel-card">
-            <div className="novel-cover">
-              <figure className="novel-coverfig">
-                <img
-                  src="/assets/01296-grand-ancestral-bloodlines.jpg"
-                  alt=""
-                />
-              </figure>
-            </div>
-            <div className="novel-content">
-              <div className="novel-title">
-                <p className="ntitle">Grand Ancestral Bloodlines</p>
-                <p className="lastchap">
-                  <small>
-                    <svg
-                      className="arrow"
-                      xmlns="http://www.w3.org/2000/svg"
-                      width={16}
-                      height={16}
-                      fill="currentColor"
-                      viewBox="0 0 16 16"
-                    >
-                      <path
-                        fillRule="evenodd"
-                        d="M8 3a5 5 0 1 1-4.546 2.914.5.5 0 0 0-.908-.417A6 6 0 1 0 8 2v1z"
-                      />
-                      <path d="M8 4.466V.534a.25.25 0 0 0-.41-.192L5.23 2.308a.25.25 0 0 0 0 .384l2.36 1.966A.25.25 0 0 0 8 4.466z" />
-                    </svg>
-                  </small>
-                  <span>yesterday</span>
-                </p>
-              </div>
-              <div className="chptpro">
-                <p className="chappro">
-                  <span>Progress:</span>
-                  <span>1276 / 1273</span>
-                  <span>(100.2%)</span>
-                </p>
-              </div>
-              <div className="updates">
-                <span className="noupdates">No Updates</span>
-              </div>
-            </div>
-            <div className="novel-side">
-              <div className="items">
-                <svg
-                  className="bellimg"
-                  xmlns="http://www.w3.org/2000/svg"
-                  width={16}
-                  height={16}
-                  fill="currentColor"
-                  viewBox="0 0 16 16"
-                >
-                  <path d="M8 16a2 2 0 0 0 2-2H6a2 2 0 0 0 2 2zM8 1.918l-.797.161A4.002 4.002 0 0 0 4 6c0 .628-.134 2.197-.459 3.742-.16.767-.376 1.566-.663 2.258h10.244c-.287-.692-.502-1.49-.663-2.258C12.134 8.197 12 6.628 12 6a4.002 4.002 0 0 0-3.203-3.92L8 1.917zM14.22 12c.223.447.481.801.78 1H1c.299-.199.557-.553.78-1C2.68 10.2 3 6.88 3 6c0-2.42 1.72-4.44 4.005-4.901a1 1 0 1 1 1.99 0A5.002 5.002 0 0 1 13 6c0 .88.32 4.2 1.22 6z" />
-                </svg>
-                <svg
-                  className="hambmenu"
-                  xmlns="http://www.w3.org/2000/svg"
-                  width={16}
-                  height={16}
-                  fill="#5071df"
-                  viewBox="0 0 16 16"
-                >
-                  <path
-                    fillRule="evenodd"
-                    d="M2.5 12a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5z"
-                  />
-                </svg>
-              </div>
-            </div>
-          </li>
-          <li className="novel-card">
-            <div className="novel-cover">
-              <figure className="novel-coverfig">
-                <img
-                  src="/assets/01511-ascension-of-the-immortal-asura.jpg"
-                  alt=""
-                />
-              </figure>
-            </div>
-            <div className="novel-content">
-              <div className="novel-title">
-                <p className="ntitle">Ascension of the Immortal Asura</p>
-                <p className="lastchap">
-                  <small>
-                    <svg
-                      className="arrow"
-                      xmlns="http://www.w3.org/2000/svg"
-                      width={16}
-                      height={16}
-                      fill="currentColor"
-                      viewBox="0 0 16 16"
-                    >
-                      <path
-                        fillRule="evenodd"
-                        d="M8 3a5 5 0 1 1-4.546 2.914.5.5 0 0 0-.908-.417A6 6 0 1 0 8 2v1z"
-                      />
-                      <path d="M8 4.466V.534a.25.25 0 0 0-.41-.192L5.23 2.308a.25.25 0 0 0 0 .384l2.36 1.966A.25.25 0 0 0 8 4.466z" />
-                    </svg>
-                  </small>
-                  <span>2 days ago</span>
-                </p>
-              </div>
-              <div className="chptpro">
-                <p className="chappro">
-                  <span>Progress:</span>
-                  <span>920 / 984 </span>
-                  <span>(93.5%)</span>
-                </p>
-              </div>
-              <div className="updates">
-                <span className="newchap">New Chapters</span>
-              </div>
-            </div>
-            <div className="novel-side">
-              <div className="items">
-                <svg
-                  className="bellimg"
-                  xmlns="http://www.w3.org/2000/svg"
-                  width={16}
-                  height={16}
-                  fill="currentColor"
-                  viewBox="0 0 16 16"
-                >
-                  <path d="M8 16a2 2 0 0 0 2-2H6a2 2 0 0 0 2 2zM8 1.918l-.797.161A4.002 4.002 0 0 0 4 6c0 .628-.134 2.197-.459 3.742-.16.767-.376 1.566-.663 2.258h10.244c-.287-.692-.502-1.49-.663-2.258C12.134 8.197 12 6.628 12 6a4.002 4.002 0 0 0-3.203-3.92L8 1.917zM14.22 12c.223.447.481.801.78 1H1c.299-.199.557-.553.78-1C2.68 10.2 3 6.88 3 6c0-2.42 1.72-4.44 4.005-4.901a1 1 0 1 1 1.99 0A5.002 5.002 0 0 1 13 6c0 .88.32 4.2 1.22 6z" />
-                </svg>
-                <svg
-                  className="hambmenu"
-                  xmlns="http://www.w3.org/2000/svg"
-                  width={16}
-                  height={16}
-                  fill="#5071df"
-                  viewBox="0 0 16 16"
-                >
-                  <path
-                    fillRule="evenodd"
-                    d="M2.5 12a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5z"
-                  />
-                </svg>
-              </div>
-            </div>
-          </li>
-          <li className="novel-card">
-            <div className="novel-cover">
-              <figure className="novel-coverfig">
-                <img
-                  src="/assets/00732-infinite-mana-in-the-apocalypse-novel.jpg"
-                  alt=""
-                />
-              </figure>
-            </div>
-            <div className="novel-content">
-              <div className="novel-title">
-                <p className="ntitle">Infinite Mana In The Apocalypse</p>
-                <p className="lastchap">
-                  <small>
-                    <svg
-                      className="arrow"
-                      xmlns="http://www.w3.org/2000/svg"
-                      width={16}
-                      height={16}
-                      fill="currentColor"
-                      viewBox="0 0 16 16"
-                    >
-                      <path
-                        fillRule="evenodd"
-                        d="M8 3a5 5 0 1 1-4.546 2.914.5.5 0 0 0-.908-.417A6 6 0 1 0 8 2v1z"
-                      />
-                      <path d="M8 4.466V.534a.25.25 0 0 0-.41-.192L5.23 2.308a.25.25 0 0 0 0 .384l2.36 1.966A.25.25 0 0 0 8 4.466z" />
-                    </svg>
-                  </small>
-                  <span>2 days ago</span>
-                </p>
-              </div>
-              <div className="chptpro">
-                <p className="chappro">
-                  <span>Progress:</span>
-                  <span>2357 / 2357 </span>
-                  <span>(100.0%)</span>
-                </p>
-              </div>
-              <div className="updates">
-                <span className="noupdates">No Updates</span>
-              </div>
-            </div>
-            <div className="novel-side">
-              <div className="items">
-                <svg
-                  className="bellimg"
-                  xmlns="http://www.w3.org/2000/svg"
-                  width={16}
-                  height={16}
-                  fill="currentColor"
-                  viewBox="0 0 16 16"
-                >
-                  <path d="M8 16a2 2 0 0 0 2-2H6a2 2 0 0 0 2 2zM8 1.918l-.797.161A4.002 4.002 0 0 0 4 6c0 .628-.134 2.197-.459 3.742-.16.767-.376 1.566-.663 2.258h10.244c-.287-.692-.502-1.49-.663-2.258C12.134 8.197 12 6.628 12 6a4.002 4.002 0 0 0-3.203-3.92L8 1.917zM14.22 12c.223.447.481.801.78 1H1c.299-.199.557-.553.78-1C2.68 10.2 3 6.88 3 6c0-2.42 1.72-4.44 4.005-4.901a1 1 0 1 1 1.99 0A5.002 5.002 0 0 1 13 6c0 .88.32 4.2 1.22 6z" />
-                </svg>
-                <svg
-                  className="hambmenu"
-                  xmlns="http://www.w3.org/2000/svg"
-                  width={16}
-                  height={16}
-                  fill="#5071df"
-                  viewBox="0 0 16 16"
-                >
-                  <path
-                    fillRule="evenodd"
-                    d="M2.5 12a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5z"
-                  />
-                </svg>
-              </div>
-            </div>
-          </li>
-          <li className="novel-card">
-            <div className="novel-cover">
-              <figure className="novel-coverfig">
-                <img src="/assets/01132-supremacy-games.jpg" alt="" />
-              </figure>
-            </div>
-            <div className="novel-content">
-              <div className="novel-title">
-                <p className="ntitle">Supremacy Games</p>
-                <p className="lastchap">
-                  <small>
-                    <svg
-                      className="arrow"
-                      xmlns="http://www.w3.org/2000/svg"
-                      width={16}
-                      height={16}
-                      fill="currentColor"
-                      viewBox="0 0 16 16"
-                    >
-                      <path
-                        fillRule="evenodd"
-                        d="M8 3a5 5 0 1 1-4.546 2.914.5.5 0 0 0-.908-.417A6 6 0 1 0 8 2v1z"
-                      />
-                      <path d="M8 4.466V.534a.25.25 0 0 0-.41-.192L5.23 2.308a.25.25 0 0 0 0 .384l2.36 1.966A.25.25 0 0 0 8 4.466z" />
-                    </svg>
-                  </small>
-                  <span>2 days ago</span>
-                </p>
-              </div>
-              <div className="chptpro">
-                <p className="chappro">
-                  <span>Progress:</span>
-                  <span>1398 / 1398</span>
-                  <span>(100.0%)</span>
-                </p>
-              </div>
-              <div className="updates">
-                <span className="noupdates">No Updates</span>
-              </div>
-            </div>
-            <div className="novel-side">
-              <div className="items">
-                <svg
-                  className="bellimg"
-                  xmlns="http://www.w3.org/2000/svg"
-                  width={16}
-                  height={16}
-                  fill="currentColor"
-                  viewBox="0 0 16 16"
-                >
-                  <path d="M8 16a2 2 0 0 0 2-2H6a2 2 0 0 0 2 2zM8 1.918l-.797.161A4.002 4.002 0 0 0 4 6c0 .628-.134 2.197-.459 3.742-.16.767-.376 1.566-.663 2.258h10.244c-.287-.692-.502-1.49-.663-2.258C12.134 8.197 12 6.628 12 6a4.002 4.002 0 0 0-3.203-3.92L8 1.917zM14.22 12c.223.447.481.801.78 1H1c.299-.199.557-.553.78-1C2.68 10.2 3 6.88 3 6c0-2.42 1.72-4.44 4.005-4.901a1 1 0 1 1 1.99 0A5.002 5.002 0 0 1 13 6c0 .88.32 4.2 1.22 6z" />
-                </svg>
-                <svg
-                  className="hambmenu"
-                  xmlns="http://www.w3.org/2000/svg"
-                  width={16}
-                  height={16}
-                  fill="#5071df"
-                  viewBox="0 0 16 16"
-                >
-                  <path
-                    fillRule="evenodd"
-                    d="M2.5 12a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5z"
-                  />
-                </svg>
-              </div>
-            </div>
-          </li>
-          <li className="novel-card">
-            <div className="novel-cover">
-              <figure className="novel-coverfig">
-                <img
-                  src="/assets/00282-nine-star-hegemon-body-art-wn.jpg"
-                  alt=""
-                />
-              </figure>
-            </div>
-            <div className="novel-content">
-              <div className="novel-title">
-                <p className="ntitle">Nine Star Hegemon Body Art</p>
-                <p className="lastchap">
-                  <small>
-                    <svg
-                      className="arrow"
-                      xmlns="http://www.w3.org/2000/svg"
-                      width={16}
-                      height={16}
-                      fill="currentColor"
-                      viewBox="0 0 16 16"
-                    >
-                      <path
-                        fillRule="evenodd"
-                        d="M8 3a5 5 0 1 1-4.546 2.914.5.5 0 0 0-.908-.417A6 6 0 1 0 8 2v1z"
-                      />
-                      <path d="M8 4.466V.534a.25.25 0 0 0-.41-.192L5.23 2.308a.25.25 0 0 0 0 .384l2.36 1.966A.25.25 0 0 0 8 4.466z" />
-                    </svg>
-                  </small>
-                  <span>2 days ago</span>
-                </p>
-              </div>
-              <div className="chptpro">
-                <p className="chappro">
-                  <span>Progress:</span>
-                  <span>121 / 3997</span>
-                  <span>(3.0%)</span>
-                </p>
-              </div>
-              <div className="updates">
-                <span className="newchap">New Chapters</span>
-              </div>
-            </div>
-            <div className="novel-side">
-              <div className="items">
-                <svg
-                  className="bellimg"
-                  xmlns="http://www.w3.org/2000/svg"
-                  width={16}
-                  height={16}
-                  fill="currentColor"
-                  viewBox="0 0 16 16"
-                >
-                  <path d="M8 16a2 2 0 0 0 2-2H6a2 2 0 0 0 2 2zM8 1.918l-.797.161A4.002 4.002 0 0 0 4 6c0 .628-.134 2.197-.459 3.742-.16.767-.376 1.566-.663 2.258h10.244c-.287-.692-.502-1.49-.663-2.258C12.134 8.197 12 6.628 12 6a4.002 4.002 0 0 0-3.203-3.92L8 1.917zM14.22 12c.223.447.481.801.78 1H1c.299-.199.557-.553.78-1C2.68 10.2 3 6.88 3 6c0-2.42 1.72-4.44 4.005-4.901a1 1 0 1 1 1.99 0A5.002 5.002 0 0 1 13 6c0 .88.32 4.2 1.22 6z" />
-                </svg>
-                <svg
-                  className="hambmenu"
-                  xmlns="http://www.w3.org/2000/svg"
-                  width={16}
-                  height={16}
-                  fill="#5071df"
-                  viewBox="0 0 16 16"
-                >
-                  <path
-                    fillRule="evenodd"
-                    d="M2.5 12a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5z"
-                  />
-                </svg>
-              </div>
-            </div>
-          </li>
-          <li className="novel-card">
-            <div className="novel-cover">
-              <figure className="novel-coverfig">
-                <img src="/assets/01238-the-authors-pov.jpg" alt="" />
-              </figure>
-            </div>
-            <div className="novel-content">
-              <div className="novel-title">
-                <p className="ntitle">The Author's POV</p>
-                <p className="lastchap">
-                  <small>
-                    <svg
-                      className="arrow"
-                      xmlns="http://www.w3.org/2000/svg"
-                      width={16}
-                      height={16}
-                      fill="currentColor"
-                      viewBox="0 0 16 16"
-                    >
-                      <path
-                        fillRule="evenodd"
-                        d="M8 3a5 5 0 1 1-4.546 2.914.5.5 0 0 0-.908-.417A6 6 0 1 0 8 2v1z"
-                      />
-                      <path d="M8 4.466V.534a.25.25 0 0 0-.41-.192L5.23 2.308a.25.25 0 0 0 0 .384l2.36 1.966A.25.25 0 0 0 8 4.466z" />
-                    </svg>
-                  </small>
-                  <span>11 days ago</span>
-                </p>
-              </div>
-              <div className="chptpro">
-                <p className="chappro">
-                  <span>Progress:</span>
-                  <span>Reading is complete</span>
-                </p>
-              </div>
-              <div className="updates">
-                <span className="noupdates">No Updates</span>
-              </div>
-            </div>
-            <div className="novel-side">
-              <div className="items">
-                <svg
-                  className="bellimg"
-                  xmlns="http://www.w3.org/2000/svg"
-                  width={16}
-                  height={16}
-                  fill="currentColor"
-                  viewBox="0 0 16 16"
-                >
-                  <path d="M8 16a2 2 0 0 0 2-2H6a2 2 0 0 0 2 2zM8 1.918l-.797.161A4.002 4.002 0 0 0 4 6c0 .628-.134 2.197-.459 3.742-.16.767-.376 1.566-.663 2.258h10.244c-.287-.692-.502-1.49-.663-2.258C12.134 8.197 12 6.628 12 6a4.002 4.002 0 0 0-3.203-3.92L8 1.917zM14.22 12c.223.447.481.801.78 1H1c.299-.199.557-.553.78-1C2.68 10.2 3 6.88 3 6c0-2.42 1.72-4.44 4.005-4.901a1 1 0 1 1 1.99 0A5.002 5.002 0 0 1 13 6c0 .88.32 4.2 1.22 6z" />
-                </svg>
-                <svg
-                  className="hambmenu"
-                  xmlns="http://www.w3.org/2000/svg"
-                  width={16}
-                  height={16}
-                  fill="#5071df"
-                  viewBox="0 0 16 16"
-                >
-                  <path
-                    fillRule="evenodd"
-                    d="M2.5 12a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5z"
-                  />
-                </svg>
-              </div>
-            </div>
-          </li>
-          <li className="novel-card">
-            <div className="novel-cover">
-              <figure className="novel-coverfig">
-                <img src="/assets/01485-lightning-is-the-only-way.jpg" alt="" />
-              </figure>
-            </div>
-            <div className="novel-content">
-              <div className="novel-title">
-                <p className="ntitle">Lightning Is The Only Way</p>
-                <p className="lastchap">
-                  <small>
-                    <svg
-                      className="arrow"
-                      xmlns="http://www.w3.org/2000/svg"
-                      width={16}
-                      height={16}
-                      fill="currentColor"
-                      viewBox="0 0 16 16"
-                    >
-                      <path
-                        fillRule="evenodd"
-                        d="M8 3a5 5 0 1 1-4.546 2.914.5.5 0 0 0-.908-.417A6 6 0 1 0 8 2v1z"
-                      />
-                      <path d="M8 4.466V.534a.25.25 0 0 0-.41-.192L5.23 2.308a.25.25 0 0 0 0 .384l2.36 1.966A.25.25 0 0 0 8 4.466z" />
-                    </svg>
-                  </small>
-                  <span>3 months ago</span>
-                </p>
-              </div>
-              <div className="chptpro">
-                <p className="chappro">
-                  <span>Progress:</span>
-                  <span>231 / 1329</span>
-                  <span>(17.4%)</span>
-                </p>
-              </div>
-              <div className="updates">
-                <span className="noupdates">No Updates</span>
-              </div>
-            </div>
-            <div className="novel-side">
-              <div className="items">
-                <svg
-                  className="bellimg"
-                  xmlns="http://www.w3.org/2000/svg"
-                  width={16}
-                  height={16}
-                  fill="currentColor"
-                  viewBox="0 0 16 16"
-                >
-                  <path d="M8 16a2 2 0 0 0 2-2H6a2 2 0 0 0 2 2zM8 1.918l-.797.161A4.002 4.002 0 0 0 4 6c0 .628-.134 2.197-.459 3.742-.16.767-.376 1.566-.663 2.258h10.244c-.287-.692-.502-1.49-.663-2.258C12.134 8.197 12 6.628 12 6a4.002 4.002 0 0 0-3.203-3.92L8 1.917zM14.22 12c.223.447.481.801.78 1H1c.299-.199.557-.553.78-1C2.68 10.2 3 6.88 3 6c0-2.42 1.72-4.44 4.005-4.901a1 1 0 1 1 1.99 0A5.002 5.002 0 0 1 13 6c0 .88.32 4.2 1.22 6z" />
-                </svg>
-                <svg
-                  className="hambmenu"
-                  xmlns="http://www.w3.org/2000/svg"
-                  width={16}
-                  height={16}
-                  fill="#5071df"
-                  viewBox="0 0 16 16"
-                >
-                  <path
-                    fillRule="evenodd"
-                    d="M2.5 12a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5z"
-                  />
-                </svg>
-              </div>
-            </div>
-          </li>
-          <li className="novel-card">
-            <div className="novel-cover">
-              <figure className="novel-coverfig">
-                <img src="/assets/00172-reverend-insanity.jpg" alt="" />
-              </figure>
-            </div>
-            <div className="novel-content">
-              <div className="novel-title">
-                <p className="ntitle">Reverend Insanity</p>
-                <p className="lastchap">
-                  <small>
-                    <svg
-                      className="arrow"
-                      xmlns="http://www.w3.org/2000/svg"
-                      width={16}
-                      height={16}
-                      fill="currentColor"
-                      viewBox="0 0 16 16"
-                    >
-                      <path
-                        fillRule="evenodd"
-                        d="M8 3a5 5 0 1 1-4.546 2.914.5.5 0 0 0-.908-.417A6 6 0 1 0 8 2v1z"
-                      />
-                      <path d="M8 4.466V.534a.25.25 0 0 0-.41-.192L5.23 2.308a.25.25 0 0 0 0 .384l2.36 1.966A.25.25 0 0 0 8 4.466z" />
-                    </svg>
-                  </small>
-                  <span>2 years ago</span>
-                </p>
-              </div>
-              <div className="chptpro">
-                <p className="chappro">
-                  <span>Progress:</span>
-                  <span>98 / 2334</span>
-                  <span>(4.2%)</span>
-                </p>
-              </div>
-              <div className="updates">
-                <span className="noupdates">No Updates</span>
-              </div>
-            </div>
-            <div className="novel-side">
-              <div className="items">
-                <svg
-                  className="bellimg"
-                  xmlns="http://www.w3.org/2000/svg"
-                  width={16}
-                  height={16}
-                  fill="currentColor"
-                  viewBox="0 0 16 16"
-                >
-                  <path d="M8 16a2 2 0 0 0 2-2H6a2 2 0 0 0 2 2zM8 1.918l-.797.161A4.002 4.002 0 0 0 4 6c0 .628-.134 2.197-.459 3.742-.16.767-.376 1.566-.663 2.258h10.244c-.287-.692-.502-1.49-.663-2.258C12.134 8.197 12 6.628 12 6a4.002 4.002 0 0 0-3.203-3.92L8 1.917zM14.22 12c.223.447.481.801.78 1H1c.299-.199.557-.553.78-1C2.68 10.2 3 6.88 3 6c0-2.42 1.72-4.44 4.005-4.901a1 1 0 1 1 1.99 0A5.002 5.002 0 0 1 13 6c0 .88.32 4.2 1.22 6z" />
-                </svg>
-                <svg
-                  className="hambmenu"
-                  xmlns="http://www.w3.org/2000/svg"
-                  width={16}
-                  height={16}
-                  fill="#5071df"
-                  viewBox="0 0 16 16"
-                >
-                  <path
-                    fillRule="evenodd"
-                    d="M2.5 12a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5z"
-                  />
-                </svg>
-              </div>
-            </div>
-          </li>
-          <li className="novel-card">
-            <div className="novel-cover">
-              <figure className="novel-coverfig">
-                <img
-                  src="/assets/00224-the-desolate-era-web-novel.jpg"
-                  alt=""
-                />
-              </figure>
-            </div>
-            <div className="novel-content">
-              <div className="novel-title">
-                <p className="ntitle">The Desolate Era</p>
-                <p className="lastchap">
-                  <small>
-                    <svg
-                      className="arrow"
-                      xmlns="http://www.w3.org/2000/svg"
-                      width={16}
-                      height={16}
-                      fill="currentColor"
-                      viewBox="0 0 16 16"
-                    >
-                      <path
-                        fillRule="evenodd"
-                        d="M8 3a5 5 0 1 1-4.546 2.914.5.5 0 0 0-.908-.417A6 6 0 1 0 8 2v1z"
-                      />
-                      <path d="M8 4.466V.534a.25.25 0 0 0-.41-.192L5.23 2.308a.25.25 0 0 0 0 .384l2.36 1.966A.25.25 0 0 0 8 4.466z" />
-                    </svg>
-                  </small>
-                  <span>2 years ago</span>
-                </p>
-              </div>
-              <div className="chptpro">
-                <p className="chappro">
-                  <span>Progress:</span>
-                  <span>573 / 1451</span>
-                  <span>(39.5%)</span>
-                </p>
-              </div>
-              <div className="updates">
-                <span className="noupdates">No Updates</span>
-              </div>
-            </div>
-            <div className="novel-side">
-              <div className="items">
-                <svg
-                  className="bellimg"
-                  xmlns="http://www.w3.org/2000/svg"
-                  width={16}
-                  height={16}
-                  fill="currentColor"
-                  viewBox="0 0 16 16"
-                >
-                  <path d="M8 16a2 2 0 0 0 2-2H6a2 2 0 0 0 2 2zM8 1.918l-.797.161A4.002 4.002 0 0 0 4 6c0 .628-.134 2.197-.459 3.742-.16.767-.376 1.566-.663 2.258h10.244c-.287-.692-.502-1.49-.663-2.258C12.134 8.197 12 6.628 12 6a4.002 4.002 0 0 0-3.203-3.92L8 1.917zM14.22 12c.223.447.481.801.78 1H1c.299-.199.557-.553.78-1C2.68 10.2 3 6.88 3 6c0-2.42 1.72-4.44 4.005-4.901a1 1 0 1 1 1.99 0A5.002 5.002 0 0 1 13 6c0 .88.32 4.2 1.22 6z" />
-                </svg>
-                <svg
-                  className="hambmenu"
-                  xmlns="http://www.w3.org/2000/svg"
-                  width={16}
-                  height={16}
-                  fill="#5071df"
-                  viewBox="0 0 16 16"
-                >
-                  <path
-                    fillRule="evenodd"
-                    d="M2.5 12a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5z"
-                  />
-                </svg>
-              </div>
-            </div>
-          </li>
-          <li className="novel-card">
-            <div className="novel-cover">
-              <figure className="novel-coverfig">
-                <img
-                  src="/assets/00265-omniscient-readers-viewpoint-novel.jpg"
-                  alt=""
-                />
-              </figure>
-            </div>
-            <div className="novel-content">
-              <div className="novel-title">
-                <p className="ntitle">Omniscient Reader's Viewpoint</p>
-                <p className="lastchap">
-                  <small>
-                    <svg
-                      className="arrow"
-                      xmlns="http://www.w3.org/2000/svg"
-                      width={16}
-                      height={16}
-                      fill="currentColor"
-                      viewBox="0 0 16 16"
-                    >
-                      <path
-                        fillRule="evenodd"
-                        d="M8 3a5 5 0 1 1-4.546 2.914.5.5 0 0 0-.908-.417A6 6 0 1 0 8 2v1z"
-                      />
-                      <path d="M8 4.466V.534a.25.25 0 0 0-.41-.192L5.23 2.308a.25.25 0 0 0 0 .384l2.36 1.966A.25.25 0 0 0 8 4.466z" />
-                    </svg>
-                  </small>
-                  <span>2 years ago</span>
-                </p>
-              </div>
-              <div className="chptpro">
-                <p className="chappro">
-                  <span>Progress:</span>
-                  <span>Reading is complete </span>
-                  <span />
-                </p>
-              </div>
-              <div className="updates">
-                <span className="noupdates">No Updates</span>
-              </div>
-            </div>
-            <div className="novel-side">
-              <div className="items">
-                <svg
-                  className="bellimg"
-                  xmlns="http://www.w3.org/2000/svg"
-                  width={16}
-                  height={16}
-                  fill="currentColor"
-                  viewBox="0 0 16 16"
-                >
-                  <path d="M8 16a2 2 0 0 0 2-2H6a2 2 0 0 0 2 2zM8 1.918l-.797.161A4.002 4.002 0 0 0 4 6c0 .628-.134 2.197-.459 3.742-.16.767-.376 1.566-.663 2.258h10.244c-.287-.692-.502-1.49-.663-2.258C12.134 8.197 12 6.628 12 6a4.002 4.002 0 0 0-3.203-3.92L8 1.917zM14.22 12c.223.447.481.801.78 1H1c.299-.199.557-.553.78-1C2.68 10.2 3 6.88 3 6c0-2.42 1.72-4.44 4.005-4.901a1 1 0 1 1 1.99 0A5.002 5.002 0 0 1 13 6c0 .88.32 4.2 1.22 6z" />
-                </svg>
-                <svg
-                  className="hambmenu"
-                  xmlns="http://www.w3.org/2000/svg"
-                  width={16}
-                  height={16}
-                  fill="#5071df"
-                  viewBox="0 0 16 16"
-                >
-                  <path
-                    fillRule="evenodd"
-                    d="M2.5 12a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5z"
-                  />
-                </svg>
-              </div>
-            </div>
-          </li>
-          <li className="novel-card">
-            <div className="novel-cover">
-              <figure className="novel-coverfig">
-                <img src="/assets/00220-martial-world-webnovel.jpg" alt="" />
-              </figure>
-            </div>
-            <div className="novel-content">
-              <div className="novel-title">
-                <p className="ntitle">Martial World</p>
-                <p className="lastchap">
-                  <small>
-                    <svg
-                      className="arrow"
-                      xmlns="http://www.w3.org/2000/svg"
-                      width={16}
-                      height={16}
-                      fill="currentColor"
-                      viewBox="0 0 16 16"
-                    >
-                      <path
-                        fillRule="evenodd"
-                        d="M8 3a5 5 0 1 1-4.546 2.914.5.5 0 0 0-.908-.417A6 6 0 1 0 8 2v1z"
-                      />
-                      <path d="M8 4.466V.534a.25.25 0 0 0-.41-.192L5.23 2.308a.25.25 0 0 0 0 .384l2.36 1.966A.25.25 0 0 0 8 4.466z" />
-                    </svg>
-                  </small>
-                  <span>3 years ago</span>
-                </p>
-              </div>
-              <div className="chptpro">
-                <p className="chappro">
-                  <span>Progress:</span>
-                  <span>Reading is complete</span>
-                  <span />
-                </p>
-              </div>
-              <div className="updates">
-                <span className="noupdates">No Updates</span>
-              </div>
-            </div>
-            <div className="novel-side">
-              <div className="items">
-                <svg
-                  className="bellimg"
-                  xmlns="http://www.w3.org/2000/svg"
-                  width={16}
-                  height={16}
-                  fill="currentColor"
-                  viewBox="0 0 16 16"
-                >
-                  <path d="M8 16a2 2 0 0 0 2-2H6a2 2 0 0 0 2 2zM8 1.918l-.797.161A4.002 4.002 0 0 0 4 6c0 .628-.134 2.197-.459 3.742-.16.767-.376 1.566-.663 2.258h10.244c-.287-.692-.502-1.49-.663-2.258C12.134 8.197 12 6.628 12 6a4.002 4.002 0 0 0-3.203-3.92L8 1.917zM14.22 12c.223.447.481.801.78 1H1c.299-.199.557-.553.78-1C2.68 10.2 3 6.88 3 6c0-2.42 1.72-4.44 4.005-4.901a1 1 0 1 1 1.99 0A5.002 5.002 0 0 1 13 6c0 .88.32 4.2 1.22 6z" />
-                </svg>
-                <svg
-                  className="hambmenu"
-                  xmlns="http://www.w3.org/2000/svg"
-                  width={16}
-                  height={16}
-                  fill="#5071df"
-                  viewBox="0 0 16 16"
-                >
-                  <path
-                    fillRule="evenodd"
-                    d="M2.5 12a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5z"
-                  />
-                </svg>
-              </div>
-            </div>
-          </li>
-          <li className="novel-card">
-            <div className="novel-cover">
-              <figure className="novel-coverfig">
-                <img src="/assets/00072-true-martial-world.jpg" alt="" />
-              </figure>
-            </div>
-            <div className="novel-content">
-              <div className="novel-title">
-                <p className="ntitle">True Martial World</p>
-                <p className="lastchap">
-                  <small>
-                    <svg
-                      className="arrow"
-                      xmlns="http://www.w3.org/2000/svg"
-                      width={16}
-                      height={16}
-                      fill="currentColor"
-                      viewBox="0 0 16 16"
-                    >
-                      <path
-                        fillRule="evenodd"
-                        d="M8 3a5 5 0 1 1-4.546 2.914.5.5 0 0 0-.908-.417A6 6 0 1 0 8 2v1z"
-                      />
-                      <path d="M8 4.466V.534a.25.25 0 0 0-.41-.192L5.23 2.308a.25.25 0 0 0 0 .384l2.36 1.966A.25.25 0 0 0 8 4.466z" />
-                    </svg>
-                  </small>
-                  <span>4 years ago</span>
-                </p>
-              </div>
-              <div className="chptpro">
-                <p className="chappro">
-                  <span>Progress:</span>
-                  <span>1256 / 1710</span>
-                  <span>(73.5%)</span>
-                </p>
-              </div>
-              <div className="updates">
-                <span className="noupdates">No Updates</span>
-              </div>
-            </div>
-            <div className="novel-side">
-              <div className="items">
-                <svg
-                  className="bellimg"
-                  xmlns="http://www.w3.org/2000/svg"
-                  width={16}
-                  height={16}
-                  fill="currentColor"
-                  viewBox="0 0 16 16"
-                >
-                  <path d="M8 16a2 2 0 0 0 2-2H6a2 2 0 0 0 2 2zM8 1.918l-.797.161A4.002 4.002 0 0 0 4 6c0 .628-.134 2.197-.459 3.742-.16.767-.376 1.566-.663 2.258h10.244c-.287-.692-.502-1.49-.663-2.258C12.134 8.197 12 6.628 12 6a4.002 4.002 0 0 0-3.203-3.92L8 1.917zM14.22 12c.223.447.481.801.78 1H1c.299-.199.557-.553.78-1C2.68 10.2 3 6.88 3 6c0-2.42 1.72-4.44 4.005-4.901a1 1 0 1 1 1.99 0A5.002 5.002 0 0 1 13 6c0 .88.32 4.2 1.22 6z" />
-                </svg>
-                <svg
-                  className="hambmenu"
-                  xmlns="http://www.w3.org/2000/svg"
-                  width={16}
-                  height={16}
-                  fill="#5071df"
-                  viewBox="0 0 16 16"
-                >
-                  <path
-                    fillRule="evenodd"
-                    d="M2.5 12a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5z"
-                  />
-                </svg>
-              </div>
-            </div>
-          </li>
-          <li className="novel-card last-card">
-            <div className="novel-cover">
-              <figure className="novel-coverfig">
-                <img src="/assets/00089-wujie-whushi-wmw.jpg" alt="" />
-              </figure>
-            </div>
-            <div className="novel-content">
-              <div className="novel-title">
-                <p className="ntitle">Warlock of the Magus World</p>
-                <p className="lastchap">
-                  <small>
-                    <svg
-                      className="arrow"
-                      xmlns="http://www.w3.org/2000/svg"
-                      width={16}
-                      height={16}
-                      fill="currentColor"
-                      viewBox="0 0 16 16"
-                    >
-                      <path
-                        fillRule="evenodd"
-                        d="M8 3a5 5 0 1 1-4.546 2.914.5.5 0 0 0-.908-.417A6 6 0 1 0 8 2v1z"
-                      />
-                      <path d="M8 4.466V.534a.25.25 0 0 0-.41-.192L5.23 2.308a.25.25 0 0 0 0 .384l2.36 1.966A.25.25 0 0 0 8 4.466z" />
-                    </svg>
-                  </small>
-                  <span>4 years ago</span>
-                </p>
-              </div>
-              <div className="chptpro">
-                <p className="chappro">
-                  <span>Progress:</span>
-                  <span>573 / 1451</span>
-                  <span>(3.8%)</span>
-                </p>
-              </div>
-              <div className="updates">
-                <span className="noupdates">No Updates</span>
-              </div>
-            </div>
-            <div className="novel-side">
-              <div className="items">
-                <svg
-                  className="bellimg"
-                  xmlns="http://www.w3.org/2000/svg"
-                  width={16}
-                  height={16}
-                  fill="currentColor"
-                  viewBox="0 0 16 16"
-                >
-                  <path d="M8 16a2 2 0 0 0 2-2H6a2 2 0 0 0 2 2zM8 1.918l-.797.161A4.002 4.002 0 0 0 4 6c0 .628-.134 2.197-.459 3.742-.16.767-.376 1.566-.663 2.258h10.244c-.287-.692-.502-1.49-.663-2.258C12.134 8.197 12 6.628 12 6a4.002 4.002 0 0 0-3.203-3.92L8 1.917zM14.22 12c.223.447.481.801.78 1H1c.299-.199.557-.553.78-1C2.68 10.2 3 6.88 3 6c0-2.42 1.72-4.44 4.005-4.901a1 1 0 1 1 1.99 0A5.002 5.002 0 0 1 13 6c0 .88.32 4.2 1.22 6z" />
-                </svg>
-                <svg
-                  className="hambmenu"
-                  xmlns="http://www.w3.org/2000/svg"
-                  width={16}
-                  height={16}
-                  fill="#5071df"
-                  viewBox="0 0 16 16"
-                >
-                  <path
-                    fillRule="evenodd"
-                    d="M2.5 12a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5z"
-                  />
-                </svg>
-              </div>
-            </div>
-          </li>
+          {novels.map((n, i) => (
+            <Suspense key={i} fallback={<Spinner />}>
+              <NovelCard
+                key={n.title}
+                cover={n.cover}
+                title={n.title}
+                lastChapter={n.lastChapterUpdate}
+                progress={n.progress}
+                updates={n.updates}
+              />
+            </Suspense>
+          ))}
         </ul>
       </section>
     </div>
@@ -1062,3 +175,127 @@ const TheLibrary = () => {
 };
 
 export default TheLibrary;
+
+const novels = [
+  {
+    cover: "/assets/00892-the-steward-demonic-emperor.jpg",
+    title: "The Steward Demonic Emperor",
+    lastChapterUpdate: "4 Hours ago",
+    progress: {
+      current: 874,
+      total: 997,
+      percentage: "87.7%",
+    },
+    updates: "New Chapters",
+  },
+  {
+    cover: "/assets/01296-grand-ancestral-bloodlines.jpg",
+    title: "Grand Ancestral Bloodlines",
+    lastChapterUpdate: "yesterday",
+    progress: {
+      current: 1276,
+      total: 1273,
+      percentage: "100.2%",
+    },
+    updates: "No Updates",
+  },
+  {
+    cover: "/assets/01511-ascension-of-the-immortal-asura.jpg",
+    title: "Ascension of the Immortal Asura",
+    lastChapterUpdate: "2 days ago",
+    progress: {
+      current: 920,
+      total: 984,
+      percentage: "93.5%",
+    },
+    updates: "New Chapters",
+  },
+  {
+    cover: "/assets/00732-infinite-mana-in-the-apocalypse-novel.jpg",
+    title: "Infinite Mana In The Apocalypse",
+    lastChapterUpdate: "2 days ago",
+    progress: {
+      current: 2357,
+      total: 2357,
+      percentage: "100.0%",
+    },
+    updates: "No Updates",
+  },
+  {
+    cover: "/assets/01132-supremacy-games.jpg",
+    title: "Supremacy Games",
+    lastChapterUpdate: "2 days ago",
+    progress: {
+      current: 1398,
+      total: 1398,
+      percentage: "100.0%",
+    },
+    updates: "No Updates",
+  },
+  {
+    cover: "/assets/00172-reverend-insanity.jpg",
+    title: "Reverend Insanity",
+    lastChapterUpdate: "2 years ago",
+    progress: {
+      current: 98,
+      total: 2334,
+      percentage: "4.2%",
+    },
+    updates: "No Updates",
+  },
+  {
+    cover: "/assets/00224-the-desolate-era-web-novel.jpg",
+    title: "The Desolate Era",
+    lastChapterUpdate: "2 years ago",
+    progress: {
+      current: 573,
+      total: 1451,
+      percentage: "39.5%",
+    },
+    updates: "No Updates",
+  },
+  {
+    cover: "/assets/00265-omniscient-readers-viewpoint-novel.jpg",
+    title: "Omniscient Reader's Viewpoint",
+    lastChapterUpdate: "2 years ago",
+    progress: {
+      current: "Reading is complete",
+      total: "Reading is complete",
+      percentage: "Reading is complete",
+    },
+    updates: "No Updates",
+  },
+  {
+    cover: "/assets/00220-martial-world-webnovel.jpg",
+    title: "Martial World",
+    lastChapterUpdate: "3 years ago",
+    progress: {
+      current: "Reading is complete",
+      total: "Reading is complete",
+      percentage: "Reading is complete",
+    },
+    updates: "No Updates",
+  },
+  {
+    cover: "/assets/00072-true-martial-world.jpg",
+    title: "True Martial World",
+    lastChapterUpdate: "4 years ago",
+    progress: {
+      current: 1256,
+      total: 1710,
+      percentage: "73.5%",
+    },
+    updates: "No Updates",
+  },
+  {
+    cover: "/assets/00089-wujie-whushi-wmw.jpg",
+    title: "Warlock of the Magus World",
+    lastChapterUpdate: "4 years ago",
+    progress: {
+      current: 573,
+      total: 1451,
+      percentage: "3.8%",
+    },
+    updates: "No Updates",
+  },
+];

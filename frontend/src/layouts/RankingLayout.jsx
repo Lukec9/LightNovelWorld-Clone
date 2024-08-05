@@ -1,6 +1,6 @@
 import { Outlet, useLocation } from "react-router-dom";
-import "../../styles/RankingPage.css";
-import RankingFilter from "../RankingPageComp/RankingFilter";
+import "../styles/RankingPage.css";
+import RankingFilter from "../components/RankingPageComp/RankingFilter";
 import { useEffect, useState } from "react";
 
 const RankingLayout = () => {

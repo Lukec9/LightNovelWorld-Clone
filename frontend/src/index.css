@@ -1,4 +1,28 @@
 :root {
+  --hg-gray: #727272;
+  --hg-darkpurple: #574dbb;
+  --hg-purple: #7367f0;
+  --hg-grayblue: #405189;
+  --hg-blue: #4769dd;
+  --hg-blue2: #2b6f93;
+  --hg-green: #3a7c45;
+  --hg-green2: #496614;
+  --hg-yellow: #9d9129;
+  --hg-red: #9a3c3c;
+  --hg-orange: #c47813;
+  --hg-pink: #9747a0;
+  --bg-black: #121212;
+  --bg-gray: #232323;
+  --bg-darkgray: #1a1d21;
+  --bg-darkblue: #161d31;
+  --bg-darkblue2: #151d25;
+  --bg-darkblue3: #20282b;
+  --bg-darkblue4: #1a1e28;
+  --bg-darkblue5: #121527;
+  --bg-darkgreen: #141f1d;
+  --bg-darkbrown: #1d1714;
+  --bg-darkpurple: #1d1823;
+  --bg-darkyellow: #2b2a20;
   --bg-nav-header: var(--bg-color);
   --bg-color-main: #161d31;
   --bg-color: #161d31;

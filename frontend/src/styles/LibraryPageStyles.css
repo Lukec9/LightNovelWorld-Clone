@@ -1,6 +1,7 @@
 .the-library {
   color: #adb0b7;
-  border-bottom: 1px solid #292f41;
+  padding-bottom: 1rem;
+  margin-bottom: 2rem;
 }
 
 .intro-library {
@@ -12,11 +13,12 @@
   font-weight: 600;
   font-size: 1.25rem;
   margin-top: 0;
+  margin-bottom: 0;
 }
 
 .description p {
   margin: 0;
-  margin-top: 0.5rem;
+  margin-top: 0.3rem;
 }
 
 .action-guide {
@@ -35,37 +37,19 @@
 
 .btn-container {
   display: flex;
-  margin: 1rem 2rem 1rem 2rem;
-  border-bottom: 1px solid #292f41;
-  padding-bottom: 1rem;
+  padding-top: 1rem;
   margin-left: 1rem;
   justify-content: space-between;
 }
 
-.filterbtn,
-.filterbtn-ns {
-  background-color: #3c59bc;
-  border: none;
-  border-bottom: 3px solid #2b3f85;
-  padding: 0.5rem 1rem;
-  color: #fff;
-  font-weight: 500;
-  font-size: 1rem;
-  border-radius: 4px;
-  cursor: pointer;
-  flex-grow: 1;
-  margin-right: 13px;
-  text-align: center;
+.sort-buttons {
+  display: flex;
+  border-top: 1px solid #292f41;
+  padding-top: 1rem;
+  justify-content: space-between;
+  align-items: center;
+  margin: 1rem 0;
 }
-
-.filterbtn-ns {
-  background-color: #2b3f85;
-}
-
-.filterbtn-ns.last {
-  margin-right: 0;
-}
-
 .sortbtn.selected {
   background-color: #292f41;
   border: 1px solid #3c59bc;
@@ -79,30 +63,9 @@
   border-radius: 4px;
 }
 
-.sort-buttons {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin: 1rem 0;
-  margin-left: 13px;
-}
-
 .sortbtn {
-  background-color: #292f41;
-  border: 1px solid #3c59bc;
   font-weight: 600;
-  color: #5071df;
-  font-size: 1rem;
-  line-height: 1;
-  cursor: pointer;
-  margin-right: 1rem;
-  padding: 6px 10px;
-  border-radius: 4px;
   flex-grow: 1;
-  width: auto;
-}
-
-.sortbtn.ns {
   background-color: #292f41;
   border: none;
   color: #737783;
@@ -275,10 +238,11 @@ ul {
   margin-bottom: 1rem;
 }
 @media (min-width: 768px) {
-  .user-panel-body {
+  .the-library.user-panel-body {
     background-color: #1f2639;
     border-radius: 0.475rem;
     margin-top: 1rem;
+
     width: 100%;
   }
   .intro-library {
@@ -298,19 +262,13 @@ ul {
     justify-content: flex-start;
     margin-left: 3rem;
   }
-  .the-library .filterbtn,
-  .filterbtn-ns {
-    padding: 0.5rem 1rem;
-    flex-grow: 0;
-    margin-right: 13px;
-  }
 
   .sort-buttons {
     justify-content: flex-start;
     margin-top: 1rem;
+    margin-left: 13px;
   }
-  .sort-buttons .sortbtn,
-  .sort-buttons .sortbtn.ns {
+  .sort-buttons .sortbtn {
     font-size: 0.7rem;
     margin-right: 0.5rem;
     max-width: 100px;
@@ -481,4 +439,38 @@ ul {
     font-weight: 500;
     display: inline-block;
   }
+
+  .btn-container [type="radio"]:checked + label {
+    padding: 6px 16px 3px;
+  }
+  .buttons-novels {
+    display: flex;
+  }
+}
+
+.fieldset {
+  flex: 1 0 auto;
+  text-align: center;
+}
+.fieldset:not(:last-child) {
+  margin-right: 13px;
+}
+.btn-container input[type="radio"] {
+  display: none;
+}
+
+.fieldset label {
+  background-color: var(--bg-color-secondary-3);
+  color: var(--text-color-secondary-2);
+  border-radius: 4px;
+  padding: 0.4rem 0.6rem;
+  font-size: 0.875rem;
+  display: block;
+}
+
+.btn-container input[type="radio"]:checked + label {
+  padding: 0.4rem 0.6rem 3px;
+  border-bottom: 3px solid var(--bg-color-secondary-4);
+  background-color: var(--bg-color-secondary-2);
+  color: #fff;
 }

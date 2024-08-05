@@ -1,4 +1,18 @@
+import { useEffect, useState } from "react";
+import { useLocation } from "react-router-dom";
+
 const AccountContainer = () => {
+  const [activePage, setActivePage] = useState("/account");
+  const location = useLocation();
+  const path = location.pathname;
+
+  useEffect(() => {
+    const currentPage = pages.find(page => path === page);
+    if (currentPage) {
+      setActivePage(currentPage);
+    }
+  }, [path]);
+
   return (
     <div className="account-container-box">
       <div className="user-info">
@@ -55,30 +69,41 @@ const AccountContainer = () => {
       </div>
       <nav className="pages-nav-buttons">
         <ul>
-          <li className="page-item">
-            <a href="https://www.lightnovelworld.com/account">Info</a>
-          </li>
-          <li className="page-item library-card">
-            <a href="https://www.lightnovelworld.com/account/library">
-              Library
-            </a>
-          </li>
-          <li className="page-item">
-            <a href="https://www.lightnovelworld.com/account">History</a>
-          </li>
-          <li className="page-item">
-            <a href="https://www.lightnovelworld.com/account">Comments</a>
-          </li>
-          <li className="page-item">
-            <a href="https://www.lightnovelworld.com/account">Reviews</a>
-          </li>
-          <li className="page-item">
-            <a href="https://www.lightnovelworld.com/account">Inbox</a>
-          </li>
+          {pages.map((page, i) => (
+            <PageItem isActive={activePage === page} key={i} page={page} />
+          ))}
         </ul>
       </nav>
     </div>
   );
 };
+
+const PageItem = ({ page, isActive }) => {
+  const labels = {
+    "/account": "Info",
+    "/account/library": "Library",
+    "/account/history": "History",
+    "/account/comments": "Comments",
+    "/account/reviews": "Reviews",
+    "/account/inbox": "Inbox",
+  };
+
+  const label = labels[page] || page;
+
+  return (
+    <li className={`page-item ${isActive ? "active" : ""} `}>
+      <a href={page}>{label}</a>
+    </li>
+  );
+};
+
+const pages = [
+  "/account",
+  "/account/library",
+  "/account/history",
+  "/account/comments",
+  "/account/reviews",
+  "/account/inbox",
+];
 
 export default AccountContainer;
