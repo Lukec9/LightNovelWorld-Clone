@@ -1,0 +1,57 @@
+.review-item input[type="radio"] {
+  display: none;
+}
+
+.usrlike {
+  display: flex;
+  align-items: center;
+}
+
+.review-item ._grp span {
+  margin-inline: 0.2rem;
+}
+
+.review-item .revtoolbar .divider {
+  display: block;
+  border-left: 2px solid var(--text-color-4);
+  margin: 0 14px;
+  height: 0.75rem;
+}
+
+.review-item {
+  margin-bottom: 1rem;
+  background-color: var(--bg-color-2);
+  padding: 1rem;
+  border-radius: 10px;
+}
+
+.review-info {
+  border-bottom: 1px solid var(--border-color-4);
+  padding-bottom: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.review-info .top-right {
+  display: flex;
+  justify-content: space-between;
+}
+
+.review-item .star-wrap {
+  display: flex;
+  align-items: center;
+}
+
+.review-item .star-wrap > span:last-child {
+  margin-left: 0.3rem;
+}
+
+.review-item label {
+  display: flex;
+  align-items: center;
+}
+
+@media screen and (min-width: 768px) {
+  .review-item {
+    border: 2px solid var(--border-color-3);
+  }
+}
