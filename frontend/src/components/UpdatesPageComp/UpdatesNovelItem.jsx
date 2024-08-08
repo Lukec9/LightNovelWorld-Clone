@@ -1,11 +1,13 @@
 const UpdatesNovelItem = ({ title, img, rank }) => {
   return (
     <li className="novel-item">
-      <a title={title} href="#" className="item-cover">
-        <div className="novel-coverfig">
-          <img src={img} alt="" />
-        </div>
-      </a>
+      <div className="cover-wrap">
+        <a title={title} href="#" className="item-cover">
+          <div className="novel-coverfig">
+            <img src={img} alt="" />
+          </div>
+        </a>
+      </div>
       <div className="item-stats">
         <h4 className="novel-title ">{title}</h4>
         <h5 className="chapter-title ">Chapter 1785: Welcome</h5>
@@ -36,6 +38,13 @@ const UpdatesNovelItem = ({ title, img, rank }) => {
             </svg>
             Rank {rank}
           </span>
+        </div>
+        <div className="summary">
+          <p>
+            In a world where the interstellar era has brought both promise and
+            disappointment, Michael Fang dreams of becoming a Lord in the
+            mysterious realm... ..
+          </p>
         </div>
       </div>
     </li>

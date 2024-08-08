@@ -1,3 +1,7 @@
+.adv-page {
+  background-color: var(--bg-color);
+}
+
 #adv-search {
   color: var(--text-color);
 }

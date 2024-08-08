@@ -1,0 +1,105 @@
+.author-novels {
+  color: var(--text-color);
+}
+.author-novels #header h1 {
+  font-size: 24px;
+  line-height: 1.4;
+  font-weight: 600;
+  margin-bottom: 0.3em;
+  height: auto;
+}
+
+.author-novels .novel-item {
+  height: 5.3rem;
+  overflow: hidden;
+  width: 100%;
+  padding-bottom: 0.5rem;
+}
+
+.author-novels .novel-coverfig {
+  padding-top: 0;
+  height: 100%;
+}
+
+.author-novels #header {
+  display: block;
+  padding: 0 0 20px;
+  margin-bottom: 20px;
+  position: relative;
+  border-bottom: 1px solid var(--border-color-4);
+}
+
+.author-novels h1,
+.author-novels p {
+  margin: 0;
+}
+
+.author-novels section {
+  width: 100%;
+  padding-bottom: 1rem;
+}
+
+.author-novels .novel-item {
+  display: flex;
+}
+.author-novels .novel-item:not(:last-child) {
+  border-bottom: 1px solid var(--border-color-4);
+}
+
+.author-novels .novel-item .item-stats {
+  width: auto;
+  flex-grow: 1;
+  margin-left: 0.4rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+
+.author-novels .novel-stats {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.author-novels .novel-stats span:first-child {
+  order: 2;
+}
+.author-novels .novel-stats span:last-child {
+  order: 1;
+}
+
+.author-novels .item-stats .summary {
+  display: block;
+}
+
+.author-novels .chapter-title {
+  display: none;
+}
+
+.author-novels .cover-wrap {
+  height: 100%;
+  flex-basis: 19%;
+  width: 19.8%;
+  flex-shrink: 0;
+}
+
+@media screen and (min-width: 768px) {
+  .author-novels.container {
+    padding: 26px;
+    background-color: var(--bg-color-2);
+  }
+  .author-novels #header {
+    background-color: var(--bg-color-2);
+  }
+  .author-novels .novel-list .novel-item {
+    height: 6.8rem;
+    width: 100%;
+  }
+  .author-novels .cover-wrap {
+    height: 100%;
+    flex-basis: 10%;
+    width: 22%;
+  }
+  .author-novels .cover-wrap a {
+    height: 100%;
+  }
+}

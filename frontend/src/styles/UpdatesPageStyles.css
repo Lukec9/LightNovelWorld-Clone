@@ -28,6 +28,10 @@
 }
 
 @media screen and (min-width: 768px) {
+  .latest-updates {
+    background-color: var(--bg-color);
+  }
+
   .latest-updates > .container {
     padding: 26px;
     background-color: var(--bg-color-2);
@@ -38,4 +42,12 @@
   .latest-updates .container section.recent-chap .novel-list .novel-item {
     width: calc(50% - 13px);
   }
+}
+
+section.recent-chap .cover-wrap {
+  height: 100%;
+  width: 11.8%;
+}
+section.recent-chap .novel-list .novel-item .cover-wrap .item-cover {
+  width: 100%;
 }

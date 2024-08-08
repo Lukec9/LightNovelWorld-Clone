@@ -19,6 +19,11 @@ import AccountLayout from "./layouts/AccountLayout";
 import RankingLayout from "./layouts/RankingLayout";
 import AccountReviewsPage from "./pages/AccountPages/AccountReviewsPage";
 import AccountInboxPage from "./pages/AccountPages/AccountInboxPage";
+import NoticesPage from "./pages/NoticesPage";
+import NovelPage from "./pages/NovelPages/NovelPage";
+import NovelReviews from "./pages/NovelPages/NovelReviews";
+import NovelChapters from "./pages/NovelPages/NovelChapters";
+import AuthorsNovelsPage from "./pages/AuthorsNovelsPage";
 
 function App() {
   return (
@@ -49,6 +54,13 @@ function App() {
           </Route>
           <Route path="latest-updates" element={<UpdatesPage />} />
           <Route path="searchadv" element={<AdvancedSearchPage />} />
+          <Route path="notices" element={<NoticesPage />} />
+          <Route path="novel/:nid">
+            <Route index element={<NovelPage />} />
+            <Route path="chapters" element={<NovelChapters />} />
+            <Route path="reviews" element={<NovelReviews />} />
+          </Route>
+          <Route path="author/:aname" element={<AuthorsNovelsPage />} />
         </Routes>
         {/* </div> */}
       </main>

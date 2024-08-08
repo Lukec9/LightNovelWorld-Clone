@@ -1,3 +1,7 @@
+.account-pages {
+  background-color: var(--bg-color);
+}
+
 .account-container-box {
   display: flex;
   padding-top: 1rem;
@@ -5,13 +9,14 @@
   padding-left: 13px;
   flex-direction: column;
   width: 100%;
+  background-color: var(--bg-color-2);
 }
 
 .user-info {
   display: flex;
   width: 100%;
   padding: 0 0 0.5rem;
-  border-bottom: 1px solid #292f41;
+  border-bottom: 1px solid var(--border-color);
 }
 
 #pfp {
@@ -26,22 +31,24 @@
 .user-acc-info {
   display: flex;
   flex-direction: column;
-  color: #737783;
+  color: var(--text-color-2);
   font-weight: 500;
 }
 
 .svg-reader {
   height: 18px;
-  color: gray;
+  color: var(--text-color-3);
   margin-right: 0.25rem;
 }
+
 .svg-email {
   height: 18px;
   margin-left: 1rem;
   margin-right: 0.25rem;
 }
+
 .username {
-  color: #adb0b7;
+  color: var(--text-color);
   font-size: 1.5rem;
 }
 
@@ -50,6 +57,7 @@
   align-items: center;
   height: clamp(2rem, 40px, 3rem);
 }
+
 .reader-email p {
   display: flex;
   text-align: center;
@@ -66,27 +74,30 @@ a {
   padding: 0;
   padding-top: 1rem;
   padding-bottom: 1rem;
-  border-bottom: 1px solid #292f41;
+  border-bottom: 1px solid var(--border-color);
 }
 
 .page-item {
   width: calc(33.3333333333% - 8.6666666667px);
   border-radius: 0.475rem;
-  background-color: #292f41;
   text-align: center;
   margin-right: 13px;
   box-sizing: border-box;
-  color: #737783;
+  color: var(--text-color-2);
   padding-top: 0.5rem;
+  background-color: var(--bg-color-4);
   padding-bottom: 0.5rem;
 }
+
 .page-item:not(:nth-child(n + 4)) {
   margin-bottom: 1rem;
 }
+
 .page-item:nth-child(3n + 3) {
   margin-left: 13px;
   margin-right: 0;
 }
+
 .page-item:nth-child(3n + 2) {
   margin-left: 0;
   margin-right: 0;
@@ -100,14 +111,10 @@ a {
 
 .page-item a {
   color: var(--text-color-2);
-  background-color: 2px solid transparent;
+  background-color: transparent;
   cursor: pointer;
   font-weight: 600;
 }
-
-/* .page-item:nth-of-type(3) {
-  margin-right: 0;
-} */
 
 .action-guide svg {
   margin-right: 0.25rem;
@@ -115,7 +122,7 @@ a {
 
 @media screen and (min-width: 768px) {
   .account-container-box {
-    background-color: #1f2639;
+    background-color: var(--bg-color-2);
     padding: 2rem 2.25rem;
     border-radius: 0.475rem;
     margin-bottom: 0;
@@ -124,6 +131,7 @@ a {
   }
 
   .pages-nav-buttons ul {
+    background-color: var(--bg-color-2);
     padding: 0;
     display: flex;
     flex-direction: row;
@@ -137,16 +145,19 @@ a {
     margin-left: 0;
     margin-right: 0;
     margin-bottom: 0;
-    background-color: #1f2639;
+    background: none;
   }
+
   .pages-nav-buttons .page-item a {
     padding-top: 1rem;
     padding-bottom: 13px;
     margin-right: 2rem;
   }
+
   .pages-nav-buttons .library-card a {
     color: var(--anchor-color);
   }
+
   .library-card {
     border-radius: 0;
   }

@@ -3,7 +3,6 @@ import { useEffect, useRef, useState } from "react";
 const RankingPageNovelItem = ({ title, img }) => {
   const scrollContainerRef = useRef(null);
   const [hasOverflow, setHasOverflow] = useState(false);
-  console.log(img);
 
   const checkOverflow = () => {
     if (scrollContainerRef.current) {

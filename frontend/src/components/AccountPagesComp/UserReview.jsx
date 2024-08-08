@@ -15,6 +15,27 @@ const UserReview = () => {
     >
       <meta itemProp="datePublished" content="2024-04-17T19:06:52" />
       <div className="review-info">
+        <div className="review-user-avatar" data-ulvlgrp={1}>
+          <img
+            className="avatar  ls-is-cached lazyloaded"
+            src="/assets/pfp.jpg"
+            alt="Luka T"
+          />
+          <span className="klvl">1</span>
+        </div>
+        <div
+          className="user"
+          itemProp="author"
+          itemType="https://schema.org/Person"
+        >
+          <span className="username" itemProp="sameAs">
+            <strong itemProp="name">Luka T</strong>
+          </span>
+          <div className="sub-items">
+            <span className="tier tier0">Reader</span>
+          </div>
+        </div>
+
         <div className="top-right">
           <span className="onNovel">Grand Ancestral Bloodlines </span>
           <span className="review-date">3 months ago</span>

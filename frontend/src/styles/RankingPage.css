@@ -1,3 +1,7 @@
+.ranking-page {
+  background-color: var(--bg-color);
+}
+
 .container div:has(.ranking-filt) {
   width: 100%;
 }
@@ -129,7 +133,7 @@
   z-index: -1;
 }
 
-.categories > div {
+.ranking-page .categories > div {
   display: flex;
 }
 
@@ -184,7 +188,7 @@ h2.title {
   line-height: 1.5;
   padding: 0 0.4rem;
 }
-.categories {
+.ranking-page .categories {
   overflow-x: hidden;
   pointer-events: auto;
   position: relative;
@@ -196,7 +200,7 @@ h2.title {
   scroll-behavior: smooth;
 }
 
-.categories div.scroll {
+.ranking-page .categories div.scroll {
   scroll-behavior: smooth;
   scrollbar-width: none;
   flex: 1 1 auto;

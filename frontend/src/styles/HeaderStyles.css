@@ -154,11 +154,19 @@ li {
   align-items: center;
 }
 
-/* #header .nav-bar .navbar-menu .gear {
-  border: 1px solid var(--text-color);
-  padding: 0.1rem;
+#header .nav-bar .navbar-menu .bi-gear-wide {
+  width: 100%;
+  height: auto;
+  border: 1px solid #989898;
+  padding: 6px;
+  border-radius: 4px;
 }
-*/
+/* #header .nav-bar .navbar-menu .gear:after {
+  content: "Light Theme";
+  color: var(--text-color);
+  letter-spacing: 0.1rem;
+  margin-left: 0.5rem;
+} */
 
 #header .wrapper .nav-bar .navbar-menu .nav-item,
 #header .wrapper .nav-bar .user-menu .user-item {
@@ -183,6 +191,23 @@ li {
   -webkit-transition: all 0.3s ease-in-out;
   transition: all 0.3s ease-in-out;
   background-color: white;
+}
+@media screen and (max-width: 1024px) {
+  #header .nav-bar .navbar-menu .gear:not(:has(.bi-moon))::after {
+    content: "Light Theme";
+    color: var(--text-color);
+    letter-spacing: 0.1rem;
+    margin-left: 0.5rem;
+  }
+  #header .nav-bar .navbar-menu .gear:has(.bi-moon)::after {
+    content: "Dark Theme";
+    color: var(--text-color);
+    letter-spacing: 0.1rem;
+    margin-left: 0.5rem;
+  }
+  #header .nav-bar .navbarr .gear a {
+    display: flex;
+  }
 }
 
 @media (max-width: 1024px) {
@@ -209,6 +234,10 @@ li {
     margin-right: 1rem;
     margin-top: auto;
     margin-bottom: auto;
+  }
+
+  html[theme="light"] .bar {
+    background-color: black;
   }
 
   .hamburger.active .bar:nth-child(2) {

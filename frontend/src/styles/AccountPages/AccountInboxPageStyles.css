@@ -1,0 +1,42 @@
+.inbox-page.user-panel {
+  margin-top: 1rem;
+  width: 100%;
+  color: var(--text-color);
+  margin-bottom: 2rem;
+}
+
+.inbox-page.user-panel .user-panel-header {
+  border-bottom: 1px solid var(--border-color-4);
+  padding-bottom: 1rem;
+}
+.inbox-page.user-panel .user-panel-header p {
+  margin: 0;
+}
+
+.inbox-page .btn-container {
+  margin-left: 0;
+}
+.inbox-page .btn-container input[type="radio"]:checked + label {
+  padding: 0.4rem 0.6rem 3px;
+  border-bottom: 3px solid var(--bg-color-secondary-4);
+  background-color: var(--bg-color-secondary-2);
+  color: #fff;
+}
+
+.white-boxed {
+  margin-top: 1rem;
+  background-color: #fff;
+  padding: 5%;
+  border-radius: 5px;
+  -webkit-box-shadow: 0 5px 25px -15px rgba(0, 0, 0, 0.5);
+  -webkit-box-shadow: rgba(0, 0, 0, 0.15) 0 2px 8px;
+  box-shadow: rgba(0, 0, 0, 0.15) 0 2px 8px;
+  background-color: var(--bg-color-2);
+}
+
+.white-boxed p {
+  margin-block: 0;
+}
+
+@media screen and (min-width: 768px) {
+}
