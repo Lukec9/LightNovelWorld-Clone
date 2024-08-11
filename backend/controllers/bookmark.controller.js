@@ -1,51 +1,93 @@
 import Bookmark from "../models/bookmark.model.js";
 import Novel from "../models/novel.model.js";
 
-class AppError extends Error {
-  constructor(message, statusCode) {
-    super(message);
-    this.statusCode = statusCode;
-    this.isOperational = true; // Mark operational errors
-    Error.captureStackTrace(this, this.constructor);
+const addBookmark = async (req, res) => {
+  try {
+    const userId = req.user._id;
+    const { novelId } = req.params;
+
+    // Check if the novel exists (optional, but good practice)
+    const novel = await Novel.findById(novelId);
+    if (!novel) {
+      return res.status(404).json({ message: "Novel not found" });
+    }
+
+    const bookmarkCount = await Bookmark.countDocuments({ userId });
+    if (bookmarkCount >= 20) {
+      return res.status(400).json({
+        error:
+          "Bookmark limit reached. Please remove a bookmark before adding a new one.",
+      });
+    }
+
+    const existingBookmark = await Bookmark.findOne({ userId, novelId });
+    if (existingBookmark) {
+      return res.status(400).json({
+        error: "Novel already bookmarked by this user",
+      });
+    }
+
+    await Bookmark.create({ userId, novelId });
+    await Novel.findByIdAndUpdate(novelId, { $inc: { bookmarkCount: 1 } });
+
+    res.status(201).json({ message: "Bookmark added successfully" });
+  } catch (error) {
+    console.error("Error adding bookmark:", error.message);
+    res.status(500).json({ message: "Server error" });
   }
-}
-
-const addBookmark = async (userId, novelId) => {
-  const bookmarkCount = await Bookmark.countDocuments({ userId });
-  if (bookmarkCount >= 20) {
-    throw new AppError(
-      "Bookmark limit reached. Please remove a bookmark before adding a new one.",
-      400
-    );
-  }
-
-  const existingBookmark = await Bookmark.findOne({ userId, novelId });
-  if (existingBookmark) {
-    throw new AppError("Novel already bookmarked by this user", 400);
-  }
-
-  await Bookmark.create({ userId, novelId });
-
-  await Novel.findByIdAndUpdate(novelId, { $inc: { bookmarkCount: 1 } });
 };
 
-const removeBookmark = async (userId, novelId) => {
-  const result = await Bookmark.deleteOne({ userId, novelId });
-  if (result.deletedCount === 0) {
-    throw new AppError("Bookmark not found", 404);
+const removeBookmark = async (req, res) => {
+  try {
+    const userId = req.user._id;
+    const { novelId } = req.params;
+
+    const result = await Bookmark.deleteOne({ userId, novelId });
+    if (result.deletedCount === 0) {
+      return res.status(404).json({ message: "Bookmark not found" });
+    }
+
+    await Novel.findByIdAndUpdate(novelId, { $inc: { bookmarkCount: -1 } });
+
+    res.status(200).json({ message: "Bookmark removed successfully" });
+  } catch (error) {
+    console.error("Error removing bookmark:", error.message);
+    res.status(500).json({ message: "Server error" });
   }
-
-  await Novel.findByIdAndUpdate(novelId, { $inc: { bookmarkCount: -1 } });
 };
 
-const getBookmarkCount = async novelId => {
-  const count = await Bookmark.countDocuments({ novelId });
-  return count;
+// const getBookmarkCount = async (req, res) => {
+//   try {
+//     const { novelId } = req.params;
+
+//     const novel = await Novel.findById(novelId);
+//     if (!novel) {
+//       return res.status(404).json({ message: "Novel not found" });
+//     }
+
+//     const count = await Bookmark.countDocuments({ novelId });
+
+//     res.status(200).json({ count });
+//   } catch (error) {
+//     console.error("Error fetching bookmark count:", error.message);
+//     res.status(500).json({ message: "Server error" });
+//   }
+// };
+
+const getBookmarkedNovels = async (req, res) => {
+  try {
+    const userId = req.user._id;
+
+    const bookmarks = await Bookmark.find({ userId })
+      .populate("novelId")
+      .exec();
+    const novels = bookmarks.map(bookmark => bookmark.novelId);
+
+    res.status(200).json({ novels });
+  } catch (error) {
+    console.error("Error fetching bookmarked novels:", error.message);
+    res.status(500).json({ message: "Server error" });
+  }
 };
 
-const getBookmarkedNovels = async userId => {
-  const bookmarks = await Bookmark.find({ userId }).populate("novelId").exec();
-  return bookmarks.map(bookmark => bookmark.novelId);
-};
-
-export { addBookmark, removeBookmark, getBookmarkCount, getBookmarkedNovels };
+export { addBookmark, removeBookmark, getBookmarkedNovels };

@@ -6,7 +6,6 @@ import LocalStrategy from "passport-local";
 import MongoStore from "connect-mongo";
 import session from "express-session";
 import helmet from "helmet";
-import { v2 as cloudinary } from "cloudinary";
 import mongoSanitize from "express-mongo-sanitize";
 
 import connectDB from "./db/connectDB.js";
@@ -24,12 +23,6 @@ const app = express();
 connectDB();
 
 const PORT = process.env.PORT || 5000;
-
-cloudinary.config({
-  cloud_name: process.env.CLOUDINARY_NAME,
-  api_key: process.env.CLOUDINARY_API_KEY,
-  api_secret: process.env.CLOUDINARY_API_SECRET,
-});
 
 app.use(express.json({ limit: "5mb" }));
 app.use(express.urlencoded({ extended: true }));

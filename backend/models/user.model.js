@@ -21,6 +21,10 @@ const UserSchema = mongoose.Schema(
     lastActivity: {
       type: Date,
     },
+    profilePic: {
+      type: String,
+      default: "",
+    },
   },
   { timestamps: true }
 );

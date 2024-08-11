@@ -1,16 +1,23 @@
 import mongoose from "mongoose";
 
+const chapterSchema = new mongoose.Schema({
+  title: { type: String, required: true },
+  textFileUrl: { type: String, required: true },
+  chapterNumber: { type: Number, required: true },
+});
+
 const novelSchema = new mongoose.Schema(
   {
     title: { type: String, required: true, unique: true },
     slugTitle: { type: String, required: true, unique: true },
+    cover: { type: String, required: true },
     author: { type: String, required: true },
     summary: { type: String, required: true },
     categories: [{ type: String, required: true }],
-    tags: [{ type: String }],
+    tags: [{ type: String, required: true }],
     rating: { type: Number, min: 0, max: 5 },
     rank: { type: Number },
-    chapters: [{ type: String }],
+    chapters: [chapterSchema],
     views: { type: Number, default: 0 },
     bookmarkCount: { type: Number, default: 0 },
     status: {
