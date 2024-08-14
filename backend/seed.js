@@ -6,328 +6,238 @@ dotenv.config();
 
 const sampleNovels = [
   {
-    title: "The Celestial Voyage",
-    slugTitle: "the-celestial-voyage",
-    cover: "https://example.com/covers/the-celestial-voyage.jpg",
-    author: "Luna Star",
+    title: "Omniscient Reader's Viewpoint",
+    slugTitle: "omniscient-readers-viewpoint",
+    cover: "https://example.com/omniscient-readers-viewpoint-cover.jpg",
+    author: "Sing-Shong",
     summary:
-      "In a world where the stars are the ultimate destination, follow the journey of Captain Liora as she navigates through interstellar adventures, ancient prophecies, and cosmic battles.",
-    categories: ["Sci-Fi", "Adventure"],
-    tags: ["Space", "Exploration", "Epic"],
-    rating: 4.7,
-    rank: 1,
-    chapters: [
-      {
-        title: "Chapter 1: The Awakening",
-        textFileUrl:
-          "https://example.com/chapters/the-celestial-voyage/chapter-1.txt",
-        chapterNumber: 1,
-      },
-      {
-        title: "Chapter 2: The First Encounter",
-        textFileUrl:
-          "https://example.com/chapters/the-celestial-voyage/chapter-2.txt",
-        chapterNumber: 2,
-      },
-      // Add more chapters as needed
-    ],
-    views: 15000,
-    bookmarkCount: 2000,
-    status: "Ongoing",
-  },
-  {
-    title: "Mystic Realms",
-    slugTitle: "mystic-realms",
-    cover: "https://example.com/covers/mystic-realms.jpg",
-    author: "Aria Moon",
-    summary:
-      "When the barriers between worlds begin to break down, a young mage must uncover ancient secrets to save her realm from impending doom.",
-    categories: ["Fantasy", "Magic"],
-    tags: ["Wizards", "Adventure", "Mystery"],
-    rating: 4.5,
-    rank: 2,
-    chapters: [
-      {
-        title: "Chapter 1: The Prophecy Revealed",
-        textFileUrl: "https://example.com/chapters/mystic-realms/chapter-1.txt",
-        chapterNumber: 1,
-      },
-      {
-        title: "Chapter 2: The Forbidden Forest",
-        textFileUrl: "https://example.com/chapters/mystic-realms/chapter-2.txt",
-        chapterNumber: 2,
-      },
-      // Add more chapters as needed
-    ],
-    views: 12000,
-    bookmarkCount: 1500,
-    status: "Completed",
-  },
-  {
-    title: "Digital Nightmare",
-    slugTitle: "digital-nightmare",
-    cover: "https://example.com/covers/digital-nightmare.jpg",
-    author: "Jake Winters",
-    summary:
-      "In a near-future society where virtual reality is indistinguishable from the real world, a hacker stumbles upon a digital conspiracy that threatens the very fabric of reality.",
-    categories: ["Cyberpunk", "Thriller"],
-    tags: ["Hacking", "Virtual Reality", "Conspiracy"],
-    rating: 4.8,
+      "A novel reader finds himself in a world he only read about. With the power of omniscient knowledge, he aims to survive and thrive in this new reality.",
+    categories: ["Action", "Fantasy", "Adventure"],
+    tags: ["Isekai", "Survival", "Drama"],
+    rating: 4.9,
     rank: 3,
     chapters: [
       {
-        title: "Chapter 1: The Glitch",
+        title: "Chapter 1: The Beginning",
         textFileUrl:
-          "https://example.com/chapters/digital-nightmare/chapter-1.txt",
+          "https://example.com/omniscient-readers-viewpoint-chapter-1.txt",
         chapterNumber: 1,
-      },
-      {
-        title: "Chapter 2: Into the Void",
-        textFileUrl:
-          "https://example.com/chapters/digital-nightmare/chapter-2.txt",
-        chapterNumber: 2,
       },
       // Add more chapters as needed
     ],
-    views: 20000,
-    bookmarkCount: 2500,
+    views: 1200000,
+    bookmarkCount: 60000,
     status: "Ongoing",
   },
   {
-    title: "Echoes of Eternity",
-    slugTitle: "echoes-of-eternity",
-    cover: "https://example.com/covers/echoes-of-eternity.jpg",
-    author: "Ella Frost",
+    title: "Overgeared",
+    slugTitle: "overgeared",
+    cover: "https://example.com/overgeared-cover.jpg",
+    author: "Park Saenal",
     summary:
-      "An ancient evil awakens in a forgotten land. A young hero must rally an unlikely group of allies to prevent the end of all existence.",
-    categories: ["Epic", "Adventure"],
-    tags: ["Heroic Journey", "Ancient Evils", "Alliances"],
+      "An unlucky player in a virtual reality game becomes incredibly powerful after finding a legendary item. He starts on a journey to become the strongest.",
+    categories: ["Action", "Adventure", "Fantasy"],
+    tags: ["Game", "VR", "Power-Up"],
     rating: 4.6,
     rank: 4,
     chapters: [
       {
-        title: "Chapter 1: The Awakening",
-        textFileUrl:
-          "https://example.com/chapters/echoes-of-eternity/chapter-1.txt",
+        title: "Chapter 1: The Legendary Item",
+        textFileUrl: "https://example.com/overgeared-chapter-1.txt",
         chapterNumber: 1,
-      },
-      {
-        title: "Chapter 2: The Gathering Storm",
-        textFileUrl:
-          "https://example.com/chapters/echoes-of-eternity/chapter-2.txt",
-        chapterNumber: 2,
       },
       // Add more chapters as needed
     ],
-    views: 18000,
-    bookmarkCount: 2200,
-    status: "Dropped",
+    views: 950000,
+    bookmarkCount: 45000,
+    status: "Ongoing",
   },
   {
-    title: "The Alchemist's Daughter",
-    slugTitle: "the-alchemists-daughter",
-    cover: "https://example.com/covers/the-alchemists-daughter.jpg",
-    author: "Sophia Black",
+    title: "Reverend Insanity",
+    slugTitle: "reverend-insanity",
+    cover: "https://example.com/reverend-insanity-cover.jpg",
+    author: "Gu Zhen Ren",
     summary:
-      "A young woman discovers her hidden alchemical powers and embarks on a quest to uncover the truth about her family's mysterious past.",
-    categories: ["Historical", "Mystery"],
-    tags: ["Alchemy", "Family Secrets", "Historical Drama"],
-    rating: 4.4,
+      "A scheming immortal cultivator reincarnates into a world of martial arts and uses his vast knowledge to manipulate and ascend to the top.",
+    categories: ["Action", "Fantasy", "Adventure"],
+    tags: ["Cultivation", "Immortality", "Strategy"],
+    rating: 4.8,
     rank: 5,
     chapters: [
       {
-        title: "Chapter 1: The Secret Laboratory",
-        textFileUrl:
-          "https://example.com/chapters/the-alchemists-daughter/chapter-1.txt",
+        title: "Chapter 1: The Rebirth",
+        textFileUrl: "https://example.com/reverend-insanity-chapter-1.txt",
         chapterNumber: 1,
-      },
-      {
-        title: "Chapter 2: The Hidden Legacy",
-        textFileUrl:
-          "https://example.com/chapters/the-alchemists-daughter/chapter-2.txt",
-        chapterNumber: 2,
       },
       // Add more chapters as needed
     ],
-    views: 10000,
-    bookmarkCount: 1200,
-    status: "Completed",
+    views: 800000,
+    bookmarkCount: 35000,
+    status: "Ongoing",
   },
   {
-    title: "Grand Ancestral Bloodlines",
-    slugTitle: "grand-ancestral-bloodlines",
-    cover: "https://example.com/covers/grand-ancestral-bloodlines.jpg",
-    author: "Unknown Author",
+    title: "The Legendary Mechanic",
+    slugTitle: "the-legendary-mechanic",
+    cover: "https://example.com/the-legendary-mechanic-cover.jpg",
+    author: "Qi Peijia",
     summary:
-      "In a world where bloodlines dictate power and status, a young man with an ordinary lineage embarks on a journey to uncover ancient secrets and forge his own destiny.",
-    categories: ["Fantasy", "Adventure"],
-    tags: ["Bloodlines", "Cultivation", "Secrets"],
-    rating: 4.6,
+      "In a futuristic world, a mechanic becomes the ultimate legend through his knowledge of technology and systems in a game-like environment.",
+    categories: ["Action", "Sci-Fi", "Adventure"],
+    tags: ["Mechanics", "Futuristic", "Game"],
+    rating: 4.7,
     rank: 6,
     chapters: [
       {
-        title: "Chapter 1: The Awakening",
-        textFileUrl:
-          "https://example.com/chapters/grand-ancestral-bloodlines/chapter-1.txt",
+        title: "Chapter 1: Awakening",
+        textFileUrl: "https://example.com/the-legendary-mechanic-chapter-1.txt",
         chapterNumber: 1,
-      },
-      {
-        title: "Chapter 2: The Hidden Legacy",
-        textFileUrl:
-          "https://example.com/chapters/grand-ancestral-bloodlines/chapter-2.txt",
-        chapterNumber: 2,
       },
       // Add more chapters as needed
     ],
-    views: 8000,
-    bookmarkCount: 900,
+    views: 900000,
+    bookmarkCount: 40000,
     status: "Ongoing",
   },
   {
-    title: "Supreme Lord",
-    slugTitle: "supreme-lord",
-    cover: "https://example.com/covers/supreme-lord.jpg",
-    author: "Unknown Author",
+    title: "Trash of the Count's Family",
+    slugTitle: "trash-of-the-counts-family",
+    cover: "https://example.com/trash-of-the-counts-family-cover.jpg",
+    author: "Yoo Ryeo Han",
     summary:
-      "A mortal man is reborn in a world of gods and demons with the title of 'Supreme Lord.' With unparalleled power, he must navigate divine politics and confront ancient enemies.",
-    categories: ["Fantasy", "Action"],
-    tags: ["Rebirth", "Power", "Divine"],
-    rating: 4.7,
+      "A man reborn as the weak and useless member of a noble family uses his knowledge from his previous life to change his fate and protect his new world.",
+    categories: ["Action", "Fantasy", "Drama"],
+    tags: ["Noble", "Rebirth", "Strategy"],
+    rating: 4.5,
     rank: 7,
     chapters: [
       {
-        title: "Chapter 1: The Rebirth",
-        textFileUrl: "https://example.com/chapters/supreme-lord/chapter-1.txt",
+        title: "Chapter 1: The Useless Noble",
+        textFileUrl:
+          "https://example.com/trash-of-the-counts-family-chapter-1.txt",
         chapterNumber: 1,
-      },
-      {
-        title: "Chapter 2: The Divine Trial",
-        textFileUrl: "https://example.com/chapters/supreme-lord/chapter-2.txt",
-        chapterNumber: 2,
       },
       // Add more chapters as needed
     ],
-    views: 9000,
-    bookmarkCount: 1200,
+    views: 700000,
+    bookmarkCount: 30000,
     status: "Ongoing",
   },
   {
-    title: "True Martial World",
-    slugTitle: "true-martial-world",
-    cover: "https://example.com/covers/true-martial-world.jpg",
-    author: "Unknown Author",
+    title: "Second Life Ranker",
+    slugTitle: "second-life-ranker",
+    cover: "https://example.com/second-life-ranker-cover.jpg",
+    author: "Sadoyeon",
     summary:
-      "In the True Martial World, where strength is everything, a young cultivator seeks to rise above his peers, uncovering hidden powers and ancient martial arts techniques along the way.",
-    categories: ["Martial Arts", "Adventure"],
-    tags: ["Cultivation", "Martial Arts", "Power"],
-    rating: 4.8,
+      "A man who dies and reincarnates into a game world takes revenge and climbs to the top of the rankings with his knowledge from his past life.",
+    categories: ["Action", "Adventure", "Fantasy"],
+    tags: ["Reincarnation", "Game", "Ranking"],
+    rating: 4.6,
     rank: 8,
     chapters: [
       {
-        title: "Chapter 1: The Martial Awakening",
-        textFileUrl:
-          "https://example.com/chapters/true-martial-world/chapter-1.txt",
+        title: "Chapter 1: The Fall",
+        textFileUrl: "https://example.com/second-life-ranker-chapter-1.txt",
         chapterNumber: 1,
-      },
-      {
-        title: "Chapter 2: The Hidden Arts",
-        textFileUrl:
-          "https://example.com/chapters/true-martial-world/chapter-2.txt",
-        chapterNumber: 2,
       },
       // Add more chapters as needed
     ],
-    views: 11000,
-    bookmarkCount: 1400,
+    views: 750000,
+    bookmarkCount: 32000,
     status: "Ongoing",
   },
   {
-    title: "Martial World",
-    slugTitle: "martial-world",
-    cover: "https://example.com/covers/martial-world.jpg",
-    author: "Unknown Author",
+    title: "Reincarnation Of The Strongest Sword God",
+    slugTitle: "reincarnation-of-the-strongest-sword-god",
+    cover:
+      "https://example.com/reincarnation-of-the-strongest-sword-god-cover.jpg",
+    author: "Lucky Old Cat",
     summary:
-      "In a world where martial arts reign supreme, a young warrior sets out to challenge the established order and uncover the truth about his mysterious origins.",
-    categories: ["Martial Arts", "Action"],
-    tags: ["Cultivation", "Adventure", "Combat"],
-    rating: 4.5,
+      "A legendary swordsman is reincarnated into a new world, retaining all his previous skills and knowledge to achieve new heights of power.",
+    categories: ["Action", "Fantasy", "Adventure"],
+    tags: ["Swordsmanship", "Reincarnation", "Action"],
+    rating: 4.4,
     rank: 9,
     chapters: [
       {
-        title: "Chapter 1: The Martial Path",
-        textFileUrl: "https://example.com/chapters/martial-world/chapter-1.txt",
+        title: "Chapter 1: New Beginning",
+        textFileUrl:
+          "https://example.com/reincarnation-of-the-strongest-sword-god-chapter-1.txt",
         chapterNumber: 1,
-      },
-      {
-        title: "Chapter 2: The First Battle",
-        textFileUrl: "https://example.com/chapters/martial-world/chapter-2.txt",
-        chapterNumber: 2,
       },
       // Add more chapters as needed
     ],
-    views: 9500,
-    bookmarkCount: 1300,
-    status: "Completed",
-  },
-  {
-    title: "Infinite Mana in the Apocalypse",
-    slugTitle: "infinite-mana-in-the-apocalypse",
-    cover: "https://example.com/covers/infinite-mana-in-the-apocalypse.jpg",
-    author: "Unknown Author",
-    summary:
-      "During the apocalypse, where the world has been devastated by monsters and chaos, a young man discovers he has infinite mana, allowing him to change the course of humanity’s fate.",
-    categories: ["Apocalypse", "Fantasy"],
-    tags: ["Survival", "Mana", "Rebirth"],
-    rating: 4.7,
-    rank: 10,
-    chapters: [
-      {
-        title: "Chapter 1: The Awakening of Mana",
-        textFileUrl:
-          "https://example.com/chapters/infinite-mana-in-the-apocalypse/chapter-1.txt",
-        chapterNumber: 1,
-      },
-      {
-        title: "Chapter 2: The New World",
-        textFileUrl:
-          "https://example.com/chapters/infinite-mana-in-the-apocalypse/chapter-2.txt",
-        chapterNumber: 2,
-      },
-      // Add more chapters as needed
-    ],
-    views: 10500,
-    bookmarkCount: 1600,
+    views: 650000,
+    bookmarkCount: 28000,
     status: "Ongoing",
   },
   {
-    title: "Supremacy Games",
-    slugTitle: "supremacy-games",
-    cover: "https://example.com/covers/supremacy-games.jpg",
-    author: "Unknown Author",
+    title: "My Vampire System",
+    slugTitle: "my-vampire-system",
+    cover: "https://example.com/my-vampire-system-cover.jpg",
+    author: "Jksmanga",
     summary:
-      "In a dystopian future where entertainment is controlled by a powerful corporation, participants in the Supremacy Games must fight for their lives and freedom while uncovering dark secrets about the world.",
-    categories: ["Dystopian", "Action"],
-    tags: ["Games", "Survival", "Conspiracy"],
-    rating: 4.4,
-    rank: 11,
+      "A high school student becomes a vampire and discovers a hidden world of supernatural beings, using his new powers to protect himself and those he loves.",
+    categories: ["Action", "Fantasy", "Supernatural"],
+    tags: ["Vampire", "Supernatural", "High School"],
+    rating: 4.5,
+    rank: 10,
     chapters: [
       {
-        title: "Chapter 1: The Game Begins",
-        textFileUrl:
-          "https://example.com/chapters/supremacy-games/chapter-1.txt",
+        title: "Chapter 1: The Transformation",
+        textFileUrl: "https://example.com/my-vampire-system-chapter-1.txt",
         chapterNumber: 1,
-      },
-      {
-        title: "Chapter 2: The Fight for Survival",
-        textFileUrl:
-          "https://example.com/chapters/supremacy-games/chapter-2.txt",
-        chapterNumber: 2,
       },
       // Add more chapters as needed
     ],
-    views: 8500,
-    bookmarkCount: 1000,
-    status: "Completed",
+    views: 600000,
+    bookmarkCount: 27000,
+    status: "Ongoing",
+  },
+  {
+    title: "Lord of the Mysteries",
+    slugTitle: "lord-of-the-mysteries",
+    cover: "https://example.com/lord-of-the-mysteries-cover.jpg",
+    author: "Cuttlefish That Loves Diving",
+    summary:
+      "A world where mystery and occultism intertwine, following a young man who uncovers hidden secrets and navigates the dangers of a world filled with supernatural occurrences.",
+    categories: ["Mystery", "Fantasy", "Adventure"],
+    tags: ["Occult", "Mystery", "Supernatural"],
+    rating: 4.8,
+    rank: 11,
+    chapters: [
+      {
+        title: "Chapter 1: The Enigma Begins",
+        textFileUrl: "https://example.com/lord-of-the-mysteries-chapter-1.txt",
+        chapterNumber: 1,
+      },
+      // Add more chapters as needed
+    ],
+    views: 700000,
+    bookmarkCount: 35000,
+    status: "Ongoing",
+  },
+  {
+    title: "Supreme Magus",
+    slugTitle: "supreme-magus",
+    cover: "https://example.com/supreme-magus-cover.jpg",
+    author: "Legion20",
+    summary:
+      "A powerful mage is reincarnated into a world where magic is central to society. Using his vast knowledge and strength, he aims to become the supreme magus.",
+    categories: ["Action", "Fantasy", "Magic"],
+    tags: ["Magic", "Reincarnation", "Power"],
+    rating: 4.7,
+    rank: 12,
+    chapters: [
+      {
+        title: "Chapter 1: A New Era of Magic",
+        textFileUrl: "https://example.com/supreme-magus-chapter-1.txt",
+        chapterNumber: 1,
+      },
+      // Add more chapters as needed
+    ],
+    views: 800000,
+    bookmarkCount: 33000,
+    status: "Ongoing",
   },
 ];
 

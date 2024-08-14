@@ -1,7 +1,9 @@
 import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
+import { useAuthContext } from "../context/AuthContext";
 
 const AccountContainer = () => {
+  const { state } = useAuthContext();
   const [activePage, setActivePage] = useState("/account");
   const location = useLocation();
   const path = location.pathname;
@@ -17,10 +19,10 @@ const AccountContainer = () => {
     <div className="account-container-box">
       <div className="user-info">
         <div className="profile-image">
-          <img id="pfp" src="/assets/pfp.jpg" alt="MrLukec" />
+          <img id="pfp" src={state.user.profilePic} alt={state.user.username} />
         </div>
         <div className="user-acc-info">
-          <div className="username">MrLukec</div>
+          <div className="username">{state.user.username}</div>
           <div className="reader-email">
             <p>
               <svg
@@ -41,7 +43,7 @@ const AccountContainer = () => {
                   fill="white"
                 />
               </svg>
-              Reader
+              {state.user.rank}
             </p>
             <p>
               <svg
@@ -62,7 +64,7 @@ const AccountContainer = () => {
                   fill="white"
                 />
               </svg>
-              tluka234@gmail.com
+              {state.user.email}
             </p>
           </div>
         </div>

@@ -38,12 +38,7 @@ const novelValidation = [
     .notEmpty()
     .withMessage("Slug title is required"),
 
-  body("cover")
-    .isString()
-    .trim()
-    // .escape()
-    .notEmpty()
-    .withMessage("Cover is required"),
+  body("cover").isString().notEmpty().withMessage("Cover is required"),
 
   body("author")
     .isString()
@@ -191,6 +186,7 @@ const userValidation = [
     .withMessage("About section must be a string"),
 
   body("rank")
+    .optional()
     .default("Reader")
     .isIn(["Reader", "Admin", "Moderator"])
     .withMessage("Rank must be one of: Reader, Admin, Moderator")
@@ -203,10 +199,9 @@ const userValidation = [
     .withMessage("Last activity must be a valid date"),
 
   body("profilePic")
-    .optional()
+    .optional({ nullable: true })
+
     .isString()
-    .trim()
-    .escape()
     .withMessage("Profile picture URL must be a string"),
 ];
 

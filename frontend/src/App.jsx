@@ -1,5 +1,5 @@
 import "./App.css";
-import { Route, Routes } from "react-router-dom";
+import { Navigate, Route, Routes } from "react-router-dom";
 
 import Header from "./components/Header";
 import Footer from "./components/Footer";
@@ -14,18 +14,27 @@ import AdvancedSearchPage from "./pages/AdvancedSearchPage";
 import AccountPage from "./pages/AccountPages/AccountPage";
 import AccountHistoryPage from "./pages/AccountPages/AccountHistoryPage";
 import AccountCommentsPage from "./pages/AccountPages/AccountCommentsPage";
-
-import AccountLayout from "./layouts/AccountLayout";
-import RankingLayout from "./layouts/RankingLayout";
 import AccountReviewsPage from "./pages/AccountPages/AccountReviewsPage";
 import AccountInboxPage from "./pages/AccountPages/AccountInboxPage";
 import NoticesPage from "./pages/NoticesPage";
 import NovelPage from "./pages/NovelPages/NovelPage";
+import AuthorsNovelsPage from "./pages/AuthorsNovelsPage";
 import NovelReviews from "./pages/NovelPages/NovelReviews";
 import NovelChapters from "./pages/NovelPages/NovelChapters";
-import AuthorsNovelsPage from "./pages/AuthorsNovelsPage";
+
+import AccountLayout from "./layouts/AccountLayout";
+import RankingLayout from "./layouts/RankingLayout";
+
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import AuthPage from "./pages/AuthPage";
+import { useAuthContext } from "./context/AuthContext";
+import Spinner from "./components/Spinner";
 
 function App() {
+  const { state } = useAuthContext();
+  if (state.loading) return <Spinner />;
+
   return (
     <div className="app">
       <Header />
@@ -34,7 +43,11 @@ function App() {
         {/* <div className="container"> */}
         <Routes>
           <Route index element={<HomePage />} />
-          <Route path="account" element={<AccountLayout />}>
+
+          <Route
+            path="account"
+            element={state.user ? <AccountLayout /> : <Navigate to="/auth" />}
+          >
             <Route index element={<AccountPage />} />
             <Route path="library" element={<LibraryPage />} />
             <Route path="history" element={<AccountHistoryPage />} />
@@ -44,6 +57,10 @@ function App() {
           </Route>
           <Route path="search" element={<SearchPage />} />
           <Route path="browse" element={<BrowsePage />} />
+          <Route
+            path="auth"
+            element={!state.user ? <AuthPage /> : <Navigate to="/" />}
+          />
           <Route path="ranking" element={<RankingLayout />}>
             <Route index element={<RankingPage />} />
             <Route path="rating" element={<RankingPage />} />
@@ -65,6 +82,17 @@ function App() {
         {/* </div> */}
       </main>
       <Footer />
+      <ToastContainer
+        position="bottom-center"
+        autoClose={5000}
+        hideProgressBar={true}
+        newestOnTop={true}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        pauseOnHover
+        theme="colored"
+      />
     </div>
   );
 }

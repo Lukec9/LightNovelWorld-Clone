@@ -208,6 +208,11 @@ li {
   #header .nav-bar .navbarr .gear a {
     display: flex;
   }
+
+  .login-wrap-nav {
+    max-width: none;
+    width: 100%;
+  }
 }
 
 @media (max-width: 1024px) {
@@ -350,6 +355,22 @@ li {
 }
 
 @media (max-width: 768px) {
+  .login-wrap-nav .login {
+    text-decoration: none;
+    text-transform: uppercase;
+    -webkit-transition: 0.3s;
+    -o-transition: 0.3s;
+    transition: 0.3s;
+    text-align: center;
+    white-space: nowrap;
+    width: 100%;
+    display: block;
+    line-height: 1.5;
+    height: auto;
+    font-size: 1rem;
+    padding: 0.5rem 1rem 0.5rem;
+  }
+
   .nav-bar.active {
     right: 0;
     top: 90px;

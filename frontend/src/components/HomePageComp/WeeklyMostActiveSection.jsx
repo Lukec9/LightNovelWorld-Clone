@@ -16,7 +16,7 @@ const WeeklyMostActiveSection = () => {
       </div>{" "}
       <div className="section-body">
         <div className="novel-list">
-          {Array(12)
+          {/* {Array(12)
             .fill(null)
             .map((_, i) => (
               <NovelItem
@@ -26,7 +26,7 @@ const WeeklyMostActiveSection = () => {
                 chapters={"1000"}
                 img={"/assets/00892-the-steward-demonic-emperor.jpg"}
               />
-            ))}
+            ))} */}
         </div>
       </div>
     </section>

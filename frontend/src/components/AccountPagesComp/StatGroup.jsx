@@ -10,15 +10,26 @@ const StatGroup = ({ cstats, rstats, nstats, kstats }) => {
         {kstats && "Karma Stats"}
       </div>
       <div className="stat-items">
-        {cstats?.map((stat, i) => (
-          <Item key={i} name={stat.name} value={stat.value} />
-        ))}
-        {rstats?.map((stat, i) => (
-          <Item key={i} name={stat.name} value={stat.value} />
-        ))}
-        {nstats?.map((stat, i) => (
-          <Item key={i} name={stat.name} value={stat.value} />
-        ))}
+        {cstats && (
+          <>
+            <Item name={"Comments"} value={cstats.totalComments} />
+            <Item name={"Likes"} value={cstats.totalLikes} />
+            <Item name={"Dislikes"} value={cstats.totalDislikes} />
+          </>
+        )}
+        {rstats && (
+          <>
+            <Item name={"Reviews"} value={rstats.totalReviews} />
+            <Item name={"Likes"} value={rstats.totalLikes} />
+            <Item name={"Dislikes"} value={rstats.totalDislikes} />
+          </>
+        )}
+        {nstats && (
+          <>
+            <Item name={"Bookmarked Novels"} value={nstats.bookmarkedNovels} />
+            <Item name={"Bookmarked Novels"} value={nstats.novelsRead} />
+          </>
+        )}
         {kstats?.map((stat, i) => (
           <Item key={i} name={stat.name} value={stat.value} />
         ))}

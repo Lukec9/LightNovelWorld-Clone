@@ -15,7 +15,7 @@ const NewNovelSection = () => {
       </div>
       <div className="section-body">
         <ul className="novel-list">
-          {Array(12)
+          {/* {Array(12)
             .fill(null)
             .map((_, i) => (
               <NovelItem
@@ -25,7 +25,7 @@ const NewNovelSection = () => {
                 chapters={"1000"}
                 img={"/assets/01296-grand-ancestral-bloodlines.jpg"}
               />
-            ))}
+            ))} */}
         </ul>
       </div>
     </section>

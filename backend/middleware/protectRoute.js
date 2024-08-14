@@ -4,7 +4,7 @@ const protectRoute = (req, res, next) => {
       return next();
     }
   } catch (error) {
-    console.error("Error in updateUser: ", error.message);
+    console.error("Error in protectUser: ", error.message);
     res.status(401).json({ error: "Unathorized" });
   }
 };

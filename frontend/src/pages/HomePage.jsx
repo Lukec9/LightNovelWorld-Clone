@@ -47,19 +47,19 @@ const HomePage = () => {
         </div>
       </section>
       <Suspense fallback={<Spinner />}>
-        <CompletedStoriesSection />
+        <NewNovelSection />
       </Suspense>
       <Suspense fallback={<Spinner />}>
-        <NewNovelSection />
+        <WeeklyMostActiveSection />
       </Suspense>
       <Suspense fallback={<Spinner />}>
         <NovelRankingSection />
       </Suspense>
       <Suspense fallback={<Spinner />}>
-        <RecentlyAddedChaptersSection />
+        <CompletedStoriesSection />
       </Suspense>
       <Suspense fallback={<Spinner />}>
-        <WeeklyMostActiveSection />
+        <RecentlyAddedChaptersSection />
       </Suspense>
     </div>
   );

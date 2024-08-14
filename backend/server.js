@@ -7,6 +7,7 @@ import MongoStore from "connect-mongo";
 import session from "express-session";
 import helmet from "helmet";
 import mongoSanitize from "express-mongo-sanitize";
+import cors from "cors";
 
 import connectDB from "./db/connectDB.js";
 import User from "./models/user.model.js";
@@ -24,6 +25,12 @@ connectDB();
 
 const PORT = process.env.PORT || 5000;
 
+app.use(
+  cors({
+    origin: "http://localhost:3000",
+    credentials: true,
+  })
+);
 app.use(express.json({ limit: "5mb" }));
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());

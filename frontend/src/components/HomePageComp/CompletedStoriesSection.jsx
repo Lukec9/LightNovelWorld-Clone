@@ -1,7 +1,30 @@
-import React from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import NovelItem from "./NovelItem";
+import axiosInstance from "../../axios";
+import notify from "../../utils/toastUtil";
+import { toast } from "react-toastify";
 
 const CompletedStoriesSection = () => {
+  const [compNovels, setCompNovels] = useState([]);
+
+  const getCompNovels = useCallback(async () => {
+    try {
+      const response = await axiosInstance.get(
+        "/novels?limit=12&status=Ongoing"
+      );
+      if (response && response.data) {
+        setCompNovels(response.data.novels);
+      }
+    } catch (error) {
+      console.error("Error fetching compnovels:", error);
+      notify("error", "Something went wrong!");
+    }
+  }, []);
+
+  useEffect(() => {
+    getCompNovels();
+  }, [getCompNovels]);
+
   return (
     <section className="container vspace">
       <div className="section-header">
@@ -16,18 +39,9 @@ const CompletedStoriesSection = () => {
       </div>{" "}
       <div className="section-body">
         <div className="novel-list">
-          {Array(12)
-            .fill(null)
-            .map((_, i) => (
-              <NovelItem
-                key={i}
-                title={"Author's pov"}
-                rank={1}
-                chapters={"1000"}
-                completedS={true}
-                img={"/assets/01238-the-authors-pov.jpg"}
-              />
-            ))}
+          {compNovels.map(novel => (
+            <NovelItem key={novel._id} novel={novel} />
+          ))}
         </div>
       </div>
     </section>

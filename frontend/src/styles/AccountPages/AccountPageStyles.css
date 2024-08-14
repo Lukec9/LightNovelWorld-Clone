@@ -402,3 +402,23 @@
     padding-left: 1em;
   }
 }
+
+dialog::backdrop {
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+.modal-section {
+  display: inline-block;
+  text-align: left;
+  vertical-align: middle;
+  font-size: 18px;
+  width: 598px;
+  max-width: 95%;
+  min-height: 100px;
+  padding: 1rem;
+  border: 2px solid var(--border-color-4);
+  border-radius: 6px;
+  background-color: var(--bg-color-2);
+  -webkit-box-shadow: 0 6px 15px 0 rgba(0, 0, 0, 0.9);
+  box-shadow: 0 6px 15px 0 rgba(0, 0, 0, 0.9);
+}

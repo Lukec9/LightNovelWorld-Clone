@@ -1081,3 +1081,7 @@ a {
 .item-stats .summary {
   display: none;
 }
+
+.Toastify__toast-container {
+  z-index: 200000;
+}
