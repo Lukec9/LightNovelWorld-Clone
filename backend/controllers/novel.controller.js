@@ -55,13 +55,18 @@ const createNovel = async (req, res) => {
     return res.status(400).json({ message: "Invalid status value." });
   }
 
+  const session = await mongoose.startSession();
+  session.startTransaction();
+
   try {
     const slugTitle = slugify(title);
 
     const existingNovel = await Novel.findOne({
       $or: [{ title }, { slugTitle }],
-    });
+    }).session(session);
     if (existingNovel) {
+      await session.abortTransaction();
+      session.endSession();
       return res.status(400).json({ message: "Novel already exists." });
     }
 
@@ -78,11 +83,17 @@ const createNovel = async (req, res) => {
       status,
     });
 
-    await newNovel.save();
+    await newNovel.save({ session });
+
+    await session.commitTransaction();
+    session.endSession();
+
     return res
       .status(201)
       .json({ message: "Novel created successfully", novel: newNovel });
   } catch (error) {
+    await session.abortTransaction();
+    session.endSession();
     console.error("error in createNovel: ", error.message);
     return res.status(500).json({ error: error.message });
   }
@@ -130,10 +141,17 @@ const addChaptersToNovel = async (req, res) => {
       .json({ error: "Number of files must match the number of chapters" });
   }
 
+  const session = await mongoose.startSession();
+  session.startTransaction();
+
   try {
     // Fetch the novel to check for existing chapters
-    const novel = await Novel.findById(novelId).select("chapters");
+    const novel = await Novel.findById(novelId)
+      .select("chapters")
+      .session(session);
     if (!novel) {
+      await session.abortTransaction();
+      session.endSession();
       return res.status(404).json({ error: "Novel not found" });
     }
 
@@ -152,6 +170,8 @@ const addChaptersToNovel = async (req, res) => {
     );
 
     if (conflictingChapters.length > 0) {
+      await session.abortTransaction();
+      session.endSession();
       return res.status(400).json({
         error: `Chapters with the following numbers already exist: ${conflictingChapters.join(
           ", "
@@ -175,15 +195,23 @@ const addChaptersToNovel = async (req, res) => {
 
     // Add new chapters to the novel
     novel.chapters.push(...chapterData);
-    const updatedNovel = await novel.save();
+    const updatedNovel = await novel.save({ session });
+
+    await session.commitTransaction();
+    session.endSession();
 
     res.status(201).json({ success: true, novel: updatedNovel });
   } catch (error) {
+    await session.abortTransaction();
+    session.endSession();
     res.status(500).json({ error: "Error adding chapters: " + error.message });
   }
 };
 
 const removeChaptersFromNovel = async (req, res) => {
+  const session = await mongoose.startSession();
+  session.startTransaction();
+
   try {
     let { novelId } = req.params;
     const { chapterIds } = req.body;
@@ -191,6 +219,8 @@ const removeChaptersFromNovel = async (req, res) => {
 
     // Validate the input
     if (!Array.isArray(chapterIds) || chapterIds.length === 0) {
+      await session.abortTransaction();
+      session.endSession();
       return res
         .status(400)
         .json({ error: "No chapter IDs provided or invalid format." });
@@ -199,47 +229,80 @@ const removeChaptersFromNovel = async (req, res) => {
     // Validate that each chapterId is a valid ObjectId
     for (const id of chapterIds) {
       if (!mongoose.Types.ObjectId.isValid(id)) {
+        await session.abortTransaction();
+        session.endSession();
         return res.status(400).json({ error: `Invalid chapter ID: ${id}` });
       }
     }
-    const novel = await Novel.findById(novelId);
+
+    const novel = await Novel.findById(novelId).session(session);
     if (!novel) {
+      await session.abortTransaction();
+      session.endSession();
       return res.status(404).json({ error: "Novel not found" });
     }
 
-    const chapterNumbers = [];
-    for (const chapter of novel.chapters) {
-      if (chapterIds.includes(chapter._id.toString())) {
-        const rawId = chapter.textFileUrl.split("/").pop().split(".")[0];
-        await cloudinary.uploader.destroy(
-          `lnworld/${novelId.toString()}/novel_chapters/${rawId}`,
-          { resource_type: "raw" }
-        );
-        chapterNumbers.push(chapter.chapterNumber);
-      }
+    // Find the chapters to be removed
+    const chaptersToRemove = novel.chapters.filter(chapter =>
+      chapterIds.includes(chapter._id.toString())
+    );
+
+    // Check if any chapters were found
+    if (chaptersToRemove.length === 0) {
+      await session.abortTransaction();
+      session.endSession();
+      return res
+        .status(404)
+        .json({ error: "No chapters found for the provided IDs" });
     }
 
+    const chapterNumbers = chaptersToRemove.map(
+      chapter => chapter.chapterNumber
+    );
+
+    // Delete files from Cloudinary
+    const deleteFilePromises = chaptersToRemove.map(chapter => {
+      const rawId = chapter.textFileUrl.split("/").pop().split(".")[0];
+      return cloudinary.uploader.destroy(
+        `lnworld/${novelId.toString()}/novel_chapters/${rawId}`,
+        { resource_type: "raw" }
+      );
+    });
+    await Promise.all(deleteFilePromises);
+
+    // Filter out chapters to be removed
     novel.chapters = novel.chapters.filter(
       chapter => !chapterIds.includes(chapter._id.toString())
     );
 
-    await novel.save();
+    // Save the updated novel
+    const updatedNovel = await novel.save({ session });
 
+    // Delete associated comments
     await Comment.deleteMany({
       novelId,
       chapterNumber: { $in: chapterNumbers },
-    });
+    }).session(session);
+
+    await session.commitTransaction();
+    session.endSession();
 
     res.status(200).json({
       message: "Chapters and associated comments removed successfully",
+      novel: updatedNovel,
     });
   } catch (err) {
+    await session.abortTransaction();
+    session.endSession();
     console.error("Error removing chapters from novel:", err.message);
     res.status(500).json({ message: "Server error" });
   }
 };
 
 const updateNovel = async (req, res) => {
+  const session = await mongoose.startSession();
+  session.startTransaction();
+
   const validations = [
     body("title").optional().isString().withMessage("Title must be a string"),
     // body("cover").optional().isURL().withMessage("Cover must be a valid URL"),
@@ -294,6 +357,8 @@ const updateNovel = async (req, res) => {
   });
 
   if (invalidFields.length > 0) {
+    await session.abortTransaction();
+    session.endSession();
     return res.status(400).json({
       message: "Invalid fields provided",
       invalidFields,
@@ -302,55 +367,80 @@ const updateNovel = async (req, res) => {
 
   // Validation result
   const errors = handleValidationErrors(req, res);
-  if (errors) return;
-
+  if (errors) {
+    await session.abortTransaction();
+    session.endSession();
+    return;
+  }
   try {
     const updatedNovel = await Novel.findByIdAndUpdate(novelId, updateData, {
       new: true,
       runValidators: true,
+      session,
     });
 
     if (!updatedNovel) {
+      await session.abortTransaction();
+      session.endSession();
       return res.status(404).json({ message: "Novel not found" });
     }
 
+    await session.commitTransaction();
+    session.endSession();
+
     res.status(200).json({ updatedNovel });
   } catch (error) {
+    await session.abortTransaction();
+    session.endSession();
     console.error("error in updateNovel", error.message);
     res.status(500).json({ message: "Server error" });
   }
 };
 
 const deleteNovel = async (req, res) => {
+  const session = await mongoose.startSession();
+  session.startTransaction();
+
   try {
     const { novelId } = req.params;
 
     // Validate novel ID
     if (!mongoose.Types.ObjectId.isValid(novelId)) {
+      await session.abortTransaction();
+      session.endSession();
       return res.status(400).json({ message: "Invalid novel ID" });
     }
 
     // Find the novel to ensure it exists
-    const novel = await Novel.findById(novelId);
+    const novel = await Novel.findById(novelId).session(session);
     if (!novel) {
+      await session.abortTransaction();
+      session.endSession();
       return res.status(404).json({ message: "Novel not found" });
     }
 
-    // Delete associated data (comments, reviews, user progress)
+    // Delete associated data (comments, reviews, user progress, bookmarks)
     await Promise.all([
-      Comment.deleteMany({ novelId }),
-      Review.deleteMany({ novelId }),
-      UserProgress.deleteMany({ novelId }),
-      Bookmark.deleteMany({ novelId }),
+      Comment.deleteMany({ novelId }).session(session),
+      Review.deleteMany({ novelId }).session(session),
+      UserProgress.deleteMany({ novelId }).session(session),
+      Bookmark.deleteMany({ novelId }).session(session),
     ]);
 
     // Delete the novel
-    await Novel.findByIdAndDelete(novelId);
+    await Novel.findByIdAndDelete(novelId).session(session);
+
+    // Commit transaction
+    await session.commitTransaction();
+    session.endSession();
 
     res
       .status(200)
       .json({ message: "Novel and associated data deleted successfully" });
   } catch (error) {
+    // Abort transaction and handle errors
+    await session.abortTransaction();
+    session.endSession();
     console.error("Error in deleteNovel:", error.message);
     res.status(500).json({ message: "Server error" });
   }
@@ -573,6 +663,9 @@ const getChapterComments = async (req, res) => {
 };
 
 const createComment = async (req, res) => {
+  const session = await mongoose.startSession();
+  session.startTransaction();
+
   try {
     const { novelId } = req.params;
     const { text } = req.body;
@@ -580,13 +673,22 @@ const createComment = async (req, res) => {
     if (!chapterNumber) chapterNumber = null;
     const userId = req.user._id;
 
-    const novelExists = await Novel.findById(novelId);
+    // Validate novel ID
+    if (!mongoose.Types.ObjectId.isValid(novelId)) {
+      await session.abortTransaction();
+      session.endSession();
+      return res.status(400).json({ message: "Invalid novel ID" });
+    }
+
+    // Check if the novel exists
+    const novelExists = await Novel.findById(novelId).session(session);
     if (!novelExists) {
+      await session.abortTransaction();
+      session.endSession();
       return res.status(404).json({ message: "Novel not found" });
     }
 
-    // Check if a similar comment already exists
-
+    // Create the new comment
     const newComment = new Comment({
       novelId,
       userId,
@@ -594,11 +696,18 @@ const createComment = async (req, res) => {
       chapterNumber,
     });
 
-    await newComment.save();
+    await newComment.save({ session });
+
+    // Commit transaction
+    await session.commitTransaction();
+    session.endSession();
+
     res
       .status(201)
       .json({ message: "Comment created successfully", comment: newComment });
   } catch (err) {
+    await session.abortTransaction();
+    session.endSession();
     console.error("Error creating comment:", err.message);
     res.status(500).json({ message: "Server error" });
   }
@@ -620,28 +729,44 @@ const updateNovelRating = async novelId => {
 };
 
 const createReview = async (req, res) => {
+  const session = await mongoose.startSession();
+  session.startTransaction();
+
   try {
     const { novelId } = req.params;
     const { text, rating } = req.body;
     const userId = req.user._id;
 
-    const novelExists = await Novel.findById(novelId);
+    // Validate novel ID
+    if (!mongoose.Types.ObjectId.isValid(novelId)) {
+      await session.abortTransaction();
+      session.endSession();
+      return res.status(400).json({ message: "Invalid novel ID" });
+    }
+
+    // Check if the novel exists
+    const novelExists = await Novel.findById(novelId).session(session);
     if (!novelExists) {
+      await session.abortTransaction();
+      session.endSession();
       return res.status(404).json({ message: "Novel not found" });
     }
 
-    // Check if a similar review already exists
+    // Check for duplicate review
     const existingReview = await Review.findOne({
       novelId,
       userId,
       text,
       rating,
-    });
+    }).session(session);
 
     if (existingReview) {
+      await session.abortTransaction();
+      session.endSession();
       return res.status(400).json({ message: "Duplicate review detected" });
     }
 
+    // Create the new review
     const newReview = new Review({
       novelId,
       userId,
@@ -649,14 +774,21 @@ const createReview = async (req, res) => {
       rating,
     });
 
-    await newReview.save();
+    await newReview.save({ session });
 
-    await updateNovelRating(novelId);
+    // Update novel rating
+    await updateNovelRating(novelId, { session });
+
+    // Commit transaction
+    await session.commitTransaction();
+    session.endSession();
 
     res
       .status(201)
       .json({ message: "Review created successfully", review: newReview });
   } catch (err) {
+    await session.abortTransaction();
+    session.endSession();
     if (err.code === 11000) {
       return res.status(400).json({
         message:
@@ -790,31 +922,40 @@ const searchNovels = async (req, res) => {
 };
 
 const updateChapter = async (req, res) => {
-  const validateRequest = [
-    check("novelId").notEmpty().isMongoId().withMessage("Invalid novel ID"),
-    check("chapterNumber")
-      .notEmpty()
-      .isInt({ min: 1 })
-      .withMessage("Chapter number must be a positive integer"),
-    check("title").optional().isString().withMessage("Title must be a string"),
-    check("textFileUrl")
-      .optional()
-      .isURL()
-      .withMessage("Text file URL must be a valid URL"),
-  ];
+  const session = await mongoose.startSession();
+  session.startTransaction();
 
   try {
+    // Validation
+    const validateRequest = [
+      check("novelId").notEmpty().isMongoId().withMessage("Invalid novel ID"),
+      check("chapterNumber")
+        .notEmpty()
+        .isInt({ min: 1 })
+        .withMessage("Chapter number must be a positive integer"),
+      check("title")
+        .optional()
+        .isString()
+        .withMessage("Title must be a string"),
+      check("textFileUrl")
+        .optional()
+        .isURL()
+        .withMessage("Text file URL must be a valid URL"),
+    ];
+
     // Validate request parameters
     await Promise.all(validateRequest.map(validation => validation.run(req)));
     const errors = handleValidationErrors(req, res);
     if (errors) return;
 
-    const { novelId, chapterNumber } = req.params; // Assuming novelId is in the URL params
+    const { novelId, chapterNumber } = req.params;
     const { title, textFileUrl } = req.body;
 
     // Find the novel
-    const novel = await Novel.findById(novelId);
+    const novel = await Novel.findById(novelId).session(session);
     if (!novel) {
+      await session.abortTransaction();
+      session.endSession();
       return res.status(404).json({ message: "Novel not found" });
     }
 
@@ -824,6 +965,8 @@ const updateChapter = async (req, res) => {
     );
 
     if (!chapter) {
+      await session.abortTransaction();
+      session.endSession();
       return res.status(404).json({ message: "Chapter not found" });
     }
 
@@ -832,128 +975,220 @@ const updateChapter = async (req, res) => {
     if (textFileUrl) chapter.textFileUrl = textFileUrl;
 
     // Save the updated novel
-    await novel.save();
+    await novel.save({ session });
+
+    // Commit transaction
+    await session.commitTransaction();
+    session.endSession();
 
     res.status(200).json({ message: "Chapter updated successfully", chapter });
   } catch (err) {
+    // Abort transaction and handle errors
+    await session.abortTransaction();
+    session.endSession();
     console.error("Error in updateChapter:", err.message);
     res.status(500).json({ message: "Server error" });
   }
 };
 
 const deleteComment = async (req, res) => {
+  const session = await mongoose.startSession();
+  session.startTransaction();
+
   try {
     const { commentId } = req.params;
     const userId = req.user._id;
 
-    // Check if a similar comment already exists
-    const commentExists = await Comment.findById(commentId);
+    // Check if the comment exists
+    const commentExists = await Comment.findById(commentId).session(session);
     if (!commentExists) {
+      await session.abortTransaction();
+      session.endSession();
       return res.status(404).json({ error: "Comment not found!" });
     }
-    if (userId.toString() !== commentExists.userId.toString())
-      return res.status(401).json({ error: "Unathorized" });
 
-    await Comment.deleteOne(
-      mongoose.Types.ObjectId.createFromHexString(commentId)
-    );
+    // Check if the user is authorized
+    if (userId.toString() !== commentExists.userId.toString()) {
+      await session.abortTransaction();
+      session.endSession();
+      return res.status(401).json({ error: "Unauthorized" });
+    }
+
+    // Delete the comment
+    await Comment.deleteOne({ _id: commentId }).session(session);
+
+    // Commit the transaction
+    await session.commitTransaction();
+    session.endSession();
 
     res.status(200).json({ message: "Comment deleted successfully" });
   } catch (err) {
+    // Abort transaction and handle errors
+    await session.abortTransaction();
+    session.endSession();
     console.error("Error deleting comment:", err.message);
     res.status(500).json({ message: "Server error" });
   }
 };
 
 const deleteReview = async (req, res) => {
+  const session = await mongoose.startSession();
+  session.startTransaction();
+
   try {
     const { reviewId, novelId } = req.params;
     const userId = req.user._id;
 
     // Check if the review exists
-    const reviewExists = await Review.findById(reviewId);
+    const reviewExists = await Review.findById(reviewId).session(session);
     if (!reviewExists) {
+      await session.abortTransaction();
+      session.endSession();
       return res.status(404).json({ error: "Review not found!" });
     }
 
-    // Check if the authenticated user is the owner of the review
+    // Check if the user is authorized
     if (userId.toString() !== reviewExists.userId.toString()) {
+      await session.abortTransaction();
+      session.endSession();
       return res.status(401).json({ error: "Unauthorized" });
     }
 
     // Delete the review
-    await Review.deleteOne({
-      _id: mongoose.Types.ObjectId.createFromHexString(reviewId),
-    });
+    await Review.deleteOne({ _id: reviewId }).session(session);
 
-    await updateNovelRating(novelId);
+    // Update the novel rating
+    await updateNovelRating(novelId, session);
+
+    // Commit the transaction
+    await session.commitTransaction();
+    session.endSession();
 
     res.status(200).json({ message: "Review deleted successfully" });
   } catch (err) {
+    // Abort transaction and handle errors
+    await session.abortTransaction();
+    session.endSession();
     console.error("Error deleting review:", err.message);
     res.status(500).json({ message: "Server error" });
   }
 };
 
 const updateComment = async (req, res) => {
-  const errors = handleValidationErrors(req, res);
-  if (errors) return;
+  const session = await mongoose.startSession();
+  session.startTransaction();
+  const validations = [
+    body("rating")
+      .optional()
+      .isInt({ min: 1, max: 5 })
+      .withMessage("Rating must be an integer between 1 and 5"),
+
+    body("text")
+      .optional()
+      .isString()
+      .trim()
+      .escape()
+      .notEmpty()
+      .withMessage("Text is required")
+      .isLength({ min: 100 })
+      .withMessage("Minimum lenght is 100 characters!"),
+  ];
+
+  await Promise.all(validations.map(validation => validation.run(req)));
+
   try {
+    const errors = handleValidationErrors(req, res);
+    if (errors) {
+      await session.abortTransaction();
+      session.endSession();
+      return;
+    }
+
     let { commentId } = req.params;
     const { text } = req.body;
     commentId = mongoose.Types.ObjectId.createFromHexString(commentId);
     const userId = req.user._id;
 
-    const comment = await Comment.findById(commentId);
+    const comment = await Comment.findById(commentId).session(session);
     if (!comment) {
+      await session.abortTransaction();
+      session.endSession();
       return res.status(404).json({ error: "Comment not found!" });
     }
 
     // Check if the authenticated user is the owner of the comment
     if (userId.toString() !== comment.userId.toString()) {
+      await session.abortTransaction();
+      session.endSession();
       return res.status(401).json({ error: "Unauthorized" });
     }
 
     // Update the comment text
     comment.text = text;
-    await comment.save();
+    await comment.save({ session });
+
+    // Commit the transaction
+    await session.commitTransaction();
+    session.endSession();
 
     res.status(200).json({ message: "Comment updated successfully", comment });
   } catch (err) {
+    // Abort transaction and handle errors
+    await session.abortTransaction();
+    session.endSession();
     console.error("Error updating comment:", err.message);
     res.status(500).json({ message: "Server error" });
   }
 };
 
 const updateReview = async (req, res) => {
+  const session = await mongoose.startSession();
+  session.startTransaction();
+
   try {
     const { reviewId, novelId } = req.params;
     const userId = req.user._id;
     const { text, rating } = req.body;
 
     const errors = handleValidationErrors(req, res);
-    if (errors) return;
+    if (errors) {
+      await session.abortTransaction();
+      session.endSession();
+      return;
+    }
 
     // Check if the review exists
-    const review = await Review.findById(reviewId);
+    const review = await Review.findById(reviewId).session(session);
     if (!review) {
+      await session.abortTransaction();
+      session.endSession();
       return res.status(404).json({ error: "Review not found!" });
     }
 
     // Check if the authenticated user is the owner of the review
     if (userId.toString() !== review.userId.toString()) {
+      await session.abortTransaction();
+      session.endSession();
       return res.status(401).json({ error: "Unauthorized" });
     }
 
     // Update the review text and rating
     if (text) review.text = text;
     if (rating) review.rating = rating;
-    await review.save();
+    await review.save({ session });
 
-    await updateNovelRating(novelId);
+    // Update the novel rating
+    await updateNovelRating(novelId, session);
+
+    // Commit the transaction
+    await session.commitTransaction();
+    session.endSession();
 
     res.status(200).json({ message: "Review updated successfully", review });
   } catch (err) {
+    // Abort transaction and handle errors
+    await session.abortTransaction();
+    session.endSession();
     console.error("Error updating review:", err.message);
     res.status(500).json({ message: "Server error" });
   }

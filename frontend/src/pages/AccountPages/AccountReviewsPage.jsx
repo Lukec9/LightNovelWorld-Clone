@@ -1,7 +1,30 @@
+import { useEffect, useState } from "react";
 import UserReview from "../../components/AccountPagesComp/UserReview";
-import "../../styles/AccountPages/AccountCommentsPageStyles.css";
+import { useAuthContext } from "../../context/AuthContext";
+import "../../styles/AccountPages/AccountReviewsPageStyles.css";
+import notify from "../../utils/toastUtil";
+import axiosInstance from "../../axios";
 
 const AccountReviewsPage = () => {
+  const {
+    state: { user: user },
+  } = useAuthContext();
+  const [reviews, setReviews] = useState([]);
+  console.log(reviews);
+
+  useEffect(() => {
+    const getReviews = async () => {
+      try {
+        const response = await axiosInstance.get(`/users/${user._id}/reviews`);
+        setReviews(response.data.reviews);
+        notify("success", "Got Reviews!");
+      } catch (error) {
+        notify("error", "Could not get user reviews");
+      }
+    };
+    getReviews();
+  }, []);
+
   return (
     <div className="user-panel-body">
       <div className="user-panel-section">
@@ -12,11 +35,14 @@ const AccountReviewsPage = () => {
 
           <div className="user-panel-body">
             <ul className="review-list">
-              {Array(2)
-                .fill(null)
-                .map((_, i) => (
-                  <UserReview key={i} />
-                ))}
+              {reviews.map(review => (
+                <UserReview
+                  review={review}
+                  setReviews={setReviews}
+                  user={user}
+                  key={review._id}
+                />
+              ))}
             </ul>
           </div>
         </section>

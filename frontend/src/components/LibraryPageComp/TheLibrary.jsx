@@ -1,13 +1,49 @@
-import { lazy, Suspense, useState } from "react";
+import { lazy, Suspense, useEffect, useState } from "react";
 import Spinner from "../Spinner";
+import { useAuthContext } from "../../context/AuthContext";
+import axiosInstance from "../../axios";
+import notify from "../../utils/toastUtil";
 
 const NovelCard = lazy(() => import("./NovelCard"));
 
 const TheLibrary = () => {
+  const {
+    state: { user: user },
+  } = useAuthContext();
   const [activeFilters, setActiveFilters] = useState({
     filter: "All",
     sort: "last updated",
   });
+  const [novels, setNovels] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const getNovels = async () => {
+      try {
+        const response = await axiosInstance.get("users/bookmarks");
+        const novelsWithProgress = await Promise.all(
+          response.data.novels.map(async novel => {
+            const progressResponse = await axiosInstance.get(
+              `/novels/${novel._id}/progress`
+            );
+            return {
+              ...novel,
+              progress: progressResponse.data.progress,
+            };
+          })
+        );
+        setNovels(novelsWithProgress);
+        setLoading(false); // Step 2: Set loading to false once data is fetched
+      } catch (error) {
+        console.error(error.message);
+        notify("error", "Could not get bookmarked novels or progress");
+        setLoading(false); // Ensure loading is set to false even on error
+      } finally {
+        setLoading(false);
+      }
+    };
+    getNovels();
+  }, []);
 
   return (
     <div className="user-panel-body the-library">
@@ -156,18 +192,15 @@ const TheLibrary = () => {
           <li className="h-action">...</li>
         </ul>
         <ul>
-          {novels.map((n, i) => (
-            <Suspense key={i} fallback={<Spinner />}>
-              <NovelCard
-                key={n.title}
-                cover={n.cover}
-                title={n.title}
-                lastChapter={n.lastChapterUpdate}
-                progress={n.progress}
-                updates={n.updates}
-              />
-            </Suspense>
-          ))}
+          {novels ? (
+            novels.map((novel, i) => (
+              <Suspense key={i} fallback={<Spinner />}>
+                <NovelCard key={novel._id} novel={novel} />
+              </Suspense>
+            ))
+          ) : (
+            <p>Bookmark some novels to have them show here</p>
+          )}
         </ul>
       </section>
     </div>
@@ -175,127 +208,3 @@ const TheLibrary = () => {
 };
 
 export default TheLibrary;
-
-const novels = [
-  {
-    cover: "/assets/00892-the-steward-demonic-emperor.jpg",
-    title: "The Steward Demonic Emperor",
-    lastChapterUpdate: "4 Hours ago",
-    progress: {
-      current: 874,
-      total: 997,
-      percentage: "87.7%",
-    },
-    updates: "New Chapters",
-  },
-  {
-    cover: "/assets/01296-grand-ancestral-bloodlines.jpg",
-    title: "Grand Ancestral Bloodlines",
-    lastChapterUpdate: "yesterday",
-    progress: {
-      current: 1276,
-      total: 1273,
-      percentage: "100.2%",
-    },
-    updates: "No Updates",
-  },
-  {
-    cover: "/assets/01511-ascension-of-the-immortal-asura.jpg",
-    title: "Ascension of the Immortal Asura",
-    lastChapterUpdate: "2 days ago",
-    progress: {
-      current: 920,
-      total: 984,
-      percentage: "93.5%",
-    },
-    updates: "New Chapters",
-  },
-  {
-    cover: "/assets/00732-infinite-mana-in-the-apocalypse-novel.jpg",
-    title: "Infinite Mana In The Apocalypse",
-    lastChapterUpdate: "2 days ago",
-    progress: {
-      current: 2357,
-      total: 2357,
-      percentage: "100.0%",
-    },
-    updates: "No Updates",
-  },
-  {
-    cover: "/assets/01132-supremacy-games.jpg",
-    title: "Supremacy Games",
-    lastChapterUpdate: "2 days ago",
-    progress: {
-      current: 1398,
-      total: 1398,
-      percentage: "100.0%",
-    },
-    updates: "No Updates",
-  },
-  {
-    cover: "/assets/00172-reverend-insanity.jpg",
-    title: "Reverend Insanity",
-    lastChapterUpdate: "2 years ago",
-    progress: {
-      current: 98,
-      total: 2334,
-      percentage: "4.2%",
-    },
-    updates: "No Updates",
-  },
-  {
-    cover: "/assets/00224-the-desolate-era-web-novel.jpg",
-    title: "The Desolate Era",
-    lastChapterUpdate: "2 years ago",
-    progress: {
-      current: 573,
-      total: 1451,
-      percentage: "39.5%",
-    },
-    updates: "No Updates",
-  },
-  {
-    cover: "/assets/00265-omniscient-readers-viewpoint-novel.jpg",
-    title: "Omniscient Reader's Viewpoint",
-    lastChapterUpdate: "2 years ago",
-    progress: {
-      current: "Reading is complete",
-      total: "Reading is complete",
-      percentage: "Reading is complete",
-    },
-    updates: "No Updates",
-  },
-  {
-    cover: "/assets/00220-martial-world-webnovel.jpg",
-    title: "Martial World",
-    lastChapterUpdate: "3 years ago",
-    progress: {
-      current: "Reading is complete",
-      total: "Reading is complete",
-      percentage: "Reading is complete",
-    },
-    updates: "No Updates",
-  },
-  {
-    cover: "/assets/00072-true-martial-world.jpg",
-    title: "True Martial World",
-    lastChapterUpdate: "4 years ago",
-    progress: {
-      current: 1256,
-      total: 1710,
-      percentage: "73.5%",
-    },
-    updates: "No Updates",
-  },
-  {
-    cover: "/assets/00089-wujie-whushi-wmw.jpg",
-    title: "Warlock of the Magus World",
-    lastChapterUpdate: "4 years ago",
-    progress: {
-      current: 573,
-      total: 1451,
-      percentage: "3.8%",
-    },
-    updates: "No Updates",
-  },
-];

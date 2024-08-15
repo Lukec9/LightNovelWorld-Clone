@@ -160,6 +160,8 @@ const AccountPage = () => {
   };
 
   const handleDelete = async () => {
+    if (!window.confirm("Are you sure you want to delete your account?"))
+      return;
     try {
       const response = await axiosInstance.delete(`/users/${state.user._id}`);
       if (response.status === 200) {

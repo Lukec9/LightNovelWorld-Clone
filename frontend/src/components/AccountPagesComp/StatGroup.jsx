@@ -26,8 +26,8 @@ const StatGroup = ({ cstats, rstats, nstats, kstats }) => {
         )}
         {nstats && (
           <>
-            <Item name={"Bookmarked Novels"} value={nstats.bookmarkedNovels} />
-            <Item name={"Bookmarked Novels"} value={nstats.novelsRead} />
+            <Item name={"Bookmarked"} value={nstats.bookmarkedNovels} />
+            <Item name={"Novels Read"} value={nstats.novelsRead} />
           </>
         )}
         {kstats?.map((stat, i) => (

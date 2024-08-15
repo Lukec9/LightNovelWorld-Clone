@@ -238,7 +238,9 @@ const getUserReviews = async (req, res) => {
       return res.status(404).json({ error: "User not found." });
     }
 
-    const reviews = await Review.find({ userId });
+    const reviews = await Review.find({ userId })
+      .populate({ path: "novelId", select: "title slugTitle" })
+      .limit(20);
     if (!reviews.length) {
       return res
         .status(404)
@@ -273,7 +275,13 @@ const getUserComments = async (req, res) => {
     }
 
     // Fetch all comments by the user
-    const comments = await Comment.find({ userId });
+    const comments = await Comment.find({ userId })
+      .populate({
+        path: "novelId",
+        select: "title slugTitle",
+      })
+      .sort({ updatedAt: -1 })
+      .limit(20);
 
     if (!comments.length) {
       return res.status(404).json({ error: "No comments found for this user" });

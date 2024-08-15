@@ -39,7 +39,7 @@ router.get("/", listAllNovels);
 router.post(
   "/",
   protectRoute,
-  validationSchemas.novelValidation,
+  // validationSchemas.novelValidation,
   requireRole(["Admin"]),
   upload.single("cover"),
   createNovel
@@ -51,12 +51,7 @@ router.get("/:query", getNovel);
 
 router
   .route("/:novelId")
-  .put(
-    validationSchemas.novelValidation,
-    protectRoute,
-    requireRole(["Admin"]),
-    updateNovel
-  )
+  .put(protectRoute, requireRole(["Admin"]), updateNovel)
   .delete(protectRoute, requireRole(["Admin"]), deleteNovel);
 router.post("/:novelId/count", addView);
 
@@ -86,7 +81,7 @@ router.post(
 );
 router
   .route("/:novelId/reviews/:reviewId")
-  .put(validationSchemas.reviewValidation, protectRoute, updateReview)
+  .put(protectRoute, updateReview)
   .delete(protectRoute, deleteReview);
 router.patch(
   "/:novelId/reviews/:reviewId/like",

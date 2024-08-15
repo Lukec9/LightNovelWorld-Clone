@@ -1,23 +1,16 @@
-const NovelCard = ({ cover, title, lastChapter, progress, updates }) => {
-  const compl = "Reading is complete";
-
-  if (
-    progress.current === compl ||
-    progress.total === compl ||
-    progress.percentage === compl
-  ) {
-    progress.complete = true;
-  }
+import timeAgo from "../../utils/timeAgo";
+const NovelCard = ({ novel }) => {
+  const updatedAt = timeAgo(new Date(novel.updatedAt));
   return (
     <li className="novel-card">
       <div className="novel-cover">
         <figure className="novel-coverfig">
-          <img src={cover} alt="" />
+          <img src={novel.cover} alt={`${novel.title} cover image`} />
         </figure>
       </div>
       <div className="novel-content">
         <div className="novel-title">
-          <p className="ntitle">{title}</p>
+          <p className="ntitle">{novel.title}</p>
           <p className="lastchap">
             <small>
               <svg
@@ -35,27 +28,42 @@ const NovelCard = ({ cover, title, lastChapter, progress, updates }) => {
                 <path d="M8 4.466V.534a.25.25 0 0 0-.41-.192L5.23 2.308a.25.25 0 0 0 0 .384l2.36 1.966A.25.25 0 0 0 8 4.466z" />
               </svg>
             </small>
-            <span>{lastChapter}</span>
+            <span>{updatedAt}</span>
           </p>
         </div>
         <div className="chptpro">
           <p className="chappro">
-            {progress.complete ? (
+            {novel.progress.completed ? (
               <span style={{ display: "block" }}>Reading is complete</span>
             ) : (
               <>
                 <span>Progress:</span>
-                <span>{`${progress.current} / ${progress.total}`}</span>
-                <span>({progress.percentage})</span>
+                <span>{`${novel.progress.lastReadChapter} / ${novel.chapters.length}`}</span>
+                <span>
+                  (
+                  {`${
+                    (novel.progress.lastReadChapter / novel.chapters.length) *
+                    100
+                  }`}
+                  % )
+                </span>
               </>
             )}
           </p>
         </div>
         <div className="updates">
           <span
-            className={updates === "New Chapters" ? "newchap" : "noupdates"}
+            className={
+              novel.progress.lastReadChapter ===
+              novel.chapters[novel.chapters.length - 1].chapterNumber
+                ? "noupdates"
+                : "newchap"
+            }
           >
-            {updates}
+            {novel.progress.lastReadChapter ===
+            novel.chapters[novel.chapters.length - 1].chapterNumber
+              ? "No Updates"
+              : "New Chapters"}
           </span>
         </div>
       </div>
