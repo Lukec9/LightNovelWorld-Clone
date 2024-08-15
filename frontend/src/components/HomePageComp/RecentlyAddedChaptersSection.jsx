@@ -1,6 +1,30 @@
+import { Suspense, useCallback, useEffect, useState } from "react";
 import RecentNovelItem from "./RecentNovelItem";
+import axiosInstance from "../../axios";
+import notify from "../../utils/toastUtil";
+import Spinner from "../Spinner";
 
 const RecentlyAddedChapteresSection = () => {
+  const [recentNovels, setRecentNovels] = useState([]);
+
+  const getRecentNovels = useCallback(async () => {
+    try {
+      const response = await axiosInstance.get(
+        "/novels?limit=24&status=All&sortBy=Updates"
+      );
+      if (response && response.data) {
+        setRecentNovels(response.data.novels);
+      }
+    } catch (error) {
+      console.error("Error fetching compnovels:", error);
+      notify("error", "Something went wrong!");
+    }
+  }, []);
+
+  useEffect(() => {
+    getRecentNovels();
+  }, [getRecentNovels]);
+
   return (
     <section className="container vspace recent-chap">
       <div className="section-header ">
@@ -15,17 +39,11 @@ const RecentlyAddedChapteresSection = () => {
       </div>{" "}
       <div className="section-body">
         <div className="novel-list">
-          {Array(24)
-            .fill(null)
-            .map((_, i) => (
-              <RecentNovelItem
-                key={i}
-                title={"Author's pov"}
-                rank={1}
-                chapters={"1000"}
-                img={"/assets/01485-lightning-is-the-only-way.jpg"}
-              />
-            ))}
+          {recentNovels.map(novel => (
+            <Suspense fallback={<Spinner />} key={novel.title}>
+              <RecentNovelItem key={novel._id} novel={novel} />
+            </Suspense>
+          ))}
         </div>
       </div>
     </section>

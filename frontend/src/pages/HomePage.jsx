@@ -50,10 +50,10 @@ const HomePage = () => {
         <NewNovelSection />
       </Suspense>
       <Suspense fallback={<Spinner />}>
-        <WeeklyMostActiveSection />
+        <NovelRankingSection />
       </Suspense>
       <Suspense fallback={<Spinner />}>
-        <NovelRankingSection />
+        <WeeklyMostActiveSection />
       </Suspense>
       <Suspense fallback={<Spinner />}>
         <CompletedStoriesSection />

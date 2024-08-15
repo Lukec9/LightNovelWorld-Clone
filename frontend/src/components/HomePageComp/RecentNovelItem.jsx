@@ -1,16 +1,26 @@
-const RecentNovelItem = ({ title, img }) => {
+import { Link } from "react-router-dom";
+
+const RecentNovelItem = ({ novel }) => {
+  const lastChapter = novel.chapters[novel.chapters.length - 1];
+
   return (
     <li className="novel-item">
-      <a title={title} href="#" className="item-cover">
+      <Link
+        title={novel.title}
+        to={`/novel/${novel.slugTitle}`}
+        className="item-cover"
+      >
         <div className="novel-coverfig">
-          <img src={img} alt="" />
+          <img src={novel.cover} alt={`${novel.title}'s cover`} />
         </div>
-      </a>
+      </Link>
       <div className="item-stats">
-        <a href="#" title="Novel Chapter">
-          <h4 className="novel-title ">Some Novel</h4>
-          <h5 className="chapter-title ">Some Chapter</h5>
-        </a>
+        <Link to={`/novels/${novel.slugTitle}`} title="Novel Chapter">
+          <h4 className="novel-title ">{novel.title}</h4>
+          <h5 className="chapter-title ">
+            Chapter {lastChapter?.chapterNumber}: {lastChapter?.title}
+          </h5>
+        </Link>
         <div className="novel-stats">
           <span>
             <svg

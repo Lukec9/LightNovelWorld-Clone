@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useLocation } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { useAuthContext } from "../context/AuthContext";
 
 const AccountContainer = () => {
@@ -94,7 +94,7 @@ const PageItem = ({ page, isActive }) => {
 
   return (
     <li className={`page-item ${isActive ? "active" : ""} `}>
-      <a href={page}>{label}</a>
+      <Link to={page}>{label}</Link>
     </li>
   );
 };

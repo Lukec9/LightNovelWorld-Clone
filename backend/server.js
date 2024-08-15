@@ -13,6 +13,7 @@ import connectDB from "./db/connectDB.js";
 import User from "./models/user.model.js";
 
 import updateViews from "./jobs/updateViews.js";
+import updateRanking from "./jobs/updateRanking.js";
 
 import userRoutes from "./routes/user.routes.js";
 import novelRoutes from "./routes/novel.routes.js";
@@ -98,6 +99,7 @@ app.use("/api/users", userRoutes);
 app.use("/api/novels", novelRoutes);
 
 updateViews.start();
+updateRanking.start();
 
 app.listen(PORT, (req, res) => {
   console.log("Listening on localhost:5000");

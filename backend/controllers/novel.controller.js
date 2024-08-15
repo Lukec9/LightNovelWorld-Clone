@@ -4,6 +4,7 @@ import Review from "../models/review.model.js";
 import UserProgress from "../models/userProgress.model.js";
 import User from "../models/user.model.js";
 import Bookmark from "../models/bookmark.model.js";
+import Ranking from "../models/ranking.model.js";
 
 import slugify from "../utils/slugify.js";
 import uploadFileToCloudinary from "../utils/uploadFileToCloudinary.js";
@@ -455,7 +456,7 @@ const listAllNovels = async (req, res) => {
 
     check("sortBy")
       .optional()
-      .isIn(["New", "Popular", "Updates"])
+      .isIn(["New", "Popular", "Updates", "Rank"])
       .withMessage(
         "SortBy must be one of: title, rating, rank, views, updatedAt"
       ),
@@ -484,8 +485,8 @@ const listAllNovels = async (req, res) => {
     // Pagination parameters
     const page = parseInt(req.query.page) || 1;
 
-    let limit = 15;
-    if (limit > 20) limit = 20;
+    let limit = parseInt(req.query.limit);
+    if (limit > 24) limit = 24;
     const skip = (page - 1) * limit;
 
     // Sorting parameters
@@ -503,6 +504,9 @@ const listAllNovels = async (req, res) => {
         break;
       case "Updates":
         sortField = { updatedAt: -1 };
+        break;
+      case "Rank":
+        sortField = { rank: 1 };
         break;
       default:
         sortField = { createdAt: -1 }; // Default sort by newest
@@ -1298,6 +1302,25 @@ const reviewLikeDislike = async (req, res) => {
   }
 };
 
+const getRankings = async (req, res) => {
+  try {
+    const latestRanking = await Ranking.findOne().sort({ updatedAt: -1 });
+
+    if (!latestRanking) {
+      return res.status(404).json({ message: "No rankings available" });
+    }
+
+    res.status(200).json({
+      topByComments: latestRanking.topByComments,
+      topByViews: latestRanking.topByViews,
+      topByRatings: latestRanking.topByRatings,
+    });
+  } catch (error) {
+    console.error("Error retrieving rankings:", error);
+    res.status(500).json({ message: "Server error" });
+  }
+};
+
 export {
   createNovel,
   getNovel,
@@ -1321,4 +1344,5 @@ export {
   updateReview,
   commentLikeDislike,
   reviewLikeDislike,
+  getRankings,
 };

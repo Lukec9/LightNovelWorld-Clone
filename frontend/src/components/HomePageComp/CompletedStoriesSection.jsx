@@ -10,7 +10,7 @@ const CompletedStoriesSection = () => {
   const getCompNovels = useCallback(async () => {
     try {
       const response = await axiosInstance.get(
-        "/novels?limit=12&status=Ongoing"
+        "/novels?limit=12&status=Completed"
       );
       if (response && response.data) {
         setCompNovels(response.data.novels);

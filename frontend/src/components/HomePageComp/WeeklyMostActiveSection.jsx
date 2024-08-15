@@ -1,7 +1,29 @@
-import React from "react";
+import { useCallback, useEffect, useState } from "react";
 import NovelItem from "./NovelItem";
+import axiosInstance from "../../axios";
+import notify from "../../utils/toastUtil";
 
 const WeeklyMostActiveSection = () => {
+  const [weeklyNovels, setWeeklyNovels] = useState([]);
+
+  const getWeeklyNovels = useCallback(async () => {
+    try {
+      const response = await axiosInstance.get(
+        "/novels?limit=12&status=All&sortBy=Popular"
+      );
+      if (response && response.data) {
+        setWeeklyNovels(response.data.novels);
+      }
+    } catch (error) {
+      console.error("Error fetching compnovels:", error);
+      notify("error", "Something went wrong!");
+    }
+  }, []);
+
+  useEffect(() => {
+    getWeeklyNovels();
+  }, [getWeeklyNovels]);
+
   return (
     <section className="container vspace weekly">
       <div className="section-header">
@@ -16,17 +38,9 @@ const WeeklyMostActiveSection = () => {
       </div>{" "}
       <div className="section-body">
         <div className="novel-list">
-          {/* {Array(12)
-            .fill(null)
-            .map((_, i) => (
-              <NovelItem
-                key={i}
-                title={"Steward demonic emperor"}
-                rank={i + 1}
-                chapters={"1000"}
-                img={"/assets/00892-the-steward-demonic-emperor.jpg"}
-              />
-            ))} */}
+          {weeklyNovels.map(novel => (
+            <NovelItem key={novel._id} novel={novel} />
+          ))}
         </div>
       </div>
     </section>

@@ -3,20 +3,23 @@ import HamburgerMenu from "./hamburgermenu";
 import ThemeSwitcher from "./ThemeSwitcher";
 import { useAuthContext } from "../context/AuthContext.jsx";
 import { Link } from "react-router-dom";
+import { useTheme } from "../context/ThemeContext.jsx";
 
 const Header = () => {
   const { state } = useAuthContext();
+  const { theme } = useTheme();
+
+  const url =
+    theme === "dark"
+      ? "https://res.cloudinary.com/dnjmtuolt/image/upload/v1723718988/lnworld/logo-dark_xqkszr.webp"
+      : "https://res.cloudinary.com/dnjmtuolt/image/upload/v1723719126/lnworld/logo_jtsphq.png";
 
   return (
     <header id="header">
       <div className="wrapper">
         <div className="header-icon">
-          <Link href="/">
-            <img
-              src="/assets/logo-dark.webp"
-              alt="Light Novel World"
-              className="logo-img"
-            />
+          <Link to="/">
+            <img src={url} alt="Light Novel World" className="logo-img" />
           </Link>
         </div>
         <div className="nav-bar">

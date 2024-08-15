@@ -1,18 +1,41 @@
-import { lazy, Suspense, useState } from "react";
+import { lazy, Suspense, useEffect, useState } from "react";
 import CategoryBtn from "../components/BrowsePageComp/CategoryBtn";
 import "../styles/BrowsePageStyles.css";
-const RankingNovelItem = lazy(() =>
-  import("../components/HomePageComp/RankingNovelItem")
-);
+
 import Pagination from "../components/BrowsePageComp/Pagination";
 import Spinner from "../components/Spinner";
+import axiosInstance from "../axios";
+import notify from "../utils/toastUtil";
+const BrowseNovelItem = lazy(() =>
+  import("../components/BrowsePageComp/BrowseNovelItem")
+);
 
 const BrowsePage = () => {
+  const [browseNovels, setBrowseNovels] = useState([]);
   const [activeCategory, setActiveCategory] = useState({
-    category: null,
-    order: null,
-    status: null,
+    category: "All",
+    order: "New",
+    status: "All",
   });
+
+  const getBrowseNovels = async () => {
+    try {
+      const response = await axiosInstance.get(
+        `/novels?limit=15&status=${activeCategory.status}&sortBy=${activeCategory.order}&category=${activeCategory.category}`
+      );
+      if (response && response.data) {
+        setBrowseNovels(response.data.novels);
+      }
+    } catch (error) {
+      console.error("Error fetching novels:", error);
+      notify("error", "Something went wrong!");
+    }
+  };
+
+  useEffect(() => {
+    getBrowseNovels();
+  }, [activeCategory]);
+
   return (
     <div className="explore">
       <div className="container">
@@ -76,26 +99,26 @@ const BrowsePage = () => {
         </div>
         <div className="action-header">
           <h1>
-            Explore The Recently Added{" "}
-            {activeCategory.category === "All" ? "" : activeCategory.category}{" "}
+            {activeCategory.order === "Popular" && "Explore The Most Popular "}
+            {activeCategory.order === "Updates" &&
+              "Explore The Recently Updated "}
+            {activeCategory.order === "New" && "Explore The Recently Added"}
+            {activeCategory.category === "All"
+              ? ""
+              : ` ${activeCategory.category}`}
+            {"  "}
             Light Novels
+            {activeCategory.status === "Completed" &&
+              " (Translation Completed)"}
+            {activeCategory.status === "Ongoing" && " (Translation Ongoing)"}
           </h1>
         </div>
         <ul className="novel-list">
-          {Array(15)
-            .fill(null)
-            .map((_, i) => (
-              <Suspense key={i} fallback={<Spinner />}>
-                <RankingNovelItem
-                  lastChapter={"2 days ago"}
-                  key={i}
-                  title={"Infinite Mana In The Apocalypse"}
-                  img={
-                    "/assets/00732-infinite-mana-in-the-apocalypse-novel.jpg"
-                  }
-                />
-              </Suspense>
-            ))}
+          {browseNovels.map((novel, i) => (
+            <Suspense key={i} fallback={<Spinner />}>
+              <BrowseNovelItem novel={novel} key={novel._id} />
+            </Suspense>
+          ))}
         </ul>
         <Pagination />
       </div>

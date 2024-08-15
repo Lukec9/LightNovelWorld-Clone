@@ -1,7 +1,31 @@
-import React from "react";
+import { useCallback, useEffect, useState } from "react";
 import RankingNovelItem from "./RankingNovelItem";
+import notify from "../../utils/toastUtil";
+import axiosInstance from "../../axios";
 
 const NovelRankingSection = () => {
+  const [mostRead, setMostReadNovels] = useState([]);
+  const [newTrends, setNewTrendNovels] = useState([]);
+  const [userRated, setUserRatedNovels] = useState([]);
+
+  const getRankings = useCallback(async () => {
+    try {
+      const response = await axiosInstance.get("/novels/rankings");
+      if (response && response.data) {
+        setMostReadNovels(response.data.topByViews);
+        setNewTrendNovels(response.data.topByComments);
+        setUserRatedNovels(response.data.topByRatings);
+      }
+    } catch (error) {
+      console.error("Error fetching compnovels:", error);
+      notify("error", "Something went wrong!");
+    }
+  }, []);
+
+  useEffect(() => {
+    getRankings();
+  }, [getRankings]);
+
   return (
     <section className="container vspace">
       <div className="section-header">
@@ -32,17 +56,9 @@ const NovelRankingSection = () => {
               <span>Most read</span>
             </h3>
             <ul>
-              {Array(10)
-                .fill(null)
-                .map((_, i) => (
-                  <RankingNovelItem
-                    key={i}
-                    title={"Steward demonic emperor"}
-                    rank={"1"}
-                    chapters={"1000"}
-                    img={"/assets/01296-grand-ancestral-bloodlines.jpg"}
-                  />
-                ))}
+              {mostRead.map((novel, i) => (
+                <RankingNovelItem key={novel._id} novel={novel} />
+              ))}
             </ul>
           </div>
           <div className="ranking-container">
@@ -50,18 +66,13 @@ const NovelRankingSection = () => {
               <span>New Trends</span>
             </h3>
             <ul>
-              {Array(10)
-                .fill(null)
-                .map((_, i) => (
-                  <RankingNovelItem
-                    key={i}
-                    title={"Steward demonic emperor"}
-                    rank={"1"}
-                    chapters={"1000"}
-                    newTrends={true}
-                    img={"/assets/01132-supremacy-games.jpg"}
-                  />
-                ))}
+              {newTrends.map((novel, i) => (
+                <RankingNovelItem
+                  key={novel._id}
+                  newTrends={true}
+                  novel={novel}
+                />
+              ))}
             </ul>
           </div>
           <div className="ranking-container">
@@ -69,20 +80,13 @@ const NovelRankingSection = () => {
               <span>User Rated</span>
             </h3>
             <ul>
-              {Array(10)
-                .fill(null)
-                .map((_, i) => (
-                  <RankingNovelItem
-                    key={i}
-                    title={"Steward demonic emperor"}
-                    rank={"1"}
-                    chapters={"1000"}
-                    img={
-                      "/assets/00732-infinite-mana-in-the-apocalypse-novel.jpg"
-                    }
-                    userRated={true}
-                  />
-                ))}
+              {userRated.map(novel => (
+                <RankingNovelItem
+                  key={novel._id}
+                  novel={novel}
+                  userRated={true}
+                />
+              ))}
             </ul>
           </div>
         </div>
