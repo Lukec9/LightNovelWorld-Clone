@@ -20,6 +20,8 @@ const novelSchema = new mongoose.Schema(
     chapters: [chapterSchema],
     views: { type: Number, default: 0 },
     bookmarkCount: { type: Number, default: 0 },
+    reviewCount: { type: Number, default: 0 },
+    commentsCount: { type: Number, default: 0 },
     status: {
       type: String,
       required: true,

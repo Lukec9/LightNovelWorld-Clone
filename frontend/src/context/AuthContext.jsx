@@ -1,4 +1,10 @@
-import { createContext, useContext, useEffect, useReducer } from "react";
+import {
+  createContext,
+  useContext,
+  useEffect,
+  useMemo,
+  useReducer,
+} from "react";
 import Cookies from "js-cookie";
 
 const initialState = {
@@ -71,10 +77,18 @@ export const AuthContextProvider = ({ children }) => {
     Cookies.remove("user");
   };
 
+  const contextValue = useMemo(
+    () => ({
+      state,
+      login,
+      logout,
+      dispatch,
+    }),
+    [state, login, logout]
+  );
+
   return (
-    <AuthContext.Provider value={{ state, login, logout, dispatch }}>
-      {children}
-    </AuthContext.Provider>
+    <AuthContext.Provider value={contextValue}>{children}</AuthContext.Provider>
   );
 };
 

@@ -4,7 +4,6 @@ import Review from "../models/review.model.js";
 import UserProgress from "../models/userProgress.model.js";
 import User from "../models/user.model.js";
 import Bookmark from "../models/bookmark.model.js";
-import Ranking from "../models/ranking.model.js";
 
 import slugify from "../utils/slugify.js";
 import uploadFileToCloudinary from "../utils/uploadFileToCloudinary.js";
@@ -453,7 +452,10 @@ const listAllNovels = async (req, res) => {
       .optional()
       .isInt({ gt: 0 })
       .withMessage("Page must be a positive integer"),
-
+    check("limit")
+      .optional()
+      .isInt({ lt: 41 })
+      .withMessage("Limit must be less than 40"),
     check("sortBy")
       .optional()
       .isIn(["New", "Popular", "Updates", "Rank"])
@@ -486,7 +488,7 @@ const listAllNovels = async (req, res) => {
     const page = parseInt(req.query.page) || 1;
 
     let limit = parseInt(req.query.limit);
-    if (limit > 24) limit = 24;
+    if (limit >= 40) limit = 40;
     const skip = (page - 1) * limit;
 
     // Sorting parameters
@@ -1316,97 +1318,92 @@ const getRankingPageNovels = async (req, res) => {
       ])
       .withMessage("SortBy must be one of the allowed"),
   ];
+
   try {
     // Validate query parameters
     await Promise.all(
       validateQueryParams.map(validation => validation.run(req))
     );
     const errors = handleValidationErrors(req, res);
-    if (errors) return;
+    if (errors) {
+      return res.status(400).json({ errors: errors });
+    }
 
     // Pagination parameters
-    const page = 1;
-    const limit = 100;
+    const page = parseInt(req.query.page, 10) || 1;
+    const limit = parseInt(req.query.limit, 10) || 100;
+    const skip = (page - 1) * limit;
 
     // Sorting parameters
     const sortBy = req.query.sortBy || "New"; // Default to "New"
 
     // Determine sorting field based on sortBy value
     let sortField;
-    let novels;
-
     switch (sortBy) {
       case "Reads":
         sortField = { views: -1 };
-        novels = await Novel.find({})
-          .sort(sortField)
-          .limit(limit)
-          .select("-chapters");
         break;
       case "Collections":
         sortField = { bookmarkCount: -1 };
-        novels = await Novel.find({})
-          .sort(sortField)
-          .limit(limit)
-          .select("-chapters");
         break;
       case "Ranking":
         sortField = { rank: 1 };
-        novels = await Novel.find({})
-          .sort(sortField)
-          .limit(limit)
-          .select("-chapters");
         break;
       case "Rating":
         sortField = { rating: -1 };
-        novels = await Novel.find({})
-          .sort(sortField)
-          .limit(limit)
-          .select("-chapters");
         break;
       case "Comments":
-        const ranking = await Ranking.findOne().lean();
-        if (ranking && ranking.topByComments) {
-          novels = ranking.topByComments.sort(
-            (a, b) => b.commentsCount - a.commentsCount
-          );
-        }
+        sortField = { commentsCount: -1 };
         break;
       case "Reviews":
-        const ranking1 = await Ranking.findOne().lean();
-
-        if (ranking1 && ranking1.topByRatings) {
-          novels = ranking1.topByRatings.sort(
-            (a, b) => b.reviewCount - a.reviewCount
-          );
-        }
+        sortField = { reviewCount: -1 };
         break;
       default:
         sortField = { createdAt: -1 }; // Default sort by newest
-        novels = await Ranking.find({}).sort(sortField).limit(limit);
+        break;
     }
 
-    res.status(200).json({
-      novels,
-    });
+    const novels = await Novel.find({})
+      .sort(sortField)
+      .skip(skip)
+      .limit(limit)
+      .select("-chapters")
+      .exec();
+
+    res.status(200).json({ novels });
   } catch (error) {
-    console.error("Error in listAllNovels:", error.message);
+    console.error("Error in getRankingPageNovels:", error.message);
     res.status(500).json({ message: "Server error" });
   }
 };
 
 const getRankings = async (req, res) => {
   try {
-    const latestRanking = await Ranking.findOne().sort({ updatedAt: -1 });
+    // Get top novels by comments
+    const topByComments = await Novel.find({})
+      .sort({ commentsCount: -1 })
+      .limit(100)
+      .select("-chapters")
+      .exec();
 
-    if (!latestRanking) {
-      return res.status(404).json({ message: "No rankings available" });
-    }
+    // Get top novels by views
+    const topByViews = await Novel.find({})
+      .sort({ views: -1 })
+      .limit(100)
+      .select("-chapters")
+      .exec();
+
+    // Get top novels by ratings
+    const topByRatings = await Novel.find({})
+      .sort({ rating: -1 })
+      .limit(100)
+      .select("-chapters")
+      .exec();
 
     res.status(200).json({
-      topByComments: latestRanking.topByComments,
-      topByViews: latestRanking.topByViews,
-      topByRatings: latestRanking.topByRatings,
+      topByComments,
+      topByViews,
+      topByRatings,
     });
   } catch (error) {
     console.error("Error retrieving rankings:", error);

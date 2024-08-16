@@ -1,13 +1,15 @@
 import cron from "node-cron";
-import Ranking from "../models/ranking.model.js";
 import Comment from "../models/comment.model.js";
 import Novel from "../models/novel.model.js";
 import Review from "../models/review.model.js";
 import mongoose from "mongoose";
 
 const updateRankings = async () => {
-  const getTopNovelsByComments = async () => {
-    return await Comment.aggregate([
+  try {
+    console.log("Updating rankings");
+
+    // Get top novels by comments
+    const topByComments = await Comment.aggregate([
       {
         $group: {
           _id: "$novelId",
@@ -20,50 +22,10 @@ const updateRankings = async () => {
       {
         $limit: 100,
       },
-      {
-        $lookup: {
-          from: "novels",
-          localField: "_id",
-          foreignField: "_id",
-          as: "novelDetails",
-        },
-      },
-      {
-        $unwind: "$novelDetails",
-      },
-      {
-        $lookup: {
-          from: "reviews",
-          localField: "_id",
-          foreignField: "novelId",
-          as: "reviewDetails",
-        },
-      },
-      {
-        $addFields: {
-          reviewCount: { $size: "$reviewDetails" },
-        },
-      },
-      {
-        $project: {
-          _id: 0,
-          novelId: "$_id",
-          commentsCount: 1,
-          reviewCount: 1,
-          bookmarkCount: 1,
-          title: "$novelDetails.title",
-          slugTitle: "$novelDetails.slugTitle",
-          categories: "$novelDetails.categories",
-          cover: "$novelDetails.cover",
-          author: "$novelDetails.author",
-          status: "$novelDetails.status",
-        },
-      },
-    ]).exec();
-  };
+    ]);
 
-  const getTopNovelsByRatings = async () => {
-    return await Review.aggregate([
+    // Get top novels by ratings
+    const topByRatings = await Review.aggregate([
       {
         $group: {
           _id: "$novelId",
@@ -72,74 +34,37 @@ const updateRankings = async () => {
         },
       },
       {
-        $sort: { averageRating: -1 },
+        $sort: { rating: -1 },
       },
       {
         $limit: 100,
       },
-      {
-        $lookup: {
-          from: "novels",
-          localField: "_id",
-          foreignField: "_id",
-          as: "novelDetails",
-        },
-      },
-      {
-        $unwind: "$novelDetails",
-      },
-      {
-        $project: {
-          _id: 0,
-          novelId: "$_id",
-          averageRating: 1,
-          reviewCount: 1,
-          bookmarkCount: 1,
-          title: "$novelDetails.title",
-          slugTitle: "$novelDetails.slugTitle",
-          categories: "$novelDetails.categories",
-          cover: "$novelDetails.cover",
-          author: "$novelDetails.author",
-          status: "$novelDetails.status",
-        },
-      },
-    ]).exec();
-  };
+    ]);
 
-  const getTopNovelsByViews = async () => {
-    return await Novel.find()
-      .sort({ views: -1 })
-      .select("-chapters")
-      .limit(100)
-      .exec();
-  };
+    // Update novel documents
+    const updatePromises = [];
 
-  try {
-    console.log("Updating rankings");
+    topByComments.forEach(({ _id, commentsCount }) => {
+      updatePromises.push(
+        Novel.updateOne(
+          { _id },
+          { $set: { commentsCount } },
+          { timestamps: false }
+        )
+      );
+    });
 
-    const topByComments = await getTopNovelsByComments();
-    const topByRatings = await getTopNovelsByRatings();
-    const topByViews = await getTopNovelsByViews();
+    topByRatings.forEach(({ _id, averageRating, reviewCount }) => {
+      updatePromises.push(
+        Novel.updateOne(
+          { _id },
+          { $set: { rating: averageRating, reviewCount } },
+          { timestamps: false }
+        )
+      );
+    });
 
-    const rankingData = {
-      topByComments,
-      topByRatings,
-      topByViews,
-    };
-
-    const result = await Ranking.updateOne(
-      {},
-      { $set: rankingData },
-      { upsert: true, timestamps: false }
-    );
-
-    if (result.upsertedCount > 0) {
-      console.log("New ranking document created.");
-    } else if (result.modifiedCount > 0) {
-      console.log("Existing ranking document updated.");
-    } else {
-      console.log("No changes made to the ranking document.");
-    }
+    await Promise.all(updatePromises);
 
     console.log("Rankings updated successfully");
   } catch (error) {
@@ -151,7 +76,6 @@ const novelRanks = async () => {
     const novels = await Novel.find({});
 
     const readCounts = novels.map(novel => novel.views);
-
     const minReadCount = Math.min(...readCounts);
     const maxReadCount = Math.max(...readCounts);
 

@@ -1,4 +1,4 @@
-import { createContext, useState, useEffect, useContext } from "react";
+import { createContext, useState, useEffect, useContext, useMemo } from "react";
 import Cookies from "js-cookie";
 
 const ThemeContext = createContext();
@@ -44,17 +44,20 @@ export const ThemeProvider = ({ children }) => {
     setHighlightColor(color);
   };
 
+  const contextValue = useMemo(
+    () => ({
+      theme,
+      toggleTheme,
+      bgColor,
+      changeBgColor,
+      highlightColor,
+      changeHighlightColor,
+    }),
+    [theme, bgColor, highlightColor]
+  );
+
   return (
-    <ThemeContext.Provider
-      value={{
-        theme,
-        toggleTheme,
-        bgColor,
-        changeBgColor,
-        highlightColor,
-        changeHighlightColor,
-      }}
-    >
+    <ThemeContext.Provider value={contextValue}>
       {children}
     </ThemeContext.Provider>
   );

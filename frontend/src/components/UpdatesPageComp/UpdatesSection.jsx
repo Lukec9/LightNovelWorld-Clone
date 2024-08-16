@@ -1,8 +1,29 @@
-import { lazy, Suspense } from "react";
+import { lazy, Suspense, useCallback, useEffect, useState } from "react";
+import axiosInstance from "../../axios";
+import notify from "../../utils/toastUtil";
 
 const UpdatesNovelItem = lazy(() => import("./UpdatesNovelItem"));
 
 const UpdatesSection = () => {
+  const [recentChapNovels, setRecentChapNovels] = useState([]);
+
+  const getRecentChapNovels = useCallback(async () => {
+    try {
+      const response = await axiosInstance.get(
+        "/novels?limit=40&status=All&sortBy=Updates"
+      );
+      if (response && response.data) {
+        setRecentChapNovels(response.data.novels);
+      }
+    } catch (error) {
+      notify("error", "Something went wrong!");
+    }
+  }, []);
+
+  useEffect(() => {
+    getRecentChapNovels();
+  }, []);
+
   return (
     <section className="recent-chap">
       <div className="section-header ">
@@ -15,19 +36,11 @@ const UpdatesSection = () => {
       </div>{" "}
       <div className="section-body">
         <div className="novel-list">
-          {Array(40)
-            .fill(null)
-            .map((_, i) => (
-              <Suspense key={i}>
-                <UpdatesNovelItem
-                  key={i}
-                  title={"Lightning Is The Only Way"}
-                  rank={1}
-                  chapters={"1000"}
-                  img={"/assets/01485-lightning-is-the-only-way.jpg"}
-                />
-              </Suspense>
-            ))}
+          {recentChapNovels.map((novel, i) => (
+            <Suspense key={i}>
+              <UpdatesNovelItem key={novel._id} novel={novel} />
+            </Suspense>
+          ))}
         </div>
       </div>
     </section>
