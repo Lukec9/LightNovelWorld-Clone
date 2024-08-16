@@ -18,7 +18,7 @@ const updateRankings = async () => {
         $sort: { commentsCount: -1 },
       },
       {
-        $limit: 10,
+        $limit: 100,
       },
       {
         $lookup: {
@@ -53,8 +53,10 @@ const updateRankings = async () => {
           bookmarkCount: 1,
           title: "$novelDetails.title",
           slugTitle: "$novelDetails.slugTitle",
+          categories: "$novelDetails.categories",
           cover: "$novelDetails.cover",
           author: "$novelDetails.author",
+          status: "$novelDetails.status",
         },
       },
     ]).exec();
@@ -73,7 +75,7 @@ const updateRankings = async () => {
         $sort: { averageRating: -1 },
       },
       {
-        $limit: 10,
+        $limit: 100,
       },
       {
         $lookup: {
@@ -95,9 +97,10 @@ const updateRankings = async () => {
           bookmarkCount: 1,
           title: "$novelDetails.title",
           slugTitle: "$novelDetails.slugTitle",
-
+          categories: "$novelDetails.categories",
           cover: "$novelDetails.cover",
           author: "$novelDetails.author",
+          status: "$novelDetails.status",
         },
       },
     ]).exec();
@@ -107,7 +110,7 @@ const updateRankings = async () => {
     return await Novel.find()
       .sort({ views: -1 })
       .select("-chapters")
-      .limit(10)
+      .limit(100)
       .exec();
   };
 
@@ -194,7 +197,7 @@ const novelRanks = async () => {
 const start = () => {
   // Schedule the update to run every week (e.g., every Sunday at midnight)
   // cron.schedule("0 0 * * 0", updateRankings);
-  cron.schedule("*/15 * * * *", updateRankings);
+  cron.schedule("0 * * * *", updateRankings);
   cron.schedule("0 * * * *", novelRanks);
 
   console.log("Cron job started: Rankings update every Sunday at midnight");

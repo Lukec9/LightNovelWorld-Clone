@@ -11,6 +11,8 @@ const rankingSchema = new Schema({
       slugTitle: String,
       cover: String,
       author: String,
+      categories: [String],
+      status: String,
     },
   ],
   topByRatings: [
@@ -21,9 +23,10 @@ const rankingSchema = new Schema({
       novelId: { type: Schema.Types.ObjectId, ref: "Novel" },
       title: String,
       slugTitle: String,
-
+      categories: [String],
       cover: String,
       author: String,
+      status: String,
     },
   ],
   topByViews: [
@@ -31,11 +34,12 @@ const rankingSchema = new Schema({
       _id: { type: Schema.Types.ObjectId, ref: "Novel" }, // The novel ID
       title: String,
       slugTitle: String,
-
       cover: String,
       author: String,
       views: Number,
       bookmarkCount: Number,
+      categories: [String],
+      status: String,
     },
   ],
 });

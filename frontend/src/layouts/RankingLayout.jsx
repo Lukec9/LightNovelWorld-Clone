@@ -4,7 +4,7 @@ import RankingFilter from "../components/RankingPageComp/RankingFilter";
 import { useEffect, useState } from "react";
 
 const RankingLayout = () => {
-  const [activeFilter, setActiveFilter] = useState("");
+  const [activeFilter, setActiveFilter] = useState("Ranking");
   const location = useLocation();
   const path = location.pathname;
 
@@ -88,7 +88,7 @@ const RankingLayout = () => {
             <p>{paragraph}</p>
           </div>
         </div>
-        <Outlet />
+        <Outlet context={{ activeFilter }} />
       </div>
     </div>
   );

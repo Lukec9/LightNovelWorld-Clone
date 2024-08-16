@@ -14,6 +14,7 @@ import {
   getNovel,
   getNovelComments,
   getNovelReviews,
+  getRankingPageNovels,
   getRankings,
   getUserProgress,
   listAllNovels,
@@ -48,6 +49,7 @@ router.post(
 router.get("/search", searchNovels);
 router.put("/progress", protectRoute, updateUserProgress);
 router.get("/rankings", getRankings);
+router.get("/rankingspage", getRankingPageNovels);
 
 router.get("/:query", getNovel);
 

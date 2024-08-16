@@ -1,15 +1,17 @@
+import { Link } from "react-router-dom";
+
 const RankingFilter = ({ title, desc, isActive }) => {
   return (
     <li className={isActive ? "active" : ""}>
-      <a
+      <Link
         title={title}
-        href={
+        to={
           title === "Ranking" ? "/ranking" : `/ranking/${title.toLowerCase()}`
         }
       >
         <span>{title}</span>
         <small>{desc}</small>
-      </a>
+      </Link>
     </li>
   );
 };

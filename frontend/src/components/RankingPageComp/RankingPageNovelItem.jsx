@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
+import { Link } from "react-router-dom";
 
-const RankingPageNovelItem = ({ title, img }) => {
+const RankingPageNovelItem = ({ title, img, novel }) => {
   const scrollContainerRef = useRef(null);
   const [hasOverflow, setHasOverflow] = useState(false);
 
@@ -41,20 +42,22 @@ const RankingPageNovelItem = ({ title, img }) => {
 
   return (
     <li className="novel-item">
-      <a title={title} href="#">
+      <Link title={novel.title} to={`/novels/${novel.slugTitle}`}>
         <figure className="cover">
-          <img src={img} alt="" />
+          <img src={novel.cover} alt={`${novel.title}'s cover`} />
         </figure>
-      </a>
+      </Link>
       <div className="novel-stats">
         <div className="status-group">
           <span className="rank-counter"></span>
-          <span className="status">Ongoing</span>
+          <span className="status">{novel.status}</span>
         </div>
         <h2 className="title ">
-          <a title={title} href="/novel/shadow-slave-05122222">
-            {title.length > 18 ? title.substring(0, 18) + "..." : title}
-          </a>
+          <Link title={title} to={`/novels/${novel.slugTitle}`}>
+            {novel.title.length > 18
+              ? novel.title.substring(0, 18) + "..."
+              : novel.title}
+          </Link>
         </h2>{" "}
         <div className="categories ">
           {hasOverflow && (
@@ -66,22 +69,9 @@ const RankingPageNovelItem = ({ title, img }) => {
             </i>
           )}
           <div ref={scrollContainerRef} className="scroll">
-            <span>Action</span>
-            <span>Adventure</span>
-            <span>Fantasy</span>
-            <span>Romance</span>
-            <span>Action</span>
-            <span>Adventure</span>
-            <span>Fantasy</span>
-            <span>Romance</span>
-            <span>Action</span>
-            <span>Adventure</span>
-            <span>Fantasy</span>
-            <span>Romance</span>
-            <span>Action</span>
-            <span>Adventure</span>
-            <span>Fantasy</span>
-            <span>Romance</span>
+            {novel.categories.map(c => (
+              <span>{c}</span>
+            ))}
           </div>
           {hasOverflow && (
             <i
