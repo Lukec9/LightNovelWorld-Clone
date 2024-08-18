@@ -5,7 +5,8 @@ import {
   useMemo,
   useReducer,
 } from "react";
-import Cookies from "js-cookie";
+import axios from "axios"; // Use axios for API requests
+import axiosInstance from "../axios";
 
 const initialState = {
   user: null,
@@ -29,6 +30,7 @@ const reducer = (state, action) => {
       return {
         ...state,
         user: null,
+        loading: false,
       };
     case UPDATE_USER:
       return {
@@ -59,22 +61,46 @@ export const AuthContextProvider = ({ children }) => {
   const [state, dispatch] = useReducer(reducer, initialState);
 
   useEffect(() => {
-    dispatch({ type: SET_LOADING });
-    const userFromCookies = Cookies.get("user");
-    if (userFromCookies) {
-      dispatch({ type: LOGIN, payload: JSON.parse(userFromCookies) });
-    }
-    dispatch({ type: "STOP_LOADING" });
+    const fetchUser = async () => {
+      try {
+        dispatch({ type: SET_LOADING });
+        const response = await axiosInstance.get("users/me");
+        if (response.data) {
+          dispatch({ type: LOGIN, payload: response.data });
+        } else {
+          dispatch({ type: LOGOUT });
+        }
+      } catch (error) {
+        console.error("Failed to fetch user:", error);
+        dispatch({ type: LOGOUT });
+      } finally {
+        dispatch({ type: "STOP_LOADING" });
+      }
+    };
+
+    fetchUser();
   }, []);
 
-  const login = userData => {
-    dispatch({ type: LOGIN, payload: userData });
-    Cookies.set("user", JSON.stringify(userData), { expires: 7 }); // Expires in 7 days
+  const login = () => {
+    try {
+      dispatch({ type: SET_LOADING });
+      dispatch({ type: LOGIN, payload: response.data.user });
+    } catch (error) {
+      console.error("Login failed:", error);
+    } finally {
+      dispatch({ type: "STOP_LOADING" });
+    }
   };
 
-  const logout = () => {
-    dispatch({ type: LOGOUT });
-    Cookies.remove("user");
+  const logout = async () => {
+    try {
+      dispatch({ type: SET_LOADING });
+      dispatch({ type: LOGOUT });
+    } catch (error) {
+      console.error("Logout failed:", error);
+    } finally {
+      dispatch({ type: "STOP_LOADING" });
+    }
   };
 
   const contextValue = useMemo(

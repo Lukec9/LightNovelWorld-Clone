@@ -89,5 +89,22 @@ const getBookmarkedNovels = async (req, res) => {
     res.status(500).json({ message: "Server error" });
   }
 };
+const getBookmarkedNovel = async (req, res) => {
+  try {
+    const userId = req.user._id;
+    const { novelId } = req.params;
 
-export { addBookmark, removeBookmark, getBookmarkedNovels };
+    const bookmark = await Bookmark.find({ userId, novelId }).exec();
+    if (!bookmark || bookmark.length === 0)
+      return res
+        .status(404)
+        .json({ message: "Novel is not bookmarked/No bookmark found" });
+
+    res.status(200).json({ bookmark });
+  } catch (error) {
+    console.error("Error fetching bookmarked novels:", error.message);
+    res.status(500).json({ message: "Server error" });
+  }
+};
+
+export { addBookmark, removeBookmark, getBookmarkedNovels, getBookmarkedNovel };

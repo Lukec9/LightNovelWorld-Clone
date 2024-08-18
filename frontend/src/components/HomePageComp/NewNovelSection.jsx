@@ -2,6 +2,7 @@ import { Suspense, useCallback, useEffect, useState } from "react";
 import NovelItem from "./NovelItem";
 import axiosInstance from "../../axios";
 import Spinner from "../Spinner";
+import notify from "../../utils/toastUtil";
 
 const NewNovelSection = () => {
   const [newNovels, setNewNovels] = useState([]);
@@ -15,7 +16,7 @@ const NewNovelSection = () => {
         setNewNovels(response.data.novels);
       }
     } catch (error) {
-      console.error("Error fetching compnovels:", error);
+      console.error("Error fetching newnovels:", error);
       notify("error", "Something went wrong!");
     }
   }, []);

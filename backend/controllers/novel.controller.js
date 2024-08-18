@@ -547,38 +547,72 @@ const listAllNovels = async (req, res) => {
 const getNovelComments = async (req, res) => {
   try {
     const { novelId } = req.params;
+    const { filter } = req.query;
+    let { page, limit } = req.query;
 
-    // Check if novelId is a valid ObjectId
+    page = parseInt(page, 10) || 1; // Defaults to page 1
+    limit = parseInt(limit, 10) || 20; // Defaults to limit 20
+
+    if (page <= 0) page = 1; // Ensure page is positive
+    if (limit <= 0 || limit > 100) limit = 20; // Ensure limit is within range
+
     if (!mongoose.Types.ObjectId.isValid(novelId)) {
       return res.status(400).json({ message: "Invalid novel ID" });
     }
 
-    const novelObjectId = mongoose.Types.ObjectId.createFromHexString(novelId);
+    let query = { novelId: novelId };
+    let sort = { createdAt: -1 }; // Default sorting: newest
 
-    // Aggregation pipeline
-    const comments = await Comment.aggregate([
-      { $match: { novelId: novelObjectId } }, // Match the novelId
-      {
-        $lookup: {
-          from: "users", // Collection name for the User model
-          localField: "userId",
-          foreignField: "_id",
-          as: "userDetails",
-        },
-      },
-      { $unwind: "$userDetails" },
-      {
-        $project: {
-          "userDetails.hash": 0,
-          "userDetails.salt": 0,
-          "userDetails.about": 0,
-          "userDetails.lastActivity": 0,
-        },
-      },
-      { $sort: { createdAt: -1 } }, // Sort by creation date, newest first
-    ]);
+    if (filter === "mostLikedThisWeek") {
+      const now = new Date();
+      const startOfWeek = new Date(now);
+      startOfWeek.setDate(now.getDate() - 7);
+      query.createdAt = { $gte: startOfWeek, $lte: now };
+      sort = { likeCount: -1 };
+    } else if (filter === "mostLikedThisMonth") {
+      const now = new Date();
+      const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
+      const endOfMonth = new Date(now.getFullYear(), now.getMonth() + 1, 0);
+      query.createdAt = { $gte: startOfMonth, $lte: endOfMonth };
+      sort = { likeCount: -1 };
+    } else if (filter === "mostLikedAllTime") {
+      sort = { likeCount: -1 };
+    }
 
-    res.status(200).json({ comments });
+    const skip = (page - 1) * limit;
+
+    // Fetch comments
+    const comments = await Comment.find(query)
+      .populate("userId", "-hash -salt -about -lastActivity")
+      .skip(skip)
+      .limit(limit)
+      .sort(sort)
+      .lean();
+
+    // Calculate likeCount dynamically
+    const commentsWithLikeCount = comments.map(comment => ({
+      ...comment,
+      likeCount: comment.likes.length,
+    }));
+
+    // Sort comments by likeCount if required
+    if (
+      ["mostLikedThisWeek", "mostLikedThisMonth", "mostLikedAllTime"].includes(
+        filter
+      )
+    ) {
+      commentsWithLikeCount.sort((a, b) => b.likeCount - a.likeCount);
+    }
+
+    // Count total number of comments for this novel
+    const totalComments = await Comment.countDocuments(query);
+
+    res.status(200).json({
+      comments: commentsWithLikeCount,
+      currentPage: page,
+      totalPages: Math.ceil(totalComments / limit),
+      totalComments,
+    });
   } catch (err) {
     console.error("Error fetching comments:", err.message);
     res.status(500).json({ message: "Server error" });
@@ -1096,8 +1130,8 @@ const updateComment = async (req, res) => {
       .escape()
       .notEmpty()
       .withMessage("Text is required")
-      .isLength({ min: 100 })
-      .withMessage("Minimum lenght is 100 characters!"),
+      .isLength({ min: 3 })
+      .withMessage("Minimum lenght is 3 characters!"),
   ];
 
   await Promise.all(validations.map(validation => validation.run(req)));
@@ -1214,33 +1248,38 @@ const commentLikeDislike = async (req, res) => {
     }
 
     // Find the comment
-    const comment = await Comment.findById(commentId);
+    let comment = await Comment.findById(commentId);
     if (!comment) return res.status(404).json({ error: "Comment not found" });
 
-    // Handle like or dislike action
+    const update = {};
     if (type === "like") {
       if (comment.likes.includes(userId)) {
-        // If user already liked, remove like
-        comment.likes = comment.likes.filter(id => !id.equals(userId));
+        update.$pull = { likes: userId };
       } else {
-        // Remove dislike if it exists
-        comment.dislikes = comment.dislikes.filter(id => !id.equals(userId));
-        // Add like
-        comment.likes.push(userId);
+        update.$pull = { dislikes: userId };
+        update.$addToSet = { likes: userId };
       }
     } else if (type === "dislike") {
       if (comment.dislikes.includes(userId)) {
-        // If user already disliked, remove dislike
-        comment.dislikes = comment.dislikes.filter(id => !id.equals(userId));
+        update.$pull = { dislikes: userId };
       } else {
-        // Remove like if it exists
-        comment.likes = comment.likes.filter(id => !id.equals(userId));
-        // Add dislike
-        comment.dislikes.push(userId);
+        update.$pull = { likes: userId };
+        update.$addToSet = { dislikes: userId };
       }
     }
 
-    await comment.save();
+    // Ensure that `update` contains the necessary fields before attempting to save
+    if (Object.keys(update).length === 0) {
+      return res.status(400).json({ error: "No update required" });
+    }
+
+    // Perform the update
+    comment = await Comment.findOneAndUpdate({ _id: commentId }, update, {
+      new: true,
+    });
+
+    if (!comment) return res.status(404).json({ error: "Comment not found" });
+
     res.status(200).json({
       message: `${
         type.charAt(0).toUpperCase() + type.slice(1)

@@ -6,6 +6,7 @@ import Pagination from "../components/BrowsePageComp/Pagination";
 import Spinner from "../components/Spinner";
 import axiosInstance from "../axios";
 import notify from "../utils/toastUtil";
+import { useLocation } from "react-router-dom";
 const BrowseNovelItem = lazy(() =>
   import("../components/BrowsePageComp/BrowseNovelItem")
 );
@@ -17,6 +18,17 @@ const BrowsePage = () => {
     order: "New",
     status: "All",
   });
+  const location = useLocation();
+
+  // Function to parse query parameters
+  const getQueryParams = () => {
+    const params = new URLSearchParams(location.search);
+    const category = params.get("category") || "All";
+    const order = params.get("sortBy") || "New";
+    const status = params.get("status") || "All";
+
+    return { category, order, status };
+  };
 
   const getBrowseNovels = async () => {
     try {
@@ -31,6 +43,11 @@ const BrowsePage = () => {
       notify("error", "Something went wrong!");
     }
   };
+
+  useEffect(() => {
+    const queryParams = getQueryParams();
+    setActiveCategory(queryParams);
+  }, [location.search]);
 
   useEffect(() => {
     getBrowseNovels();

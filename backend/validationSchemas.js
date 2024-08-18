@@ -102,10 +102,11 @@ const commentValidation = [
   body("text")
     .isString()
     .trim()
-    .escape()
+    // .escape()
     .notEmpty()
-    .withMessage("Text is required"),
-
+    .withMessage("Text is required")
+    .isLength({ min: 3, max: 1000 })
+    .withMessage("Comment should be atleast 3 and a max of 1000 characters"),
   check("likes")
     .optional()
     .isArray()

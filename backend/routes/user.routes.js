@@ -1,6 +1,7 @@
 import express from "express";
 import {
   deleteUser,
+  getMe,
   getUserComments,
   getUserProfile,
   getUserReviews,
@@ -11,12 +12,12 @@ import {
   updateUser,
 } from "../controllers/user.controller.js";
 import protectRoute from "../middleware/protectRoute.js";
-import { cloudinary, upload } from "../cloudinaryConfig.js";
 import validationSchemas from "../validationSchemas.js";
 import { getBookmarkedNovels } from "../controllers/bookmark.controller.js";
 
 const router = express.Router();
 
+router.get("/me", getMe);
 router.get("/profile/:query", protectRoute, getUserProfile);
 router.get("/bookmarks", protectRoute, getBookmarkedNovels);
 router.post("/signup", validationSchemas.userValidation, signupUser);

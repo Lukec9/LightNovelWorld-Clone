@@ -371,6 +371,10 @@
   margin-bottom: 0;
 }
 
+#novel .comment-list {
+  width: 100%;
+}
+
 #novel a.reply {
   display: flex;
   align-items: center;
@@ -403,7 +407,7 @@
   margin-left: 10px;
 }
 
-.expand-wrapper::after {
+/* .expand-wrapper::after {
   position: absolute;
   top: 13.3rem;
   right: 0;
@@ -420,7 +424,7 @@
 }
 
 .expand-wrapper {
-  /* max-height: 15rem; */
+  max-height: 15rem;
   overflow: hidden;
   position: relative;
   -webkit-transition: all 0.5s ease-in-out;
@@ -428,6 +432,71 @@
   -ms-transition: all 0.5s ease-in-out;
   -o-transition: all 0.5s ease-in-out;
   transition: all 0.5s ease-in-out;
+} */
+
+.expand-checkbox {
+  display: none;
+}
+
+/* Container for expandable content */
+.expand-wrapper {
+  max-height: 15rem; /* Set the maximum height for collapsed state */
+  overflow: hidden;
+  position: relative;
+  transition: max-height 0.5s ease-in-out;
+}
+
+/* Gradient fade effect at the bottom */
+.expand-wrapper::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 2rem; /* Adjust height if needed */
+  background: linear-gradient(
+    to bottom,
+    transparent 0%,
+    var(--fade) 20%,
+    var(--bg-color-2) 85%
+  );
+  z-index: 1;
+}
+
+/* Remove height restriction and gradient when expanded */
+.expand-checkbox:checked ~ .expand-wrapper {
+  max-height: none;
+}
+
+.expand-checkbox:checked ~ .expand-wrapper::after {
+  display: none;
+}
+.expand-checkbox:checked ~ .expand-button::after {
+  content: "Read Less";
+}
+
+/* Button to toggle expand/collapse */
+.expand-button {
+  display: none; /* Initially hidden */
+  margin-top: 1rem;
+  color: white;
+  border: none;
+  padding: 0.2rem 0.2rem;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: background-color 0.3s ease;
+}
+
+.expand-button::after {
+  content: "Read more";
+}
+
+/* Show button only if content overflows */
+.expand-wrapper + .expand-button {
+  display: block;
+}
+.expand-wrapper p {
+  margin-bottom: 1rem; /* Adjust spacing as needed */
 }
 
 #info .tags ul {

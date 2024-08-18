@@ -32,6 +32,7 @@ import { upload } from "../cloudinaryConfig.js";
 import validationSchemas from "../validationSchemas.js";
 import {
   addBookmark,
+  getBookmarkedNovel,
   removeBookmark,
 } from "../controllers/bookmark.controller.js";
 
@@ -117,6 +118,7 @@ router.put(
 
 router
   .route("/:novelId/bookmarks")
+  .get(protectRoute, getBookmarkedNovel)
   .post(protectRoute, addBookmark)
   .delete(protectRoute, removeBookmark);
 

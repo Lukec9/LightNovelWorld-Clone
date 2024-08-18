@@ -8,7 +8,6 @@ import "../../styles/AccountPages/AccountPageStyles.css";
 import notify from "../../utils/toastUtil";
 import usePreviewImg from "../../hooks/usePreviewImg";
 import axiosInstance from "../../axios";
-import Cookies from "js-cookie";
 import axios from "axios";
 
 const AccountPage = () => {
@@ -102,16 +101,6 @@ const AccountPage = () => {
 
       if (response.status === 200) {
         await dispatch({ type: "UPDATE_USER", payload: response.data.user });
-
-        Cookies.set(
-          "user",
-          JSON.stringify({
-            ...JSON.parse(Cookies.get("user")),
-            username: response.data.user.username,
-            about: response.data.user.about,
-            profilePic: response.data.user.profilePic,
-          })
-        );
 
         setInputs({
           username: response.data.user.username,

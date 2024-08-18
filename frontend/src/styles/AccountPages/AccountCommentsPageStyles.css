@@ -644,6 +644,10 @@
 .comment-list ul li .comment-item .comment-body .toolbar .usrlike label:hover {
   color: var(--anchor-color);
 }
+
+.comment-list ul li .comment-item .comment-body .toolbar .usrlike label.active {
+  color: var(--anchor-color);
+}
 .comment-list
   ul
   li

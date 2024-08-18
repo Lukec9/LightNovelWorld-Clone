@@ -4,7 +4,7 @@ import Comment from "../models/comment.model.js";
 import Bookmark from "../models/bookmark.model.js";
 import UserProgress from "../models/userProgress.model.js";
 
-import { validationResult, body } from "express-validator";
+import { body } from "express-validator";
 import mongoose from "mongoose";
 import passport from "passport";
 import { cloudinary } from "../cloudinaryConfig.js";
@@ -374,6 +374,14 @@ const getUserStats = async (req, res) => {
   }
 };
 
+const getMe = async (req, res) => {
+  if (req.isAuthenticated()) {
+    res.json(req.user);
+  } else {
+    res.status(401).send("Not authenticated");
+  }
+};
+
 export {
   signupUser,
   loginUser,
@@ -384,4 +392,5 @@ export {
   getUserComments,
   getUserReviews,
   getUserStats,
+  getMe,
 };
