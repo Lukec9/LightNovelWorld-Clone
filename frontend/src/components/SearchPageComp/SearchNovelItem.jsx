@@ -5,7 +5,7 @@ const SearchNovelItem = ({ novel }) => {
     <li className="novel-item">
       <Link
         title={novel.title}
-        to={`novel/${novel.slugTitle}`}
+        to={`/novel/${novel.slugTitle}`}
         className="item-cover"
       >
         <div className="novel-coverfig">
@@ -14,7 +14,7 @@ const SearchNovelItem = ({ novel }) => {
       </Link>
       <div className="item-stats">
         <h4 className="novel-title ">
-          <Link title="Shadow Slave" to={`novel/${novel.slugTitle}`}>
+          <Link title="Shadow Slave" to={`/novel/${novel.slugTitle}`}>
             {novel.title.length > 18
               ? novel.title.substring(0, 18) + "..."
               : novel.title}{" "}

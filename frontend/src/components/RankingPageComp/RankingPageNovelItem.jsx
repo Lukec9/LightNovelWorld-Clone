@@ -42,7 +42,7 @@ const RankingPageNovelItem = ({ title, img, novel }) => {
 
   return (
     <li className="novel-item">
-      <Link title={novel.title} to={`/novels/${novel.slugTitle}`}>
+      <Link title={novel.title} to={`/novel/${novel.slugTitle}`}>
         <figure className="cover">
           <img src={novel.cover} alt={`${novel.title}'s cover`} />
         </figure>
@@ -53,7 +53,7 @@ const RankingPageNovelItem = ({ title, img, novel }) => {
           <span className="status">{novel.status}</span>
         </div>
         <h2 className="title ">
-          <Link title={title} to={`/novels/${novel.slugTitle}`}>
+          <Link title={title} to={`/novel/${novel.slugTitle}`}>
             {novel.title.length > 18
               ? novel.title.substring(0, 18) + "..."
               : novel.title}

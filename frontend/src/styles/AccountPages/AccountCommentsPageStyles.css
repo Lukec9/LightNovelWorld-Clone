@@ -648,7 +648,7 @@
 .comment-list ul li .comment-item .comment-body .toolbar .usrlike label.active {
   color: var(--anchor-color);
 }
-.comment-list
+/* .comment-list
   ul
   li
   .comment-item
@@ -658,8 +658,8 @@
   input[type="radio"]:checked
   + label {
   color: var(--anchor-color);
-}
-.comment-list
+} */
+/* .comment-list
   ul
   li
   .comment-item
@@ -682,7 +682,7 @@
   + label
   .icon-thumbs-up:before {
   content: "";
-}
+} */
 .comment-list ul li .comment-item .comment-body .toolbar .user-command {
   position: relative;
   font-size: 0;

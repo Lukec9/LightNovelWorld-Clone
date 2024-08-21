@@ -1,9 +1,21 @@
-import React, { useCallback, useEffect, useState, Suspense, lazy } from "react";
+import React, {
+  useCallback,
+  useEffect,
+  useState,
+  Suspense,
+  lazy,
+  memo,
+} from "react";
 import axiosInstance from "../../axios";
 const NovelComment = lazy(() => import("./NovelComment"));
 import Spinner from "../Spinner";
 
-const CommentSection = ({ novel, openModal }) => {
+const CommentSection = ({
+  novel,
+  openModal,
+  onChapter = false,
+  chapterNumber,
+}) => {
   const [comments, setComments] = useState([]);
   const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(false);
@@ -18,7 +30,43 @@ const CommentSection = ({ novel, openModal }) => {
       const response = await axiosInstance.get(
         `/novels/${novel._id}/comments`,
         {
-          params: { filter, page, limit: 10 }, // Adjust limit as needed
+          params: { filter, page, limit: 5 }, // Adjust limit as needed
+        }
+      );
+
+      if (response.status === 200) {
+        const newComments = response.data.comments;
+
+        // Ensure uniqueness based on `_id`
+        const existingCommentIds = new Set(
+          comments.map(comment => comment._id)
+        );
+        const uniqueNewComments = newComments.filter(
+          comment => !existingCommentIds.has(comment._id)
+        );
+
+        setComments(prevComments =>
+          page === 1
+            ? uniqueNewComments
+            : [...prevComments, ...uniqueNewComments]
+        );
+        setHasMore(uniqueNewComments.length === 5); // Adjust based on your limit
+      }
+    } catch (error) {
+      console.error("Failed to load comments", error);
+    } finally {
+      setLoading(false);
+    }
+  }, [page, novel, filter]);
+  const fetchChapterComments = useCallback(async () => {
+    if (!onChapter) return;
+    if (!novel) return;
+    setLoading(true);
+    try {
+      const response = await axiosInstance.get(
+        `/novels/${novel._id}/chapters/${chapterNumber}/comments`,
+        {
+          params: { page, limit: 10 }, // Adjust limit as needed
         }
       );
 
@@ -45,17 +93,21 @@ const CommentSection = ({ novel, openModal }) => {
     } finally {
       setLoading(false);
     }
-  }, [page, novel, filter]);
+  }, [page, novel, chapterNumber]);
 
   useEffect(() => {
-    fetchComments();
-  }, [fetchComments]);
+    if (onChapter) {
+      fetchChapterComments();
+    } else {
+      fetchComments();
+    }
+  }, [fetchComments, fetchChapterComments, onChapter]);
 
   useEffect(() => {
     const handleScroll = () => {
       if (
         window.innerHeight + document.documentElement.scrollTop >=
-        document.documentElement.scrollHeight - 200 // Trigger 200px before the bottom
+        document.documentElement.scrollHeight - 100 // Trigger 200px before the bottom
       ) {
         if (hasMore && !loading) {
           setPage(prevPage => prevPage + 1);
@@ -71,10 +123,16 @@ const CommentSection = ({ novel, openModal }) => {
   }, [hasMore, loading]);
 
   useEffect(() => {
+    setLoading(true);
     setPage(1);
+    setHasMore(true);
     setComments([]);
-    fetchComments();
-  }, [filter]);
+    if (onChapter) {
+      fetchChapterComments();
+    } else {
+      fetchComments();
+    }
+  }, [filter, onChapter]);
 
   const handleFilterChange = event => {
     const selectedFilter = event.target.value;
@@ -96,83 +154,88 @@ const CommentSection = ({ novel, openModal }) => {
         <br />
         By sharing your comment, you agree to all the relevant terms.
       </div>
-      <div className="chapter-comments-group">
-        <p className="com-grp-desc">
-          Comments on the novel chapters for the last week.
-        </p>
-        <div className="com-grp-list">
-          {comments.slice(0, 5).map(comment => (
-            <div key={comment._id} className="com-grp-item">
-              <span className="text1row">
-                <time dateTime={comment.date}>
-                  {new Date(comment.date).toLocaleString()}{" "}
-                  {/* Adjust formatting as needed */}
-                </time>
-                : <strong>{comment.count}</strong> comment
-                {comment.count > 1 ? "s" : ""} on Chapter {comment.chapterTitle}
-              </span>
+      {!onChapter && (
+        <>
+          <div className="chapter-comments-group">
+            <p className="com-grp-desc">
+              Comments on the novel chapters for the last week.
+            </p>
+            <div className="com-grp-list">
+              {comments.slice(0, 5).map(comment => (
+                <div key={comment._id} className="com-grp-item">
+                  <span className="text1row">
+                    <time dateTime={comment.date}>
+                      {new Date(comment.date).toLocaleString()}{" "}
+                      {/* Adjust formatting as needed */}
+                    </time>
+                    : <strong>{comment.count}</strong> comment
+                    {comment.count > 1 ? "s" : ""} on Chapter{" "}
+                    {comment.chapterTitle}
+                  </span>
+                </div>
+              ))}
             </div>
-          ))}
-        </div>
-      </div>
-      <div id="comment-filter">
-        <div className="radio-group">
-          <div className="sub-group">
-            <div className="group-desc">Orders</div>
-            <div className="group-items">
-              <div className="radio-item">
-                <input
-                  id="com_order_newest"
-                  type="radio"
-                  name="com_order"
-                  value="newest"
-                  checked={filter === "newest"}
-                  onChange={handleFilterChange}
-                />
-                <label htmlFor="com_order_newest">Newest</label>
+          </div>
+          <div id="comment-filter">
+            <div className="radio-group">
+              <div className="sub-group">
+                <div className="group-desc">Orders</div>
+                <div className="group-items">
+                  <div className="radio-item">
+                    <input
+                      id="com_order_newest"
+                      type="radio"
+                      name="com_order"
+                      value="newest"
+                      checked={filter === "newest"}
+                      onChange={handleFilterChange}
+                    />
+                    <label htmlFor="com_order_newest">Newest</label>
+                  </div>
+                </div>
+              </div>
+              <div className="sub-group">
+                <div className="group-desc">Most Liked</div>
+                <div className="group-items">
+                  <div className="radio-item">
+                    <input
+                      id="com_order_likedweek"
+                      type="radio"
+                      name="com_order"
+                      value="mostLikedThisWeek"
+                      checked={filter === "mostLikedThisWeek"}
+                      onChange={handleFilterChange}
+                    />
+                    <label htmlFor="com_order_likedweek">This Week</label>
+                  </div>
+                  <div className="radio-item">
+                    <input
+                      id="com_order_likedmonth"
+                      type="radio"
+                      name="com_order"
+                      value="mostLikedThisMonth"
+                      checked={filter === "mostLikedThisMonth"}
+                      onChange={handleFilterChange}
+                    />
+                    <label htmlFor="com_order_likedmonth">This Month</label>
+                  </div>
+                  <div className="radio-item">
+                    <input
+                      id="com_order_likedall"
+                      type="radio"
+                      name="com_order"
+                      value="mostLikedAllTime"
+                      checked={filter === "mostLikedAllTime"}
+                      onChange={handleFilterChange}
+                    />
+                    <label htmlFor="com_order_likedall">All Time</label>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
-          <div className="sub-group">
-            <div className="group-desc">Most Liked</div>
-            <div className="group-items">
-              <div className="radio-item">
-                <input
-                  id="com_order_likedweek"
-                  type="radio"
-                  name="com_order"
-                  value="mostLikedThisWeek"
-                  checked={filter === "mostLikedThisWeek"}
-                  onChange={handleFilterChange}
-                />
-                <label htmlFor="com_order_likedweek">This Week</label>
-              </div>
-              <div className="radio-item">
-                <input
-                  id="com_order_likedmonth"
-                  type="radio"
-                  name="com_order"
-                  value="mostLikedThisMonth"
-                  checked={filter === "mostLikedThisMonth"}
-                  onChange={handleFilterChange}
-                />
-                <label htmlFor="com_order_likedmonth">This Month</label>
-              </div>
-              <div className="radio-item">
-                <input
-                  id="com_order_likedall"
-                  type="radio"
-                  name="com_order"
-                  value="mostLikedAllTime"
-                  checked={filter === "mostLikedAllTime"}
-                  onChange={handleFilterChange}
-                />
-                <label htmlFor="com_order_likedall">All Time</label>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
+        </>
+      )}
       <div className="comment-wrapper">
         <ul>
           {comments.length > 0 ? (
@@ -193,4 +256,4 @@ const CommentSection = ({ novel, openModal }) => {
   );
 };
 
-export default CommentSection;
+export default memo(CommentSection);

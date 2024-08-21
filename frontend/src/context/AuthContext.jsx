@@ -64,7 +64,7 @@ export const AuthContextProvider = ({ children }) => {
     const fetchUser = async () => {
       try {
         dispatch({ type: SET_LOADING });
-        const response = await axiosInstance.get("users/me");
+        const response = await axiosInstance.get("/users/me");
         if (response.data) {
           dispatch({ type: LOGIN, payload: response.data });
         } else {
@@ -81,10 +81,10 @@ export const AuthContextProvider = ({ children }) => {
     fetchUser();
   }, []);
 
-  const login = () => {
+  const login = userData => {
     try {
       dispatch({ type: SET_LOADING });
-      dispatch({ type: LOGIN, payload: response.data.user });
+      dispatch({ type: LOGIN, payload: userData });
     } catch (error) {
       console.error("Login failed:", error);
     } finally {

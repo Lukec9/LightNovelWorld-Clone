@@ -17,6 +17,7 @@ const NovelComment = ({ comment, setComments }) => {
   );
   const [likeCount, setLikeCount] = useState(comment.likes.length);
   const [dislikeCount, setDislikeCount] = useState(comment.dislikes.length);
+  const [loading, setLoading] = useState(false);
   const openModal = () => setModalOpen(true);
   const closeModal = () => {
     document.body.classList.remove("bodyactive");
@@ -72,47 +73,44 @@ const NovelComment = ({ comment, setComments }) => {
     }
   };
 
-  const handleLike = async () => {
-    try {
-      const response = await axiosInstance.patch(
-        `/novels/${comment.novelId._id}/comments/${comment._id}/like`,
-        { type: liked ? "dislike" : "like" }
-      );
-      if (response.status === 200) {
-        notify("success", response.data.message);
-        setLiked(!liked);
-        setLikeCount(prevCount => (liked ? prevCount - 1 : prevCount + 1));
-        if (disliked) {
-          setDisliked(false);
-          setDislikeCount(prevCount => prevCount - 1);
-        }
-      }
-    } catch (error) {
-      console.error(error);
-      notify("error", error.response.data.error);
-    }
-  };
+  const handleLikeDislike = async type => {
+    if (loading) return;
+    if (!user) return notify("error", "Must be logged in to like/dislike");
 
-  const handleDislike = async () => {
     try {
+      setLoading(true);
       const response = await axiosInstance.patch(
         `/novels/${comment.novelId._id}/comments/${comment._id}/like`,
-        { type: disliked ? "like" : "dislike" }
+        { type }
       );
+
       if (response.status === 200) {
+        const updatedComment = response.data.comment;
+
         notify("success", response.data.message);
-        setDisliked(!disliked);
-        setDislikeCount(prevCount =>
-          disliked ? prevCount - 1 : prevCount + 1
+        setComments(prevComments =>
+          prevComments.map(c => {
+            if (c._id === comment._id) {
+              return {
+                ...c,
+                likes: updatedComment.likes,
+                dislikes: updatedComment.dislikes,
+              };
+            }
+            return c;
+          })
         );
-        if (liked) {
-          setLiked(false);
-          setLikeCount(prevCount => prevCount - 1);
-        }
+        // maybe do setComments take a lock wehn you come boack
+
+        setLikeCount(updatedComment.likes.length);
+        setDislikeCount(updatedComment.dislikes.length);
+        setLiked(updatedComment.likes.includes(user?._id));
+        setDisliked(updatedComment.dislikes.includes(user?._id));
       }
     } catch (error) {
-      console.error(error);
-      notify("error", error.response.data.error);
+      notify("error", error.response?.data?.error || "An error occurred");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -196,7 +194,7 @@ const NovelComment = ({ comment, setComments }) => {
             </div>
             <span className="spacer" />
             <span className="usrlike">
-              <span className="_grp" onClick={handleLike}>
+              <span className="_grp" onClick={() => handleLikeDislike("like")}>
                 <input
                   id={`inputlike_${comment._id}`}
                   type="radio"
@@ -221,7 +219,10 @@ const NovelComment = ({ comment, setComments }) => {
                 </label>
               </span>
               <span className="divider" />
-              <span className="_grp" onClick={handleDislike}>
+              <span
+                className="_grp"
+                onClick={() => handleLikeDislike("dislike")}
+              >
                 <input
                   id={`inputdislike_${comment._id}`}
                   type="radio"

@@ -100,7 +100,7 @@ const createNovel = async (req, res) => {
 };
 
 const getNovel = async (req, res) => {
-  let { query } = req.params;
+  let { query } = req.query;
 
   try {
     let novel;
@@ -622,45 +622,100 @@ const getNovelComments = async (req, res) => {
 const getNovelReviews = async (req, res) => {
   try {
     const { novelId } = req.params;
+    let { page, limit } = req.query;
+
+    page = parseInt(page, 10) || 1; // Defaults to page 1
+    limit = parseInt(limit, 10) || 20; // Defaults to limit 20
+
+    if (page <= 0) page = 1; // Ensure page is positive
+    if (limit <= 0 || limit > 100) limit = 20; // Ensure limit is within range
 
     if (!mongoose.Types.ObjectId.isValid(novelId)) {
       return res.status(400).json({ message: "Invalid novel ID" });
     }
 
-    const novelObjectId = mongoose.Types.ObjectId.createFromHexString(novelId);
+    const skip = (page - 1) * limit;
 
-    const reviews = await Review.aggregate([
-      { $match: { novelId: novelObjectId } },
-      {
-        $lookup: {
-          from: "users", // Collection name for the User model
-          localField: "userId",
-          foreignField: "_id",
-          as: "userDetails",
-        },
-      },
-      { $unwind: "$userDetails" },
-      {
-        $project: {
-          "userDetails.hash": 0,
-          "userDetails.salt": 0,
-          "userDetails.about": 0,
-          "userDetails.lastActivity": 0,
-        },
-      },
-      { $sort: { createdAt: -1 } }, // Sort by creation date, newest first
-    ]);
+    const novelIdObject = mongoose.Types.ObjectId.createFromHexString(novelId);
 
-    res.status(200).json({ reviews });
+    // Fetch reviews with user details
+    const reviews = await Review.find({
+      novelId: novelIdObject,
+    })
+      .populate({
+        path: "userId",
+        select: "-hash -salt -lastActivity -about", // Select specific fields from User model
+      })
+      .sort({ createdAt: -1 }) // Sort by creation date, newest first
+      .skip(skip)
+      .limit(limit)
+      .lean();
+
+    // Calculate likeCount dynamically
+    const reviewsWithLikeCount = reviews.map(review => ({
+      ...review,
+      likeCount: review.likes.length,
+    }));
+
+    // Count total number of reviews for this novel
+    const totalReviews = await Review.countDocuments({
+      novelId: novelIdObject,
+    });
+
+    res.status(200).json({
+      reviews: reviewsWithLikeCount,
+      currentPage: page,
+      totalPages: Math.ceil(totalReviews / limit),
+      totalReviews,
+    });
   } catch (err) {
     console.error("Error fetching reviews:", err.message);
     res.status(500).json({ message: "Server error" });
   }
 };
 
+const getChapter = async (req, res) => {
+  const { novelId } = req.params;
+  let { chapterNumber } = req.params;
+  chapterNumber = Number(chapterNumber);
+
+  try {
+    // Find the novel by its ID
+    const novel = await Novel.findById(novelId);
+
+    if (!novel) {
+      return res.status(404).json({ message: "Novel not found" });
+    }
+
+    // Find the chapter by chapterNumber
+    const chapter = novel.chapters.find(
+      ch => parseInt(ch.chapterNumber) === parseInt(chapterNumber)
+    );
+
+    if (!chapter) {
+      return res.status(404).json({ message: "Chapter not found" });
+    }
+
+    // If chapter is found, return it
+    return res.status(200).json(chapter);
+  } catch (error) {
+    // Handle potential errors
+    return res
+      .status(500)
+      .json({ message: "Server Error", error: error.message });
+  }
+};
+
 const getChapterComments = async (req, res) => {
   try {
     const { novelId, chapterNumber } = req.params;
+    let { page, limit } = req.query;
+
+    page = parseInt(page, 10) || 1; // Defaults to page 1
+    limit = parseInt(limit, 10) || 20; // Defaults to limit 20
+
+    if (page <= 0) page = 1; // Ensure page is positive
+    if (limit <= 0 || limit > 100) limit = 20; // Ensure limit is within range
 
     if (!mongoose.Types.ObjectId.isValid(novelId)) {
       return res.status(400).json({ message: "Invalid novel ID" });
@@ -668,34 +723,32 @@ const getChapterComments = async (req, res) => {
 
     const novelObjectId = mongoose.Types.ObjectId.createFromHexString(novelId);
 
-    const comments = await Comment.aggregate([
-      {
-        $match: {
-          novelId: novelObjectId,
-          chapterNumber: parseInt(chapterNumber, 10), // Match both novelId and chapterNumber
-        },
-      },
-      {
-        $lookup: {
-          from: "users",
-          localField: "userId",
-          foreignField: "_id",
-          as: "userDetails",
-        },
-      },
-      {
-        $project: {
-          "userDetails.hash": 0,
-          "userDetails.salt": 0,
-          "userDetails.about": 0,
-          "userDetails.lastActivity": 0,
-        },
-      },
-      { $unwind: "$userDetails" }, // Unwind the userDetails array
-      { $sort: { createdAt: -1 } }, // Sort by creation date, newest first
-    ]);
+    // Define the query
+    const query = {
+      novelId: novelObjectId,
+      chapterNumber: parseInt(chapterNumber, 10),
+    };
 
-    res.status(200).json({ comments });
+    // Calculate skip value for pagination
+    const skip = (page - 1) * limit;
+
+    // Fetch comments
+    const comments = await Comment.find(query)
+      .populate("userId", "-hash -salt -about -lastActivity") // Populate userId excluding certain fields
+      .sort({ createdAt: -1 }) // Sort by creation date, newest first
+      .skip(skip)
+      .limit(limit)
+      .lean(); // Convert to plain JavaScript objects for easier manipulation
+
+    // Count total number of comments for this chapter
+    const totalComments = await Comment.countDocuments(query);
+
+    res.status(200).json({
+      comments,
+      currentPage: page,
+      totalPages: Math.ceil(totalComments / limit),
+      totalComments,
+    });
   } catch (err) {
     console.error("Error fetching chapter comments:", err.message);
     res.status(500).json({ message: "Server error" });
@@ -753,19 +806,48 @@ const createComment = async (req, res) => {
   }
 };
 
-const updateNovelRating = async novelId => {
-  const reviews = await Review.find({ novelId });
+const updateNovelRating = async (novelId, session = null) => {
+  const isTransaction = !!session;
 
-  if (reviews.length === 0) {
-    await Novel.findByIdAndUpdate(novelId, { rating: 0 });
-    return;
+  if (isTransaction && !session) {
+    throw new Error("A session must be provided for this operation.");
   }
 
-  const averageRating =
-    reviews.reduce((total, review) => total + review.rating, 0) /
-    reviews.length;
+  const transactionSession = session || (await mongoose.startSession());
+  if (!session) transactionSession.startTransaction();
 
-  await Novel.findByIdAndUpdate(novelId, { rating: averageRating });
+  try {
+    const reviews = await Review.find({ novelId }).session(transactionSession);
+
+    const reviewCount = reviews.length;
+    let averageRating = 0;
+
+    if (reviewCount > 0) {
+      averageRating =
+        reviews.reduce((total, review) => total + review.rating, 0) /
+        reviewCount;
+    }
+
+    // Use $set to only update specific fields and avoid affecting timestamps
+    await Novel.findByIdAndUpdate(
+      novelId,
+      {
+        $set: {
+          rating: averageRating,
+          reviewCount: reviewCount,
+        },
+      },
+      { session: transactionSession, timestamps: false }
+    );
+
+    if (!session) await transactionSession.commitTransaction();
+  } catch (error) {
+    console.error("Transaction error:", error);
+    if (!session) await transactionSession.abortTransaction();
+    throw error; // Re-throw the error after aborting the transaction
+  } finally {
+    if (!session) transactionSession.endSession();
+  }
 };
 
 const createReview = async (req, res) => {
@@ -817,7 +899,7 @@ const createReview = async (req, res) => {
     await newReview.save({ session });
 
     // Update novel rating
-    await updateNovelRating(novelId, { session });
+    await updateNovelRating(novelId, session);
 
     // Commit transaction
     await session.commitTransaction();
@@ -836,7 +918,7 @@ const createReview = async (req, res) => {
       });
     }
     console.error("Error creating review:", err.message);
-    res.status(500).json({ message: "Server error" });
+    res.status(500).json({ message: err.message });
   }
 };
 
@@ -866,22 +948,30 @@ const updateUserProgress = async (req, res) => {
     // Find the progress document for the user and novel
     let progress = await UserProgress.findOne({ userId, novelId });
 
-    if (!progress) {
+    if (progress) {
+      // Check if the progress needs updating
+      const isProgressChanged =
+        progress.lastReadChapter !== chapterNumber ||
+        progress.completed !==
+          (completed !== undefined ? completed : progress.completed);
+
+      if (!isProgressChanged) {
+        return res.status(200).json({ message: "No changes in progress" });
+      }
+
+      // Update the progress only if there are changes
+      progress.lastReadChapter = chapterNumber;
+      if (completed !== undefined) {
+        progress.completed = completed;
+      }
+    } else {
       // Create new progress if it doesn't exist
       progress = new UserProgress({
         userId,
         novelId,
         lastReadChapter: chapterNumber,
-        completed: !!completed, // Set to true/false based on the value of completed
+        completed: !!completed,
       });
-    } else {
-      // Update the last read chapter
-      progress.lastReadChapter = chapterNumber;
-
-      // Update the completed status if provided
-      if (completed !== undefined) {
-        progress.completed = completed;
-      }
     }
 
     progress.lastReadDate = new Date();
@@ -889,16 +979,17 @@ const updateUserProgress = async (req, res) => {
 
     // Update the user's last activity
     const user = await User.findById(userId);
-    if (user) user.lastActivity = new Date();
-
-    await user.save();
+    if (user) {
+      user.lastActivity = new Date();
+      await user.save();
+    }
 
     res
       .status(200)
       .json({ message: "Progress updated successfully", progress });
   } catch (err) {
     console.error("Error in updateUserProgress:", err.message);
-    res.status(500).json({ err: "Server error" });
+    res.status(500).json({ message: "Server error" });
   }
 };
 
@@ -1276,6 +1367,7 @@ const commentLikeDislike = async (req, res) => {
     // Perform the update
     comment = await Comment.findOneAndUpdate({ _id: commentId }, update, {
       new: true,
+      fields: { likes: 1, dislikes: 1 },
     });
 
     if (!comment) return res.status(404).json({ error: "Comment not found" });
@@ -1284,6 +1376,7 @@ const commentLikeDislike = async (req, res) => {
       message: `${
         type.charAt(0).toUpperCase() + type.slice(1)
       } action performed successfully`,
+      comment: comment,
     });
   } catch (err) {
     console.error("Error toggling like/dislike:", err.message);
@@ -1308,35 +1401,42 @@ const reviewLikeDislike = async (req, res) => {
     const review = await Review.findById(reviewId);
     if (!review) return res.status(404).json({ error: "Review not found" });
 
-    // Handle like or dislike action
+    const update = {};
     if (type === "like") {
       if (review.likes.includes(userId)) {
-        // If user already liked, remove like
-        review.likes = review.likes.filter(id => !id.equals(userId));
+        update.$pull = { likes: userId }; // Remove like
       } else {
-        // Remove dislike if it exists
-        review.dislikes = review.dislikes.filter(id => !id.equals(userId));
-        // Add like
-        review.likes.push(userId);
+        update.$pull = { dislikes: userId }; // Remove dislike if exists
+        update.$addToSet = { likes: userId }; // Add like
       }
     } else if (type === "dislike") {
       if (review.dislikes.includes(userId)) {
-        // If user already disliked, remove dislike
-        review.dislikes = review.dislikes.filter(id => !id.equals(userId));
+        update.$pull = { dislikes: userId }; // Remove dislike
       } else {
-        // Remove like if it exists
-        review.likes = review.likes.filter(id => !id.equals(userId));
-        // Add dislike
-        review.dislikes.push(userId);
+        update.$pull = { likes: userId }; // Remove like if exists
+        update.$addToSet = { dislikes: userId }; // Add dislike
       }
     }
 
-    await review.save();
-    res.status(200).json({
-      message: `${
-        type.charAt(0).toUpperCase() + type.slice(1)
-      } action performed successfully`,
-    });
+    // Ensure that `update` contains the necessary fields before attempting to save
+    if (Object.keys(update).length === 0) {
+      return res.status(400).json({ error: "No update required" });
+    }
+
+    // Perform the update and get the updated review
+    const updatedReview = await Review.findOneAndUpdate(
+      { _id: reviewId },
+      update,
+      {
+        new: true, // Return the updated document
+        fields: { likes: 1, dislikes: 1 }, // Only return the fields you need
+      }
+    );
+
+    if (!updatedReview)
+      return res.status(404).json({ error: "Review not found" });
+
+    res.status(200).json(updatedReview);
   } catch (err) {
     console.error("Error toggling like/dislike:", err.message);
     res.status(500).json({ message: "Server error" });
@@ -1475,4 +1575,6 @@ export {
   reviewLikeDislike,
   getRankings,
   getRankingPageNovels,
+  updateNovelRating,
+  getChapter,
 };

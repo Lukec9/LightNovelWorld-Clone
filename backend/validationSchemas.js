@@ -1,4 +1,5 @@
 import { body, check } from "express-validator";
+import sanitizeHtml from "sanitize-html";
 
 const chapterValidation = [
   body("title")
@@ -38,8 +39,19 @@ const novelValidation = [
     .notEmpty()
     .withMessage("Slug title is required"),
 
-  body("cover").isString().notEmpty().withMessage("Cover is required"),
-
+  body("cover")
+    .isString()
+    .withMessage("Cover must be a string")
+    .custom(value => {
+      // Check if it’s a valid base64 or URL
+      if (
+        !/^data:image\/[a-z]+;base64,/.test(value) &&
+        !/^https?:\/\/.+/.test(value)
+      ) {
+        throw new Error("Cover must be a valid base64 image data or URL");
+      }
+      return true;
+    }),
   body("author")
     .isString()
     .trim()
@@ -101,12 +113,18 @@ const novelValidation = [
 const commentValidation = [
   body("text")
     .isString()
-    .trim()
-    // .escape()
     .notEmpty()
     .withMessage("Text is required")
     .isLength({ min: 3, max: 1000 })
-    .withMessage("Comment should be atleast 3 and a max of 1000 characters"),
+    .withMessage(
+      "Comment should be at least 3 characters and a maximum of 1000 characters"
+    )
+    .customSanitizer(value =>
+      sanitizeHtml(value, {
+        allowedTags: [],
+        allowedAttributes: {},
+      })
+    ),
   check("likes")
     .optional()
     .isArray()
@@ -141,12 +159,16 @@ const reviewValidation = [
 
   body("text")
     .isString()
-    .trim()
-    .escape()
     .notEmpty()
     .withMessage("Text is required")
     .isLength({ min: 100 })
-    .withMessage("Minimum lenght is 100 characters!"),
+    .withMessage("Minimum length is 100 characters")
+    .customSanitizer(value =>
+      sanitizeHtml(value, {
+        allowedTags: [],
+        allowedAttributes: {},
+      })
+    ),
 
   check("likes")
     .optional()
@@ -182,9 +204,13 @@ const userValidation = [
   body("about")
     .optional()
     .isString()
-    .trim()
-    .escape()
-    .withMessage("About section must be a string"),
+    .withMessage("About section must be a string")
+    .customSanitizer(value =>
+      sanitizeHtml(value, {
+        allowedTags: [],
+        allowedAttributes: {},
+      })
+    ),
 
   body("rank")
     .optional()

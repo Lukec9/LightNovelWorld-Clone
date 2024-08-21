@@ -10,6 +10,7 @@ import {
   deleteComment,
   deleteNovel,
   deleteReview,
+  getChapter,
   getChapterComments,
   getNovel,
   getNovelComments,
@@ -39,27 +40,26 @@ import {
 const router = express.Router();
 
 router.get("/", listAllNovels);
+router.get("/novel", getNovel);
+router.get("/search", searchNovels);
+router.get("/rankings", getRankings);
+router.get("/rankingspage", getRankingPageNovels);
+router.put("/progress", protectRoute, updateUserProgress);
+
 router.post(
   "/",
   protectRoute,
-  // validationSchemas.novelValidation,
   requireRole(["Admin"]),
   upload.single("cover"),
   createNovel
 );
-router.get("/search", searchNovels);
-router.put("/progress", protectRoute, updateUserProgress);
-router.get("/rankings", getRankings);
-router.get("/rankingspage", getRankingPageNovels);
-
-router.get("/:query", getNovel);
 
 router
   .route("/:novelId")
   .put(protectRoute, requireRole(["Admin"]), updateNovel)
   .delete(protectRoute, requireRole(["Admin"]), deleteNovel);
-router.post("/:novelId/count", addView);
 
+router.post("/:novelId/count", addView);
 router.get("/:novelId/progress", protectRoute, getUserProgress);
 
 router
@@ -71,6 +71,7 @@ router
   .route("/:novelId/comments/:commentId")
   .put(validationSchemas.commentValidation, protectRoute, updateComment)
   .delete(protectRoute, deleteComment);
+
 router.patch(
   "/:novelId/comments/:commentId/like",
   protectRoute,
@@ -88,6 +89,7 @@ router
   .route("/:novelId/reviews/:reviewId")
   .put(protectRoute, updateReview)
   .delete(protectRoute, deleteReview);
+
 router.patch(
   "/:novelId/reviews/:reviewId/like",
   protectRoute,
@@ -108,6 +110,7 @@ router.delete(
   requireRole(["Admin"]),
   removeChaptersFromNovel
 );
+router.get("/:novelId/chapters/:chapterNumber", getChapter);
 router.get("/:novelId/chapters/:chapterNumber/comments", getChapterComments);
 router.put(
   "/:novelId/chapters/:chapterNumber",

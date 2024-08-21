@@ -29,11 +29,11 @@ const NovelPage = () => {
   const MAX_CHAR = 1000;
   const [remainingChar, setRemainingChar] = useState(MAX_CHAR);
 
-  const scrollRef = useRef();
-
   const fetchNovel = useCallback(async () => {
     try {
-      const response = await axiosInstance.get(`/novels/${nid}`);
+      const response = await axiosInstance.get(`/novels/novel`, {
+        params: { query: nid },
+      });
       if (response.status === 200) {
         setNovel(response.data.novel);
       }
@@ -194,7 +194,7 @@ const NovelPage = () => {
     }
 
     if (newCommentText.length > 1000) {
-      notify("error", "About section cannot exceed 200 characters");
+      notify("error", "Comment cannot exceed 200 characters");
       return;
     }
     try {
@@ -220,7 +220,7 @@ const NovelPage = () => {
     } finally {
       setLoading(false);
       closeModal();
-      setNewCommentText();
+      setNewCommentText("");
     }
   };
 
@@ -250,7 +250,7 @@ const NovelPage = () => {
   };
   return (
     <>
-      <div ref={scrollRef} id="novel">
+      <div id="novel">
         <div className="thenovel-header">
           <div className="glass-background">
             <img src={novel?.cover} alt={`${novel?.title}'s cover`} />
@@ -360,7 +360,9 @@ const NovelPage = () => {
                 <Link
                   id="readchapterbtn"
                   className="button"
-                  to={`/novels/${novel.id}/chapters/${progress?.lastReadChapter}`}
+                  to={`/novel/${novel?.slugTitle}/chapters/${
+                    progress?.lastReadChapter || 1
+                  }`}
                   title="Chapter 890: Blast"
                 >
                   <span>{progress?.fake ? `Read ` : "Continue Reading"}</span>
@@ -477,10 +479,10 @@ const NovelPage = () => {
         </div>
         <div className="novel-body container">
           <nav className="content-nav">
-            <a
+            <Link
               className="grdbtn chapter-latest-container"
-              title="Supreme Lord: I can extract everything! Novel Chapters"
-              href="/novel/supreme-lord-i-can-extract-everything/chapters"
+              title={`${novel?.title} Novel Chapters`}
+              to={`/novel/${novel?.slugTitle}/chapters`}
             >
               <div className="body">
                 <h4>Novel Chapters</h4>
@@ -504,11 +506,11 @@ const NovelPage = () => {
                   d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708"
                 />
               </svg>{" "}
-            </a>
-            <a
+            </Link>
+            <Link
               className="grdbtn reviews-latest-container"
-              title="Supreme Lord: I can extract everything! Novel User Reviews"
-              href="/novel/supreme-lord-i-can-extract-everything/reviews"
+              title={`${novel?.title} Novel User Reviews`}
+              to={`/novel/${novel?.slugTitle}/reviews`}
             >
               <div className="body">
                 <h4>User Reviews</h4>
@@ -530,7 +532,7 @@ const NovelPage = () => {
                   d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708"
                 />
               </svg>
-            </a>
+            </Link>
           </nav>
           <section id="info">
             <p className="description">

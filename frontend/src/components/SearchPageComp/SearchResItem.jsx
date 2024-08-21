@@ -6,7 +6,7 @@ const SearchResItem = ({ novel }) => {
       <div className="cover-wrap">
         <Link
           title={novel.title}
-          to={`novel/${novel.slugTitle}`}
+          to={`/novel/${novel.slugTitle}`}
           className="item-cover"
         >
           <div className="novel-coverfig">

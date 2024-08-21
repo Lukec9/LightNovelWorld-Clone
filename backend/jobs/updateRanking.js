@@ -3,6 +3,7 @@ import Comment from "../models/comment.model.js";
 import Novel from "../models/novel.model.js";
 import Review from "../models/review.model.js";
 import mongoose from "mongoose";
+import { updateNovelRating } from "../controllers/novel.controller.js";
 
 const updateRankings = async () => {
   try {
@@ -118,11 +119,26 @@ const novelRanks = async () => {
   }
 };
 
+const updateAllNovelsRatings = async () => {
+  try {
+    const novels = await Novel.find({}, "_id");
+
+    for (const { _id: novelId } of novels) {
+      await updateNovelRating(novelId);
+    }
+
+    console.log("All novel ratings updated successfully.");
+  } catch (error) {
+    console.error("Error updating novel ratings:", error);
+  }
+};
+
 const start = () => {
   // Schedule the update to run every week (e.g., every Sunday at midnight)
   // cron.schedule("0 0 * * 0", updateRankings);
   cron.schedule("0 * * * *", updateRankings);
   cron.schedule("0 * * * *", novelRanks);
+  cron.schedule("0 * * * *", updateAllNovelsRatings);
 
   console.log("Cron job started: Rankings update every Sunday at midnight");
 };

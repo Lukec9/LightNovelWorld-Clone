@@ -30,6 +30,8 @@ import "react-toastify/dist/ReactToastify.css";
 import AuthPage from "./pages/AuthPage";
 import { useAuthContext } from "./context/AuthContext";
 import Spinner from "./components/Spinner";
+import NovelChapter from "./pages/NovelPages/NovelChapter";
+import NotFound from "./pages/NotFound";
 
 function App() {
   const { state } = useAuthContext();
@@ -75,9 +77,11 @@ function App() {
           <Route path="novel/:nid">
             <Route index element={<NovelPage />} />
             <Route path="chapters" element={<NovelChapters />} />
+            <Route path="chapters/:chapNum" element={<NovelChapter />} />
             <Route path="reviews" element={<NovelReviews />} />
           </Route>
           <Route path="author/:aname" element={<AuthorsNovelsPage />} />
+          <Route path="*" element={<NotFound />} />
         </Routes>
         {/* </div> */}
       </main>

@@ -4,6 +4,8 @@ const chapterSchema = new mongoose.Schema({
   title: { type: String, required: true },
   textFileUrl: { type: String, required: true },
   chapterNumber: { type: Number, required: true },
+  createdAt: { type: Date, default: Date.now },
+  updatedAt: { type: Date, default: Date.now },
 });
 
 const novelSchema = new mongoose.Schema(

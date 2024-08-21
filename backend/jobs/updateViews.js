@@ -14,7 +14,11 @@ const start = () => {
 
       // Update each novel's unique view count
       for (const { _id: novelId, count } of viewCounts) {
-        await Novel.findByIdAndUpdate(novelId, { $inc: { views: count } });
+        await Novel.findByIdAndUpdate(
+          novelId,
+          { $inc: { views: count } },
+          { timestamps: false }
+        );
       }
 
       console.log("Views aggregated successfully.");
