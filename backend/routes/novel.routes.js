@@ -50,7 +50,7 @@ router.post(
   "/",
   protectRoute,
   requireRole(["Admin"]),
-  upload.single("cover"),
+  // upload.single("cover"),
   createNovel
 );
 
@@ -104,8 +104,8 @@ router.post(
   upload.array("files"),
   addChaptersToNovel
 );
-router.delete(
-  "/:novelId/chapters",
+router.post(
+  "/:novelId/chapters/delete",
   protectRoute,
   requireRole(["Admin"]),
   removeChaptersFromNovel
@@ -116,6 +116,7 @@ router.put(
   "/:novelId/chapters/:chapterNumber",
   protectRoute,
   requireRole(["Admin"]),
+  upload.single("textFile"),
   updateChapter
 );
 

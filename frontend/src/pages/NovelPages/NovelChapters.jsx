@@ -9,9 +9,13 @@ import axiosInstance from "../../axios";
 import { Link, useParams } from "react-router-dom";
 import notify from "../../utils/toastUtil";
 import timeAgo from "../../utils/timeAgo";
+import { useAuthContext } from "../../context/AuthContext";
 
 const NovelChapters = () => {
   const { nid } = useParams();
+  const {
+    state: { user },
+  } = useAuthContext();
   const [novel, setNovel] = useState(null);
   const [loading, setLoading] = useState(true);
 
@@ -34,6 +38,18 @@ const NovelChapters = () => {
     }
   }, [nid]);
 
+  const handleDelete = async chapterId => {
+    if (window.confirm("Are you sure you want to delete this chapter?")) {
+      try {
+        await axiosInstance.post(`/novels/${novel._id}/chapters/delete`, {
+          chapterIds: [chapterId],
+        });
+      } catch (error) {
+        notify("error", error.response.data);
+      }
+    }
+  };
+
   useEffect(() => {
     fetchNovel();
   }, [fetchNovel]);
@@ -41,7 +57,8 @@ const NovelChapters = () => {
   if (loading) return <Spinner />;
   if (!novel && !loading)
     return <Link to="/">Novel not found, return to homepage</Link>;
-  const lastChapter = novel.chapters[novel.chapters.length - 1];
+  if (!novel.chapters) return <p>No chapters</p>;
+  const lastChapter = novel.chapters[novel.chapters.length - 1] || null;
 
   return (
     <div id="chapter-list-page">
@@ -94,17 +111,17 @@ const NovelChapters = () => {
           List of most recent chapters published for {novel.title} novel. A
           total of {novel.chapters.length} chapters have been translated and the
           release date of the last chapter is{" "}
-          {new Date(lastChapter.createdAt).toDateString()}
+          {new Date(lastChapter?.createdAt).toDateString()}
           <br />
         </p>
         <p>
           Latest Release:
           <br />
           <Link
-            to={`/novel/${novel.slugTitle}/chapters/${lastChapter.chapterNumber}`}
-            title={lastChapter.title}
+            to={`/novel/${novel.slugTitle}/chapters/${lastChapter?.chapterNumber}`}
+            title={lastChapter?.title}
           >
-            Chapter {lastChapter.chapterNumber}: {lastChapter.title}
+            Chapter {lastChapter?.chapterNumber}: {lastChapter?.title}
           </Link>
         </p>
 
@@ -148,6 +165,11 @@ const NovelChapters = () => {
                   chapter={chapter}
                   key={chapter._id}
                 />
+                {user?.rank === "Admin" && (
+                  <button onClick={() => handleDelete(chapter._id)}>
+                    Delete{" "}
+                  </button>
+                )}
               </Suspense>
             ))}
         </ul>

@@ -21,17 +21,23 @@ import NovelPage from "./pages/NovelPages/NovelPage";
 import AuthorsNovelsPage from "./pages/AuthorsNovelsPage";
 import NovelReviews from "./pages/NovelPages/NovelReviews";
 import NovelChapters from "./pages/NovelPages/NovelChapters";
+import NovelChapter from "./pages/NovelPages/NovelChapter";
+import NotFound from "./pages/NotFound";
+import AuthPage from "./pages/AuthPage";
 
 import AccountLayout from "./layouts/AccountLayout";
 import RankingLayout from "./layouts/RankingLayout";
+import AdminLayout from "./layouts/AdminLayout";
 
-import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import AuthPage from "./pages/AuthPage";
-import { useAuthContext } from "./context/AuthContext";
+import { ToastContainer } from "react-toastify";
+
 import Spinner from "./components/Spinner";
-import NovelChapter from "./pages/NovelPages/NovelChapter";
-import NotFound from "./pages/NotFound";
+import { useAuthContext } from "./context/AuthContext";
+
+import CreateNovel from "./components/AdminComp/CreateNovel";
+import UpdateNovel from "./components/AdminComp/UpdateNovel";
+import UpdateChapter from "./components/AdminComp/UpdateChapter";
 
 function App() {
   const { state } = useAuthContext();
@@ -81,6 +87,23 @@ function App() {
             <Route path="reviews" element={<NovelReviews />} />
           </Route>
           <Route path="author/:aname" element={<AuthorsNovelsPage />} />
+          <Route
+            path="admin"
+            element={
+              state.user?.rank === "Admin" ? (
+                <AdminLayout />
+              ) : (
+                <Navigate to="/" />
+              )
+            }
+          >
+            <Route path="create" element={<CreateNovel />} />
+            <Route path="update/:novelId" element={<UpdateNovel />} />
+            <Route
+              path="update/:novelId/chapters/:chapterNumber"
+              element={<UpdateChapter />}
+            />
+          </Route>
           <Route path="*" element={<NotFound />} />
         </Routes>
         {/* </div> */}

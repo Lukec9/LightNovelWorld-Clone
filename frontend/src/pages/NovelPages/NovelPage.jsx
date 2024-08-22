@@ -8,6 +8,8 @@ import formatNumber from "../../utils/formatNumber";
 import timeAgo from "../../utils/timeAgo";
 import CommentSection from "../../components/NovelPagesComp/CommentSection";
 import { useAuthContext } from "../../context/AuthContext";
+import DeleteNovel from "../../components/AdminComp/DeleteNovel";
+import AddChapters from "../../components/AdminComp/AddChapters";
 
 const NovelPage = () => {
   const { nid } = useParams();
@@ -250,6 +252,13 @@ const NovelPage = () => {
   };
   return (
     <>
+      {user.rank === "Admin" && (
+        <>
+          <Link to={`/admin/update/${novel._id}`}>Update Novel</Link>
+          <DeleteNovel novelId={novel._id} />
+          <AddChapters novelId={novel._id} />
+        </>
+      )}
       <div id="novel">
         <div className="thenovel-header">
           <div className="glass-background">

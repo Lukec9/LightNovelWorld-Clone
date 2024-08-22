@@ -207,6 +207,13 @@ const NovelChapter = () => {
 
   return (
     <>
+      {user.rank === "Admin" && (
+        <Link
+          to={`/admin/update/${novel._id}/chapters/${chapter.chapterNumber}`}
+        >
+          Update Chapter
+        </Link>
+      )}
       <article id="chapter-article">
         <section className="page-in content-wrap">
           <div className="titles">

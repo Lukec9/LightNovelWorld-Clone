@@ -71,7 +71,6 @@ export const AuthContextProvider = ({ children }) => {
           dispatch({ type: LOGOUT });
         }
       } catch (error) {
-        console.error("Failed to fetch user:", error);
         dispatch({ type: LOGOUT });
       } finally {
         dispatch({ type: "STOP_LOADING" });
@@ -86,7 +85,6 @@ export const AuthContextProvider = ({ children }) => {
       dispatch({ type: SET_LOADING });
       dispatch({ type: LOGIN, payload: userData });
     } catch (error) {
-      console.error("Login failed:", error);
     } finally {
       dispatch({ type: "STOP_LOADING" });
     }
@@ -97,7 +95,6 @@ export const AuthContextProvider = ({ children }) => {
       dispatch({ type: SET_LOADING });
       dispatch({ type: LOGOUT });
     } catch (error) {
-      console.error("Logout failed:", error);
     } finally {
       dispatch({ type: "STOP_LOADING" });
     }

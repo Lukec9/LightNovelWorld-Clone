@@ -18,12 +18,9 @@ const createNovel = async (req, res) => {
   const errors = handleValidationErrors(req, res);
   if (errors) return;
 
-  let img = req.file;
+  let { cover } = req.body;
 
-  const { title, author, summary, status } = req.body;
-  let { categories, tags } = req.body;
-  categories = ["cat1", "cat2", "cat3"];
-  tags = ["tag1", "tag2", "tag3"];
+  const { title, author, summary, status, categories, tags } = req.body;
 
   if (
     !title ||
@@ -32,7 +29,7 @@ const createNovel = async (req, res) => {
     !categories ||
     !tags ||
     !status ||
-    !img
+    !cover
   ) {
     return res
       .status(400)
@@ -70,7 +67,9 @@ const createNovel = async (req, res) => {
       return res.status(400).json({ message: "Novel already exists." });
     }
 
-    const uploadedResponse = await uploadToCloudinary(img.buffer, "covers");
+    const uploadedResponse = await cloudinary.uploader.upload(cover, {
+      folder: "lnworld/covers",
+    });
 
     const newNovel = new Novel({
       title,
@@ -121,7 +120,19 @@ const getNovel = async (req, res) => {
 const addChaptersToNovel = async (req, res) => {
   const { novelId } = req.params;
   const files = req.files; // Array of uploaded files
-  const chapters = req.body.chapters; // Metadata for each chapter
+  let chapters = req.body.chapters; // Metadata for each chapter
+
+  if (typeof chapters === "string") {
+    try {
+      chapters = JSON.parse(chapters);
+    } catch (error) {
+      return res.status(400).json({ error: "Invalid chapter data" });
+    }
+  }
+
+  if (!Array.isArray(chapters)) {
+    chapters = [chapters]; // Convert to array if it's a single object
+  }
 
   if (
     !novelId ||
@@ -211,7 +222,6 @@ const addChaptersToNovel = async (req, res) => {
 const removeChaptersFromNovel = async (req, res) => {
   const session = await mongoose.startSession();
   session.startTransaction();
-
   try {
     let { novelId } = req.params;
     const { chapterIds } = req.body;
@@ -305,7 +315,6 @@ const updateNovel = async (req, res) => {
 
   const validations = [
     body("title").optional().isString().withMessage("Title must be a string"),
-    // body("cover").optional().isURL().withMessage("Cover must be a valid URL"),
     body("author").optional().isString().withMessage("Author must be a string"),
     body("summary")
       .optional()
@@ -333,6 +342,8 @@ const updateNovel = async (req, res) => {
   await Promise.all(validations.map(validation => validation.run(req)));
 
   const { novelId } = req.params;
+  const { cover, ...updateFields } = req.body;
+
   const allowedFields = [
     "title",
     "cover",
@@ -348,9 +359,9 @@ const updateNovel = async (req, res) => {
   const updateData = {};
   const invalidFields = [];
 
-  Object.keys(req.body).forEach(field => {
+  Object.keys(updateFields).forEach(field => {
     if (allowedFields.includes(field)) {
-      updateData[field] = req.body[field];
+      updateData[field] = updateFields[field];
     } else {
       invalidFields.push(field);
     }
@@ -365,14 +376,30 @@ const updateNovel = async (req, res) => {
     });
   }
 
-  // Validation result
-  const errors = handleValidationErrors(req, res);
-  if (errors) {
-    await session.abortTransaction();
-    session.endSession();
-    return;
-  }
+  // Handle the cover image update
   try {
+    if (cover) {
+      const novel = await Novel.findById(novelId).session(session);
+      if (!novel) {
+        await session.abortTransaction();
+        session.endSession();
+        return res.status(404).json({ message: "Novel not found" });
+      }
+
+      // If there's an existing cover, delete it from Cloudinary
+      if (novel.cover) {
+        const imgId = novel.cover.split("/").pop().split(".")[0];
+        await cloudinary.uploader.destroy(`lnworld/covers/${imgId}`);
+      }
+
+      // Upload the new cover
+      const uploadedResponse = await cloudinary.uploader.upload(cover, {
+        folder: "lnworld/covers",
+      });
+
+      updateData.cover = uploadedResponse.secure_url;
+    }
+
     const updatedNovel = await Novel.findByIdAndUpdate(novelId, updateData, {
       new: true,
       runValidators: true,
@@ -392,7 +419,7 @@ const updateNovel = async (req, res) => {
   } catch (error) {
     await session.abortTransaction();
     session.endSession();
-    console.error("error in updateNovel", error.message);
+    console.error("Error in updateNovel", error.message);
     res.status(500).json({ message: "Server error" });
   }
 };
@@ -1061,6 +1088,7 @@ const updateChapter = async (req, res) => {
     const validateRequest = [
       check("novelId").notEmpty().isMongoId().withMessage("Invalid novel ID"),
       check("chapterNumber")
+        .optional()
         .notEmpty()
         .isInt({ min: 1 })
         .withMessage("Chapter number must be a positive integer"),
@@ -1068,19 +1096,15 @@ const updateChapter = async (req, res) => {
         .optional()
         .isString()
         .withMessage("Title must be a string"),
-      check("textFileUrl")
-        .optional()
-        .isURL()
-        .withMessage("Text file URL must be a valid URL"),
+      // No validation for textFileUrl as it will be handled as a file upload
     ];
 
-    // Validate request parameters
     await Promise.all(validateRequest.map(validation => validation.run(req)));
     const errors = handleValidationErrors(req, res);
     if (errors) return;
 
     const { novelId, chapterNumber } = req.params;
-    const { title, textFileUrl } = req.body;
+    const { title, newChapterNumber } = req.body;
 
     // Find the novel
     const novel = await Novel.findById(novelId).session(session);
@@ -1101,9 +1125,31 @@ const updateChapter = async (req, res) => {
       return res.status(404).json({ message: "Chapter not found" });
     }
 
+    // Handle file upload if a new file is provided
+    if (req.file) {
+      // If the chapter already has a file, delete the old one
+      if (chapter.textFileUrl) {
+        const oldFilePublicId = chapter.textFileUrl
+          .split("/")
+          .pop()
+          .split(".")[0];
+        await cloudinary.uploader.destroy(
+          `lnworld/${novelId}/novel_chapters/${oldFilePublicId}`
+        );
+      }
+
+      // Upload the new file
+      const uploadedResponse = await uploadFileToCloudinary(
+        req.file.buffer,
+        `chapter-${chapterNumber}`,
+        novelId
+      );
+      chapter.textFileUrl = uploadedResponse; // Update the chapter with the new file URL
+    }
+
     // Update chapter details
     if (title) chapter.title = title;
-    if (textFileUrl) chapter.textFileUrl = textFileUrl;
+    if (newChapterNumber) chapter.chapterNumber = newChapterNumber;
 
     // Save the updated novel
     await novel.save({ session });

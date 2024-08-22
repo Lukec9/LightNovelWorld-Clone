@@ -1085,3 +1085,7 @@ a {
 .Toastify__toast-container {
   z-index: 200000;
 }
+
+input[type="file"] {
+  color: var(--text-color);
+}
