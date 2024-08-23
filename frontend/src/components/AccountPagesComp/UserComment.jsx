@@ -64,7 +64,6 @@ const UserComment = ({ comment, setComments }) => {
       }
     } catch (error) {
       notify("error", "An error occurred while trying to delete comment");
-      console.error("Error deleting comment:", error);
     }
   };
 

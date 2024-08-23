@@ -106,6 +106,17 @@ const NovelChapter = () => {
     }
   }, [user, novel, chapter]);
 
+  const updateUserHistory = useCallback(async () => {
+    if (!user || !novel || !chapter) return;
+    try {
+      await axiosInstance.post("/users/recently-read", {
+        novelId: novel._id,
+      });
+    } catch (error) {
+      return;
+    }
+  }, [user, novel, chapter]);
+
   useEffect(() => {
     const addView = async () => {
       if (!user) return;
@@ -121,6 +132,10 @@ const NovelChapter = () => {
   useEffect(() => {
     updateProgress();
   }, [updateProgress]);
+
+  useEffect(() => {
+    updateUserHistory();
+  }, [updateUserHistory]);
 
   useEffect(() => {
     fetchNovel();
@@ -143,6 +158,12 @@ const NovelChapter = () => {
       }
     }
   }, [isModalOpen]);
+
+  useEffect(() => {
+    setChapter(null);
+    setChapterContent("");
+    setComments("");
+  }, [chapNum]);
 
   if (loading) return <Spinner />;
   if (!novel && !loading)
@@ -242,10 +263,21 @@ const NovelChapter = () => {
           ></div>
           <div className="chapternav">
             <Link
-              className="button prevchap"
-              to={`/novel/${novel.slugTitle}/chapters/${
-                chapter.chapterNumber - 1
+              className={`button prevchap ${
+                chapter.chapterNumber === 1 ? "disabled" : ""
               }`}
+              to={
+                chapter.chapterNumber === 1
+                  ? ""
+                  : `/novel/${novel.slugTitle}/chapters/${
+                      chapter.chapterNumber - 1
+                    }`
+              }
+              onClick={e => {
+                if (chapter.chapterNumber === 1) {
+                  e.preventDefault(); // Prevent navigation
+                }
+              }}
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -279,10 +311,23 @@ const NovelChapter = () => {
               <span>INDEX</span>
             </Link>
             <Link
-              className="button nextchap"
-              to={`/novel/${novel.slugTitle}/chapters/${
-                chapter.chapterNumber + 1
+              className={`button nextchap ${
+                chapter.chapterNumber === novel.chapters.length
+                  ? "disabled"
+                  : ""
               }`}
+              to={
+                chapter.chapterNumber === novel.chapters.length
+                  ? ""
+                  : `/novel/${novel.slugTitle}/chapters/${
+                      chapter.chapterNumber + 1
+                    }`
+              }
+              onClick={e => {
+                if (chapter.chapterNumber === novel.chapters.length) {
+                  e.preventDefault(); // Prevent navigation
+                }
+              }}
             >
               <span>NEXT</span>
               <svg

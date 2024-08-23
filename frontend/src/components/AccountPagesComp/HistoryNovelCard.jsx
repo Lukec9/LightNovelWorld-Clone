@@ -1,13 +1,12 @@
-const HistoryNovelCard = ({ cover, title, progress }) => {
-  const compl = "Reading is complete";
+import { Link } from "react-router-dom";
+import timeAgo from "../../utils/timeAgo";
 
-  if (
-    progress.current === compl ||
-    progress.total === compl ||
-    progress.percentage === compl
-  ) {
-    progress.complete = true;
-  }
+const HistoryNovelCard = ({ novel }) => {
+  const { cover, title, rank } = novel;
+  const { completed, lastReadChapter, lastReadDate } = novel.progress;
+  const lastReadChapterTitle = novel.chapters.find(
+    chap => Number(chap.chapterNumber) === Number(lastReadChapter)
+  ).title;
   return (
     <li className="novel-card">
       <div className="novel-cover">
@@ -16,7 +15,7 @@ const HistoryNovelCard = ({ cover, title, progress }) => {
         </figure>
       </div>
       <div className="novel-content">
-        <div className="novel-title">
+        <Link to={`/novel/${novel.slugTitle}`} className="novel-title">
           <p className="ntitle">{title}</p>
           <span>
             <svg
@@ -28,26 +27,31 @@ const HistoryNovelCard = ({ cover, title, progress }) => {
             >
               <path d="M309 106c11.4-7 19-19.7 19-34c0-22.1-17.9-40-40-40s-40 17.9-40 40c0 14.4 7.6 27 19 34L209.7 220.6c-9.1 18.2-32.7 23.4-48.6 10.7L72 160c5-6.7 8-15 8-24c0-22.1-17.9-40-40-40S0 113.9 0 136s17.9 40 40 40c.2 0 .5 0 .7 0L86.4 427.4c5.5 30.4 32 52.6 63 52.6l277.2 0c30.9 0 57.4-22.1 63-52.6L535.3 176c.2 0 .5 0 .7 0c22.1 0 40-17.9 40-40s-17.9-40-40-40s-40 17.9-40 40c0 9 3 17.3 8 24l-89.1 71.3c-15.9 12.7-39.5 7.5-48.6-10.7L309 106z" />
             </svg>
-            Rank 1
+            Rank {rank}
           </span>
-        </div>
+        </Link>
         <div className="chptpro">
           <p className="chappro">
-            {progress.complete ? (
+            {completed ? (
               <span style={{ display: "block" }}>Reading is complete</span>
             ) : (
               <>
                 <span>Progress: </span>
-                <span>{`${progress.current} / ${progress.total}`}</span>
-                <span> ({progress.percentage})</span>
+                <span>{`${lastReadChapter} / ${novel.chapters.length}`}</span>
+                <span>
+                  {" "}
+                  ({(lastReadChapter / novel.chapters.length) * 100}%)
+                </span>
               </>
             )}
           </p>
         </div>
         <div className="last-read">
           <span className="mobile-d">Last read: </span>
-          <span> 9 days ago</span>
-          <a href="#">Chapter 951: Spirit Emanations</a>
+          <span> {timeAgo(new Date(lastReadDate))}</span>
+          <Link>
+            Chapter {lastReadChapter}: {lastReadChapterTitle}{" "}
+          </Link>
         </div>
       </div>
     </li>

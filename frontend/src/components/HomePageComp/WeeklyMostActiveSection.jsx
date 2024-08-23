@@ -1,12 +1,15 @@
-import { useCallback, useEffect, useState } from "react";
+import { memo, useCallback, useEffect, useState } from "react";
 import NovelItem from "./NovelItem";
 import axiosInstance from "../../axios";
 import notify from "../../utils/toastUtil";
+import Skeleton from "react-loading-skeleton";
 
 const WeeklyMostActiveSection = () => {
   const [weeklyNovels, setWeeklyNovels] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   const getWeeklyNovels = useCallback(async () => {
+    setLoading(true);
     try {
       const response = await axiosInstance.get(
         "/novels?limit=12&status=All&sortBy=Popular"
@@ -17,6 +20,8 @@ const WeeklyMostActiveSection = () => {
     } catch (error) {
       console.error("Error fetching compnovels:", error);
       notify("error", "Something went wrong!");
+    } finally {
+      setLoading(false);
     }
   }, []);
 
@@ -26,6 +31,7 @@ const WeeklyMostActiveSection = () => {
 
   return (
     <section className="container vspace weekly">
+      {loading && <Skeleton height={"150px"} count={6} />}
       <div className="section-header">
         <h3>Weekly Most Active</h3>
         <a
@@ -47,4 +53,4 @@ const WeeklyMostActiveSection = () => {
   );
 };
 
-export default WeeklyMostActiveSection;
+export default memo(WeeklyMostActiveSection);

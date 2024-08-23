@@ -1,14 +1,17 @@
-import { useCallback, useEffect, useState } from "react";
+import { memo, useCallback, useEffect, useState } from "react";
 import RankingNovelItem from "./RankingNovelItem";
 import notify from "../../utils/toastUtil";
 import axiosInstance from "../../axios";
+import Skeleton from "react-loading-skeleton";
 
 const NovelRankingSection = () => {
   const [mostRead, setMostReadNovels] = useState([]);
   const [newTrends, setNewTrendNovels] = useState([]);
   const [userRated, setUserRatedNovels] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   const getRankings = useCallback(async () => {
+    setLoading(true);
     try {
       const response = await axiosInstance.get("/novels/rankings");
       if (response && response.data) {
@@ -17,14 +20,22 @@ const NovelRankingSection = () => {
         setUserRatedNovels(response.data.topByRatings);
       }
     } catch (error) {
-      console.error("Error fetching compnovels:", error);
       notify("error", "Something went wrong!");
+    } finally {
+      setLoading(false);
     }
   }, []);
 
   useEffect(() => {
     getRankings();
   }, [getRankings]);
+
+  if (
+    (!loading && !newTrends) ||
+    (!loading && !mostRead) ||
+    (!loading && !userRated)
+  )
+    return <p>Couldn't get novels</p>;
 
   return (
     <section className="container vspace">
@@ -55,8 +66,17 @@ const NovelRankingSection = () => {
             <h3>
               <span>Most read</span>
             </h3>
+            {loading && (
+              <Skeleton
+                containerClassName="vertloading"
+                height={"50px"}
+                width={"80%"}
+                count={10}
+              />
+            )}
+
             <ul>
-              {mostRead.map((novel, i) => (
+              {mostRead.map(novel => (
                 <RankingNovelItem key={novel._id} novel={novel} />
               ))}
             </ul>
@@ -65,6 +85,14 @@ const NovelRankingSection = () => {
             <h3>
               <span>New Trends</span>
             </h3>
+            {loading && (
+              <Skeleton
+                containerClassName="vertloading"
+                height={"50px"}
+                width={"80%"}
+                count={10}
+              />
+            )}
             <ul>
               {newTrends.map((novel, i) => (
                 <RankingNovelItem
@@ -79,6 +107,14 @@ const NovelRankingSection = () => {
             <h3>
               <span>User Rated</span>
             </h3>
+            {loading && (
+              <Skeleton
+                containerClassName="vertloading"
+                height={"50px"}
+                width={"80%"}
+                count={10}
+              />
+            )}
             <ul>
               {userRated.map(novel => (
                 <RankingNovelItem
@@ -95,4 +131,4 @@ const NovelRankingSection = () => {
   );
 };
 
-export default NovelRankingSection;
+export default memo(NovelRankingSection);

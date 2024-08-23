@@ -1,3 +1,83 @@
 .admin-pages {
   color: var(--text-color);
 }
+
+.admin-layout {
+  display: flex;
+  height: 100%;
+  background-color: var(--bg-color);
+  color: var(--text-color);
+}
+
+.sidebar {
+  width: 200px;
+  background-color: var(--bg-color-2);
+  padding: 20px;
+  box-shadow: var(--global-shadow);
+}
+
+.sidebar h2 {
+  color: var(--text-color);
+  margin-bottom: 20px;
+}
+
+.sidebar nav ul {
+  list-style: none;
+  padding: 0;
+}
+
+.sidebar nav ul li {
+  margin-bottom: 10px;
+}
+
+.sidebar nav ul li a {
+  color: var(--text-color);
+  text-decoration: none;
+  font-size: 16px;
+}
+
+.sidebar nav ul li a:hover {
+  color: var(--text-color-4);
+}
+
+.admin-content {
+  flex-grow: 1;
+  padding: 20px;
+  background-color: var(--bg-color-3);
+}
+
+.admin-layout input,
+.admin-layout textarea,
+.admin-layout select {
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  padding: 5px;
+  border: none;
+}
+
+.admin-layout .cover {
+  display: flex;
+  flex-direction: column;
+  margin-block: 1rem;
+}
+
+.cover input {
+  width: 30%;
+  height: 100%;
+}
+
+.admin-layout .summary textarea {
+  width: 100%;
+  height: 200px;
+}
+
+.admin-layout .title input,
+.admin-layout .author input {
+  width: 50%;
+}
+
+.admin-layout .categories input,
+.admin-layout .tags input {
+  margin-block: 0.5rem;
+  width: 100%;
+}

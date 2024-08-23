@@ -12,22 +12,22 @@ const StatGroup = ({ cstats, rstats, nstats, kstats }) => {
       <div className="stat-items">
         {cstats && (
           <>
-            <Item name={"Comments"} value={cstats.totalComments} />
-            <Item name={"Likes"} value={cstats.totalLikes} />
-            <Item name={"Dislikes"} value={cstats.totalDislikes} />
+            <Item name={"Comments"} value={cstats.totalComments || 0} />
+            <Item name={"Likes"} value={cstats.totalLikes || 0} />
+            <Item name={"Dislikes"} value={cstats.totalDislikes || 0} />
           </>
         )}
         {rstats && (
           <>
-            <Item name={"Reviews"} value={rstats.totalReviews} />
-            <Item name={"Likes"} value={rstats.totalLikes} />
-            <Item name={"Dislikes"} value={rstats.totalDislikes} />
+            <Item name={"Reviews"} value={rstats.totalReviews || 0} />
+            <Item name={"Likes"} value={rstats.totalLikes || 0} />
+            <Item name={"Dislikes"} value={rstats.totalDislikes || 0} />
           </>
         )}
         {nstats && (
           <>
-            <Item name={"Bookmarked"} value={nstats.bookmarkedNovels} />
-            <Item name={"Novels Read"} value={nstats.novelsRead} />
+            <Item name={"Bookmarked"} value={nstats.bookmarkedNovels || 0} />
+            <Item name={"Novels Read"} value={nstats.novelsRead || 0} />
           </>
         )}
         {kstats?.map((stat, i) => (

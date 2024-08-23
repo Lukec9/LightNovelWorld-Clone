@@ -100,6 +100,7 @@ const UpdateChapter = () => {
             </a>
           </p>
         </div>
+
         <button type="submit">Update Chapter</button>
       </form>
     </div>

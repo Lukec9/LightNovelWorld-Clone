@@ -10,7 +10,6 @@ const AccountReviewsPage = () => {
     state: { user: user },
   } = useAuthContext();
   const [reviews, setReviews] = useState([]);
-  console.log(reviews);
 
   useEffect(() => {
     const getReviews = async () => {

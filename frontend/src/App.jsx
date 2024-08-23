@@ -1,8 +1,13 @@
 import "./App.css";
+import "react-toastify/dist/ReactToastify.css";
+import "react-loading-skeleton/dist/skeleton.css";
+
 import { Navigate, Route, Routes } from "react-router-dom";
+import { ToastContainer } from "react-toastify";
 
 import Header from "./components/Header";
 import Footer from "./components/Footer";
+import Spinner from "./components/Spinner";
 
 import LibraryPage from "./pages/LibraryPage";
 import HomePage from "./pages/HomePage";
@@ -24,15 +29,12 @@ import NovelChapters from "./pages/NovelPages/NovelChapters";
 import NovelChapter from "./pages/NovelPages/NovelChapter";
 import NotFound from "./pages/NotFound";
 import AuthPage from "./pages/AuthPage";
+import SearchByTagPage from "./pages/SearchByTagPage";
 
 import AccountLayout from "./layouts/AccountLayout";
 import RankingLayout from "./layouts/RankingLayout";
 import AdminLayout from "./layouts/AdminLayout";
 
-import "react-toastify/dist/ReactToastify.css";
-import { ToastContainer } from "react-toastify";
-
-import Spinner from "./components/Spinner";
 import { useAuthContext } from "./context/AuthContext";
 
 import CreateNovel from "./components/AdminComp/CreateNovel";
@@ -64,6 +66,7 @@ function App() {
             <Route path="inbox" element={<AccountInboxPage />} />
           </Route>
           <Route path="search" element={<SearchPage />} />
+          <Route path="tag" element={<SearchByTagPage />} />
           <Route path="browse" element={<BrowsePage />} />
           <Route
             path="auth"

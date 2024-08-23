@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import timeAgo from "../../utils/timeAgo";
+import { memo } from "react";
 
 const BrowseNovelItem = ({ novel }) => {
   return (
@@ -46,4 +47,4 @@ const BrowseNovelItem = ({ novel }) => {
   );
 };
 
-export default BrowseNovelItem;
+export default memo(BrowseNovelItem);

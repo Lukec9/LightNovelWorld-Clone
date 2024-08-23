@@ -1,13 +1,16 @@
-import { Suspense, useCallback, useEffect, useState } from "react";
+import { memo, Suspense, useCallback, useEffect, useState } from "react";
 import NovelItem from "./NovelItem";
 import axiosInstance from "../../axios";
 import Spinner from "../Spinner";
 import notify from "../../utils/toastUtil";
+import Skeleton from "react-loading-skeleton";
 
 const NewNovelSection = () => {
   const [newNovels, setNewNovels] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   const getNewNovels = useCallback(async () => {
+    setLoading(true);
     try {
       const response = await axiosInstance.get(
         "/novels?limit=12&status=Ongoing&sortBy=New"
@@ -16,8 +19,9 @@ const NewNovelSection = () => {
         setNewNovels(response.data.novels);
       }
     } catch (error) {
-      console.error("Error fetching newnovels:", error);
       notify("error", "Something went wrong!");
+    } finally {
+      setLoading(false);
     }
   }, []);
 
@@ -27,6 +31,7 @@ const NewNovelSection = () => {
 
   return (
     <section className="container vspace">
+      {loading && <Skeleton height={"150px"} count={6} />}
       <div className="section-header">
         <h3>New Ongoing Release</h3>
         <a
@@ -50,4 +55,4 @@ const NewNovelSection = () => {
   );
 };
 
-export default NewNovelSection;
+export default memo(NewNovelSection);

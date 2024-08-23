@@ -572,77 +572,84 @@ const listAllNovels = async (req, res) => {
 };
 
 const getNovelComments = async (req, res) => {
+  const { novelId } = req.params;
+  const {
+    page = 1,
+    pageSize = 10,
+    sortBy = "newest",
+    period = "allTime",
+  } = req.query;
+
+  const skip = (page - 1) * pageSize;
+
+  // Define date ranges for "week" and "month"
+  const now = new Date();
+  const weekStart = new Date(now.setDate(now.getDate() - 7));
+  const monthStart = new Date(now.setMonth(now.getMonth() - 1));
+
+  const novelIdObject = mongoose.Types.ObjectId.createFromHexString(novelId);
+
+  // Base query
+  const query = { novelId: novelIdObject };
+
+  // Aggregation pipeline
+  let pipeline = [
+    { $match: query },
+    {
+      $addFields: {
+        // Count total likes
+        likesCount: { $size: "$likes" },
+      },
+    },
+  ];
+
+  // Filter comments based on creation date
+  if (period === "week") {
+    pipeline.push({ $match: { createdAt: { $gte: weekStart } } });
+  } else if (period === "month") {
+    pipeline.push({ $match: { createdAt: { $gte: monthStart } } });
+  } else if (period === "allTime") {
+    // No additional filtering needed
+  }
+
+  // Sorting and pagination
+  if (sortBy === "mostLiked") {
+    pipeline.push({ $sort: { likesCount: -1, _id: 1 } });
+  } else if (sortBy === "newest") {
+    pipeline.push({ $sort: { createdAt: -1, _id: 1 } });
+  }
+
+  pipeline.push({ $skip: skip }, { $limit: Number(pageSize) });
+
+  // Add user population to the aggregation pipeline
+  pipeline.push(
+    {
+      $lookup: {
+        from: "users",
+        localField: "userId",
+        foreignField: "_id",
+        as: "user",
+      },
+    },
+    { $unwind: "$user" },
+    {
+      $project: {
+        "user.hash": 0,
+        "user.salt": 0,
+        "user.lastActivity": 0,
+        "user.about": 0,
+        "user.history": 0,
+      },
+    }
+  );
+
   try {
-    const { novelId } = req.params;
-    const { filter } = req.query;
-    let { page, limit } = req.query;
+    const comments = await Comment.aggregate(pipeline).exec();
 
-    page = parseInt(page, 10) || 1; // Defaults to page 1
-    limit = parseInt(limit, 10) || 20; // Defaults to limit 20
-
-    if (page <= 0) page = 1; // Ensure page is positive
-    if (limit <= 0 || limit > 100) limit = 20; // Ensure limit is within range
-
-    if (!mongoose.Types.ObjectId.isValid(novelId)) {
-      return res.status(400).json({ message: "Invalid novel ID" });
-    }
-
-    let query = { novelId: novelId };
-    let sort = { createdAt: -1 }; // Default sorting: newest
-
-    if (filter === "mostLikedThisWeek") {
-      const now = new Date();
-      const startOfWeek = new Date(now);
-      startOfWeek.setDate(now.getDate() - 7);
-      query.createdAt = { $gte: startOfWeek, $lte: now };
-      sort = { likeCount: -1 };
-    } else if (filter === "mostLikedThisMonth") {
-      const now = new Date();
-      const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
-      const endOfMonth = new Date(now.getFullYear(), now.getMonth() + 1, 0);
-      query.createdAt = { $gte: startOfMonth, $lte: endOfMonth };
-      sort = { likeCount: -1 };
-    } else if (filter === "mostLikedAllTime") {
-      sort = { likeCount: -1 };
-    }
-
-    const skip = (page - 1) * limit;
-
-    // Fetch comments
-    const comments = await Comment.find(query)
-      .populate("userId", "-hash -salt -about -lastActivity")
-      .skip(skip)
-      .limit(limit)
-      .sort(sort)
-      .lean();
-
-    // Calculate likeCount dynamically
-    const commentsWithLikeCount = comments.map(comment => ({
-      ...comment,
-      likeCount: comment.likes.length,
-    }));
-
-    // Sort comments by likeCount if required
-    if (
-      ["mostLikedThisWeek", "mostLikedThisMonth", "mostLikedAllTime"].includes(
-        filter
-      )
-    ) {
-      commentsWithLikeCount.sort((a, b) => b.likeCount - a.likeCount);
-    }
-
-    // Count total number of comments for this novel
-    const totalComments = await Comment.countDocuments(query);
-
-    res.status(200).json({
-      comments: commentsWithLikeCount,
-      currentPage: page,
-      totalPages: Math.ceil(totalComments / limit),
-      totalComments,
-    });
-  } catch (err) {
-    console.error("Error fetching comments:", err.message);
-    res.status(500).json({ message: "Server error" });
+    res.status(200).json(comments);
+  } catch (error) {
+    console.error("Error fetching comments:", error);
+    res.status(500).json({ message: "Error fetching comments" });
   }
 };
 
@@ -762,7 +769,7 @@ const getChapterComments = async (req, res) => {
     // Fetch comments
     const comments = await Comment.find(query)
       .populate("userId", "-hash -salt -about -lastActivity") // Populate userId excluding certain fields
-      .sort({ createdAt: -1 }) // Sort by creation date, newest first
+      .sort({ createdAt: -1, _id: 1 }) // Sort by creation date, newest first
       .skip(skip)
       .limit(limit)
       .lean(); // Convert to plain JavaScript objects for easier manipulation
@@ -1596,6 +1603,66 @@ const getRankings = async (req, res) => {
   }
 };
 
+const searchNovelsByTag = async (req, res) => {
+  try {
+    const { tag, sort = "Updates" } = req.query;
+    if (!tag) {
+      return res
+        .status(400)
+        .json({ message: "Tag query parameter is required" });
+    }
+
+    // Determine sort order based on query parameter
+    let sortOrder = {};
+    switch (sort) {
+      case "Popular":
+        sortOrder = { views: -1 };
+        break;
+      case "Updates":
+        sortOrder = { updatedAt: -1 };
+        break;
+      case "New":
+        sortOrder = { createdAt: -1 };
+        break;
+      default:
+        sortOrder = { views: -1 }; // Default to popular if an invalid sort parameter is provided
+    }
+
+    const novels = await Novel.find({ tags: tag })
+      .sort(sortOrder)
+      .limit(30)
+      .exec();
+
+    res.status(200).json(novels);
+  } catch (error) {
+    // Handle any errors
+    res
+      .status(500)
+      .json({ message: "An error occurred while searching for novels", error });
+  }
+};
+const getAuthorNovels = async (req, res) => {
+  try {
+    const { author } = req.query;
+    if (!author)
+      return res
+        .status(404)
+        .json({ message: "Author not found or doesn't exist" });
+
+    const novels = await Novel.find({ author }).exec();
+
+    if (!novels.toString())
+      return res.status(404).json({ message: `No novels by ${author} found` });
+
+    res.status(200).json(novels);
+  } catch (error) {
+    // Handle any errors
+    res.status(500).json({
+      message: `An error occurred while searching for ${author}'s novels`,
+    });
+  }
+};
+
 export {
   createNovel,
   getNovel,
@@ -1623,4 +1690,6 @@ export {
   getRankingPageNovels,
   updateNovelRating,
   getChapter,
+  searchNovelsByTag,
+  getAuthorNovels,
 };

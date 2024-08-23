@@ -28,7 +28,11 @@ const addBookmark = async (req, res) => {
     }
 
     await Bookmark.create({ userId, novelId });
-    await Novel.findByIdAndUpdate(novelId, { $inc: { bookmarkCount: 1 } });
+    await Novel.findByIdAndUpdate(
+      novelId,
+      { $inc: { bookmarkCount: 1 } },
+      { timestamps: false }
+    );
 
     res.status(201).json({ message: "Bookmark added successfully" });
   } catch (error) {
@@ -47,7 +51,11 @@ const removeBookmark = async (req, res) => {
       return res.status(404).json({ message: "Bookmark not found" });
     }
 
-    await Novel.findByIdAndUpdate(novelId, { $inc: { bookmarkCount: -1 } });
+    await Novel.findByIdAndUpdate(
+      novelId,
+      { $inc: { bookmarkCount: -1 } },
+      { timestamps: false }
+    );
 
     res.status(200).json({ message: "Bookmark removed successfully" });
   } catch (error) {

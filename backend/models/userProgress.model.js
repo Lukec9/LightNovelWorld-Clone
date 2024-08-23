@@ -15,6 +15,7 @@ const userProgressSchema = new mongoose.Schema(
     lastReadChapter: {
       type: Number,
       required: true,
+      default: 1,
     },
     lastReadDate: {
       type: Date,

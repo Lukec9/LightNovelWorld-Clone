@@ -23,12 +23,14 @@ h4.title {
   flex-wrap: wrap;
 }
 
-.action-list li {
+.action-list li,
+.tag-page li {
   display: inline-block;
   margin-right: 0.7rem;
   margin-bottom: 0.7rem;
 }
-.action-list li a {
+.action-list li a,
+.tag-page li button {
   display: inline-block;
   text-decoration: none;
   padding: 3px 6px;
@@ -41,7 +43,8 @@ h4.title {
   -moz-osx-font-smoothing: grayscale;
   text-rendering: optimizeLegibility;
 }
-.action-list li a:hover {
+.action-list li a:hover,
+.tag-page li button:hover {
   border: 1px solid var(--bg-color-secondary-2);
 }
 
@@ -50,7 +53,8 @@ h4.title {
   margin-top: 0.5rem;
 }
 
-.action-panel .action-list li.active a {
+.action-panel .action-list li.active a,
+.tag-page li.active button {
   color: #e7e7e7;
   background-color: var(--bg-color-secondary-2);
 }
@@ -127,4 +131,18 @@ h4.title {
   .explore .novel-list .novel-item {
     width: calc(20% - 13px);
   }
+}
+
+.container.tag-page {
+  background-color: var(--bg-color-2);
+  color: var(--text-color);
+  align-items: flex-start;
+}
+
+.tag-page .order-btns {
+  display: flex;
+  width: 100%;
+}
+.tag-page li button {
+  border-radius: 0 6px;
 }

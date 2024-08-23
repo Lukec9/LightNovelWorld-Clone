@@ -18,24 +18,46 @@ const CommentSection = ({
 }) => {
   const [comments, setComments] = useState([]);
   const [page, setPage] = useState(1);
+  const [pageSize, setPageSize] = useState(10);
+  const [filter, setFilter] = useState("newest"); // Default to 'newest'
+  const [period, setPeriod] = useState("allTime"); // Default period
   const [loading, setLoading] = useState(false);
-  const [hasMore, setHasMore] = useState(true);
-  const [filter, setFilter] = useState("newest");
+  const [error, setError] = useState(null);
+  const [hasMore, setHasMore] = useState(true); // Track if more comments are available
+  const novelId = novel._id;
 
-  const fetchComments = useCallback(async () => {
-    if (!novel) return;
-
-    setLoading(true);
+  const fetchComments = async (novelId, page, pageSize, filter, period) => {
     try {
-      const response = await axiosInstance.get(
-        `/novels/${novel._id}/comments`,
-        {
-          params: { filter, page, limit: 5 }, // Adjust limit as needed
-        }
-      );
+      const response = await axiosInstance.get(`/novels/${novelId}/comments`, {
+        params: {
+          page,
+          pageSize,
+          sortBy: filter,
+          period,
+        },
+      });
 
-      if (response.status === 200) {
-        const newComments = response.data.comments;
+      const fetchedComments = response.data;
+      setHasMore(fetchedComments.length === pageSize);
+
+      return fetchedComments;
+    } catch (error) {
+      return;
+    }
+  };
+
+  useEffect(() => {
+    const loadComments = async () => {
+      setLoading(true);
+      setError(null);
+      try {
+        const newComments = await fetchComments(
+          novelId,
+          page,
+          pageSize,
+          filter,
+          period
+        );
 
         // Ensure uniqueness based on `_id`
         const existingCommentIds = new Set(
@@ -50,23 +72,48 @@ const CommentSection = ({
             ? uniqueNewComments
             : [...prevComments, ...uniqueNewComments]
         );
-        setHasMore(uniqueNewComments.length === 5); // Adjust based on your limit
+      } catch (error) {
+        setError("Failed to load comments");
+      } finally {
+        setLoading(false);
       }
-    } catch (error) {
-      console.error("Failed to load comments", error);
-    } finally {
-      setLoading(false);
+    };
+    if (onChapter) {
+      fetchChapterComments();
+    } else {
+      loadComments();
     }
-  }, [page, novel, filter]);
+  }, [novelId, page, pageSize, filter, period]);
+
+  const handleFilterChange = event => {
+    const value = event.target.value;
+    if (value === "newest") {
+      setFilter("newest");
+      setPeriod("allTime"); // Default period for newest
+    } else if (value === "mostLikedThisWeek") {
+      setFilter("mostLiked");
+      setPeriod("week");
+    } else if (value === "mostLikedThisMonth") {
+      setFilter("mostLiked");
+      setPeriod("month");
+    } else if (value === "mostLikedAllTime") {
+      setFilter("mostLiked");
+      setPeriod("allTime");
+    }
+
+    // Reset page to 1 when filter changes
+    setPage(1);
+  };
+
   const fetchChapterComments = useCallback(async () => {
-    if (!onChapter) return;
-    if (!novel) return;
+    if (!onChapter || !novel) return;
+
     setLoading(true);
     try {
       const response = await axiosInstance.get(
         `/novels/${novel._id}/chapters/${chapterNumber}/comments`,
         {
-          params: { page, limit: 10 }, // Adjust limit as needed
+          params: { page, limit: pageSize }, // Adjust limit as needed
         }
       );
 
@@ -86,58 +133,14 @@ const CommentSection = ({
             ? uniqueNewComments
             : [...prevComments, ...uniqueNewComments]
         );
-        setHasMore(uniqueNewComments.length === 10); // Adjust based on your limit
+        setHasMore(uniqueNewComments.length === pageSize); // Adjust based on your limit
       }
     } catch (error) {
-      console.error("Failed to load comments", error);
+      return;
     } finally {
       setLoading(false);
     }
-  }, [page, novel, chapterNumber]);
-
-  useEffect(() => {
-    if (onChapter) {
-      fetchChapterComments();
-    } else {
-      fetchComments();
-    }
-  }, [fetchComments, fetchChapterComments, onChapter]);
-
-  useEffect(() => {
-    const handleScroll = () => {
-      if (
-        window.innerHeight + document.documentElement.scrollTop >=
-        document.documentElement.scrollHeight - 100 // Trigger 200px before the bottom
-      ) {
-        if (hasMore && !loading) {
-          setPage(prevPage => prevPage + 1);
-        }
-      }
-    };
-
-    window.addEventListener("scroll", handleScroll);
-
-    return () => {
-      window.removeEventListener("scroll", handleScroll);
-    };
-  }, [hasMore, loading]);
-
-  useEffect(() => {
-    setLoading(true);
-    setPage(1);
-    setHasMore(true);
-    setComments([]);
-    if (onChapter) {
-      fetchChapterComments();
-    } else {
-      fetchComments();
-    }
-  }, [filter, onChapter]);
-
-  const handleFilterChange = event => {
-    const selectedFilter = event.target.value;
-    setFilter(selectedFilter);
-  };
+  }, [page, novel, chapterNumber, onChapter, pageSize]);
 
   return (
     <section className="comment-list">
@@ -203,7 +206,7 @@ const CommentSection = ({
                       type="radio"
                       name="com_order"
                       value="mostLikedThisWeek"
-                      checked={filter === "mostLikedThisWeek"}
+                      checked={filter === "mostLiked" && period === "week"}
                       onChange={handleFilterChange}
                     />
                     <label htmlFor="com_order_likedweek">This Week</label>
@@ -214,7 +217,7 @@ const CommentSection = ({
                       type="radio"
                       name="com_order"
                       value="mostLikedThisMonth"
-                      checked={filter === "mostLikedThisMonth"}
+                      checked={filter === "mostLiked" && period === "month"}
                       onChange={handleFilterChange}
                     />
                     <label htmlFor="com_order_likedmonth">This Month</label>
@@ -225,7 +228,7 @@ const CommentSection = ({
                       type="radio"
                       name="com_order"
                       value="mostLikedAllTime"
-                      checked={filter === "mostLikedAllTime"}
+                      checked={filter === "mostLiked" && period === "allTime"}
                       onChange={handleFilterChange}
                     />
                     <label htmlFor="com_order_likedall">All Time</label>
@@ -251,6 +254,16 @@ const CommentSection = ({
           )}
         </ul>
       </div>
+      <div>
+        <button
+          onClick={() => setPage(page + 1)}
+          disabled={!hasMore || loading}
+        >
+          Next
+        </button>
+      </div>
+      {loading && <p>Loading...</p>}
+      {error && <p>Error: {error}</p>}
       {loading && <Spinner />} {/* Adjust placement of loading spinner */}
     </section>
   );

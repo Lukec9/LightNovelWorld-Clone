@@ -25,6 +25,12 @@ const UserSchema = mongoose.Schema(
       type: String,
       default: "",
     },
+    history: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Novel",
+      },
+    ],
   },
   { timestamps: true }
 );

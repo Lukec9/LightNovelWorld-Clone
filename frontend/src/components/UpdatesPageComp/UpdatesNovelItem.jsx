@@ -25,10 +25,10 @@ const UpdatesNovelItem = ({ novel }) => {
           to={`/novel/${novel.slugTitle}/chapters/${lastChapter.chapterNumber}`}
         >
           <h4 className="novel-title ">
-            {" "}
-            {novel?.title.length > 18
+            {novel.title}
+            {/* {novel?.title.length > 18
               ? novel?.title.substring(0, 18) + "..."
-              : novel?.title}
+              : novel?.title} */}
           </h4>
           <h5 className="chapter-title ">
             Chapter {lastChapter?.chapterNumber}: {lastChapter?.title}

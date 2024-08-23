@@ -1,13 +1,16 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { memo, useCallback, useEffect, useState } from "react";
 import NovelItem from "./NovelItem";
 import axiosInstance from "../../axios";
 import notify from "../../utils/toastUtil";
 import { toast } from "react-toastify";
+import Skeleton from "react-loading-skeleton";
 
 const CompletedStoriesSection = () => {
   const [compNovels, setCompNovels] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   const getCompNovels = useCallback(async () => {
+    setLoading(true);
     try {
       const response = await axiosInstance.get(
         "/novels?limit=12&status=Completed"
@@ -18,6 +21,8 @@ const CompletedStoriesSection = () => {
     } catch (error) {
       console.error("Error fetching compnovels:", error);
       notify("error", "Something went wrong!");
+    } finally {
+      setLoading(false);
     }
   }, []);
 
@@ -27,6 +32,7 @@ const CompletedStoriesSection = () => {
 
   return (
     <section className="container vspace">
+      {loading && <Skeleton height={"150px"} count={6} />}
       <div className="section-header">
         <h3>Completed Stories</h3>
         <a
@@ -48,4 +54,4 @@ const CompletedStoriesSection = () => {
   );
 };
 
-export default CompletedStoriesSection;
+export default memo(CompletedStoriesSection);

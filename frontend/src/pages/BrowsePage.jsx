@@ -1,4 +1,5 @@
-import { lazy, Suspense, useEffect, useState } from "react";
+import { lazy, Suspense, useCallback, useEffect, useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 import CategoryBtn from "../components/BrowsePageComp/CategoryBtn";
 import "../styles/BrowsePageStyles.css";
 
@@ -6,7 +7,7 @@ import Pagination from "../components/BrowsePageComp/Pagination";
 import Spinner from "../components/Spinner";
 import axiosInstance from "../axios";
 import notify from "../utils/toastUtil";
-import { useLocation } from "react-router-dom";
+
 const BrowseNovelItem = lazy(() =>
   import("../components/BrowsePageComp/BrowseNovelItem")
 );
@@ -19,6 +20,10 @@ const BrowsePage = () => {
     status: "All",
   });
   const location = useLocation();
+  const navigate = useNavigate(); // Use this to update URL without reloading
+  const [pagination, setPagination] = useState(null);
+  const [page, setPage] = useState(1);
+  const [loading, setLoading] = useState(true); // Set true initially to show spinner
 
   // Function to parse query parameters
   const getQueryParams = () => {
@@ -26,32 +31,77 @@ const BrowsePage = () => {
     const category = params.get("category") || "All";
     const order = params.get("sortBy") || "New";
     const status = params.get("status") || "All";
+    const pageParam = parseInt(params.get("page")) || 1;
 
-    return { category, order, status };
+    return { category, order, status, page: pageParam };
   };
 
-  const getBrowseNovels = async () => {
+  const updateURLParams = newParams => {
+    const searchParams = new URLSearchParams(location.search);
+    Object.keys(newParams).forEach(key => {
+      searchParams.set(key, newParams[key]);
+    });
+    navigate({ search: searchParams.toString() }, { replace: true });
+  };
+
+  const getBrowseNovels = useCallback(async () => {
+    setLoading(true);
     try {
-      const response = await axiosInstance.get(
-        `/novels?limit=15&status=${activeCategory.status}&sortBy=${activeCategory.order}&category=${activeCategory.category}`
-      );
+      const response = await axiosInstance.get(`/novels`, {
+        params: {
+          status: activeCategory.status,
+          sortBy: activeCategory.order,
+          category: activeCategory.category,
+          page,
+          limit: 5, // Set limit to whatever number you need
+        },
+      });
       if (response && response.data) {
         setBrowseNovels(response.data.novels);
+        setPagination(response.data.pagination);
       }
     } catch (error) {
-      console.error("Error fetching novels:", error);
       notify("error", "Something went wrong!");
+    } finally {
+      setLoading(false);
     }
-  };
+  }, [activeCategory, page]);
 
   useEffect(() => {
     const queryParams = getQueryParams();
-    setActiveCategory(queryParams);
+    setActiveCategory({
+      category: queryParams.category,
+      order: queryParams.order,
+      status: queryParams.status,
+    });
+    setPage(queryParams.page);
   }, [location.search]);
 
   useEffect(() => {
     getBrowseNovels();
-  }, [activeCategory]);
+  }, [getBrowseNovels]);
+
+  const handleCategoryChange = newCategory => {
+    setActiveCategory(prev => ({ ...prev, category: newCategory }));
+    setPage(1);
+    updateURLParams({ category: newCategory, page: 1 });
+  };
+
+  const handleOrderChange = newOrder => {
+    setActiveCategory(prev => ({ ...prev, order: newOrder }));
+    setPage(1);
+    updateURLParams({ sortBy: newOrder, page: 1 });
+  };
+
+  const handleStatusChange = newStatus => {
+    setActiveCategory(prev => ({ ...prev, status: newStatus }));
+    setPage(1);
+    updateURLParams({ status: newStatus, page: 1 });
+  };
+
+  // if (loading) return <Spinner />;
+  if (!browseNovels && !loading)
+    return <Link to="/">Couldn't get novels, try refreshing the page</Link>;
 
   return (
     <div className="explore">
@@ -64,12 +114,7 @@ const BrowsePage = () => {
                 <CategoryBtn
                   key={i}
                   isActive={activeCategory.category === genre}
-                  onClick={() =>
-                    setActiveCategory(prevState => ({
-                      ...prevState,
-                      category: genre,
-                    }))
-                  }
+                  onClick={() => handleCategoryChange(genre)}
                   category={genre}
                 />
               ))}
@@ -83,12 +128,7 @@ const BrowsePage = () => {
                   <CategoryBtn
                     key={i}
                     isActive={activeCategory.order === filt}
-                    onClick={() =>
-                      setActiveCategory(prevState => ({
-                        ...prevState,
-                        order: filt,
-                      }))
-                    }
+                    onClick={() => handleOrderChange(filt)}
                     category={filt}
                   />
                 ))}
@@ -101,12 +141,7 @@ const BrowsePage = () => {
                   <CategoryBtn
                     key={i}
                     isActive={activeCategory.status === filt}
-                    onClick={() =>
-                      setActiveCategory(prevState => ({
-                        ...prevState,
-                        status: filt,
-                      }))
-                    }
+                    onClick={() => handleStatusChange(filt)}
                     category={filt}
                   />
                 ))}
@@ -130,14 +165,25 @@ const BrowsePage = () => {
             {activeCategory.status === "Ongoing" && " (Translation Ongoing)"}
           </h1>
         </div>
-        <ul className="novel-list">
-          {browseNovels.map((novel, i) => (
-            <Suspense key={i} fallback={<Spinner />}>
-              <BrowseNovelItem novel={novel} key={novel._id} />
-            </Suspense>
-          ))}
-        </ul>
-        <Pagination />
+        {loading && <Spinner />}
+        {browseNovels && !loading && (
+          <>
+            <ul className="novel-list">
+              {browseNovels.map((novel, i) => (
+                <Suspense key={i} fallback={<Spinner />}>
+                  <BrowseNovelItem novel={novel} key={novel._id} />
+                </Suspense>
+              ))}
+            </ul>
+            <Pagination
+              pagination={pagination}
+              setPage={newPage => {
+                setPage(newPage);
+                updateURLParams({ page: newPage });
+              }}
+            />
+          </>
+        )}
       </div>
     </div>
   );

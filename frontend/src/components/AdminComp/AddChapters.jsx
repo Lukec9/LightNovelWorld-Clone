@@ -77,15 +77,21 @@ const AddChapters = ({ novelId }) => {
             onChange={e => handleInputChange(index, e)}
             required
           />
-          <button type="button" onClick={() => handleRemoveChapter(index)}>
+          <button
+            className="button"
+            type="button"
+            onClick={() => handleRemoveChapter(index)}
+          >
             Remove
           </button>
         </div>
       ))}
-      <button type="button" onClick={handleAddChapter}>
+      <button className="button" type="button" onClick={handleAddChapter}>
         Add Another Chapter
       </button>
-      <button type="submit">Submit Chapters</button>
+      <button className="button" type="submit">
+        Submit Chapters
+      </button>
     </form>
   );
 };

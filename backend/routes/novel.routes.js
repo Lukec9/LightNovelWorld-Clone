@@ -10,6 +10,7 @@ import {
   deleteComment,
   deleteNovel,
   deleteReview,
+  getAuthorNovels,
   getChapter,
   getChapterComments,
   getNovel,
@@ -22,6 +23,7 @@ import {
   removeChaptersFromNovel,
   reviewLikeDislike,
   searchNovels,
+  searchNovelsByTag,
   updateChapter,
   updateComment,
   updateNovel,
@@ -42,6 +44,8 @@ const router = express.Router();
 router.get("/", listAllNovels);
 router.get("/novel", getNovel);
 router.get("/search", searchNovels);
+router.get("/tag", searchNovelsByTag);
+router.get("/author", getAuthorNovels);
 router.get("/rankings", getRankings);
 router.get("/rankingspage", getRankingPageNovels);
 router.put("/progress", protectRoute, updateUserProgress);

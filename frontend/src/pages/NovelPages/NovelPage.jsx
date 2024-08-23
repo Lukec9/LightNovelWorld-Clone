@@ -255,8 +255,6 @@ const NovelPage = () => {
       {user.rank === "Admin" && (
         <>
           <Link to={`/admin/update/${novel._id}`}>Update Novel</Link>
-          <DeleteNovel novelId={novel._id} />
-          <AddChapters novelId={novel._id} />
         </>
       )}
       <div id="novel">

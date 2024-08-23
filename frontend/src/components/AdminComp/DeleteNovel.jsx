@@ -24,7 +24,11 @@ const DeleteNovel = ({ novelId }) => {
 
   return (
     <div>
-      <button onClick={handleDelete} style={{ color: "red" }}>
+      <button
+        className="button"
+        onClick={handleDelete}
+        style={{ color: "red" }}
+      >
         Delete Novel
       </button>
     </div>

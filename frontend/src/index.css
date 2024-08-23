@@ -1089,3 +1089,24 @@ a {
 input[type="file"] {
   color: var(--text-color);
 }
+
+.disabled {
+  pointer-events: none;
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+span:has(.react-loading-skeleton) {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  gap: 0.5rem;
+}
+
+.react-loading-skeleton {
+  background-color: var(--bg-color);
+}
+
+span.vertloading {
+  flex-direction: column;
+}

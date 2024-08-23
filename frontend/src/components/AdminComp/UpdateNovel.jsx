@@ -3,6 +3,9 @@ import { useParams, useNavigate } from "react-router-dom";
 import { updateNovel, getNovelById } from "../../services/api";
 import usePreviewImg from "../../hooks/usePreviewImg"; // Adjust path as necessary
 import notify from "../../utils/toastUtil";
+import AddChapters from "./AddChapters";
+import DeleteNovel from "./DeleteNovel";
+import ReturnToPrevious from "../ReturnTo";
 
 const UpdateNovel = () => {
   const { novelId } = useParams();
@@ -21,7 +24,6 @@ const UpdateNovel = () => {
     const fetchNovel = async () => {
       try {
         const response = await getNovelById(novelId);
-        console.log(response);
         setNovel(response.data.novel);
         setTitle(response.data.novel.title);
         setAuthor(response.data.novel.author);
@@ -86,7 +88,7 @@ const UpdateNovel = () => {
     <div>
       <h2>Update Novel</h2>
       <form onSubmit={handleSubmit}>
-        <div>
+        <div className="title">
           <label>Title:</label>
           <input
             type="text"
@@ -95,7 +97,7 @@ const UpdateNovel = () => {
             required
           />
         </div>
-        <div>
+        <div className="author">
           <label>Author:</label>
           <input
             type="text"
@@ -104,7 +106,7 @@ const UpdateNovel = () => {
             required
           />
         </div>
-        <div>
+        <div className="summary">
           <label>Summary:</label>
           <textarea
             value={summary}
@@ -112,7 +114,7 @@ const UpdateNovel = () => {
             required
           />
         </div>
-        <div>
+        <div className="status">
           <label>Status:</label>
           <select
             value={status}
@@ -124,7 +126,7 @@ const UpdateNovel = () => {
             <option value="Dropped">Dropped</option>
           </select>
         </div>
-        <div>
+        <div className="categories">
           <label>Categories (comma separated):</label>
           <input
             type="text"
@@ -134,7 +136,7 @@ const UpdateNovel = () => {
             required
           />
         </div>
-        <div>
+        <div className="tags">
           <label>Tags (comma separated):</label>
           <input
             type="text"
@@ -144,7 +146,7 @@ const UpdateNovel = () => {
             required
           />
         </div>
-        <div>
+        <div className="cover">
           <label>Cover Image:</label>
           <input
             type="file"
@@ -159,8 +161,13 @@ const UpdateNovel = () => {
             />
           )}
         </div>
-        <button type="submit">Update Novel</button>
+        <button className="button" type="submit">
+          Update Novel
+        </button>
       </form>
+      <AddChapters novelId={novelId} />
+      <DeleteNovel novelId={novelId} />
+      <ReturnToPrevious />
     </div>
   );
 };

@@ -12,11 +12,12 @@ import axios from "axios";
 
 const AccountPage = () => {
   const { logout, state, dispatch } = useAuthContext();
+  const [loading, setLoading] = useState(true);
   const [commentStats, setCommentStats] = useState({});
   const [reviewStats, setReviewStats] = useState({});
   const [novelStats, setNovelStats] = useState({
-    bookmarkedNovels: null,
-    novelsRead: 39,
+    bookmarkedNovels: 0,
+    novelsRead: 0,
   });
   const navigate = useNavigate();
   const { imgUrl, handleImageChange } = usePreviewImg();
@@ -28,6 +29,7 @@ const AccountPage = () => {
     username: state.user.username,
     about: state.user.about,
   });
+
   const handleTextChange = e => {
     const inputText = e.target.value;
 
@@ -178,19 +180,24 @@ const AccountPage = () => {
 
   useEffect(() => {
     const getUserStats = async () => {
+      setLoading(true);
       try {
         const response = await axiosInstance.get(
           `/users/${state.user._id}/stats`
         );
-        const resp = await axiosInstance.get(`users/bookmarks`);
+        const resp = await axiosInstance.get(`/users/bookmarks`);
+        const resp2 = await axiosInstance.get("/users/novels-read");
         setCommentStats(response.data.commentStats[0] || {});
         setReviewStats(response.data.reviewStats[0] || {});
         setNovelStats(prevStats => ({
           ...prevStats,
           bookmarkedNovels: resp.data.novels.length,
+          novelsRead: resp2.data,
         }));
       } catch (error) {
         notify("error", "Could not get activity stats");
+      } finally {
+        setLoading(false);
       }
     };
 
@@ -383,8 +390,8 @@ const AccountPage = () => {
 };
 
 const karmaStats = [
-  { name: "Total points", value: 2 },
-  { name: "Karma Level", value: 1 },
+  { name: "Total points", value: 0 },
+  { name: "Karma Level", value: 0 },
 ];
 
 export default AccountPage;
