@@ -384,19 +384,13 @@ const getMe = async (req, res) => {
 
 async function addRecentlyReadNovel(req, res) {
   const { novelId } = req.body;
-  const userId = req.user._id;
+  const user = req.user;
 
   if (!novelId) {
     return res.status(400).json({ message: "Novel ID is required." });
   }
 
   try {
-    const user = await User.findById(userId);
-
-    if (!user) {
-      return res.status(404).json({ message: "User not found." });
-    }
-
     // Check if novelId is already in the history
     if (user.history.includes(novelId)) {
       // Move to the front if it's already in the list

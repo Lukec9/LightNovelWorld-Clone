@@ -3,7 +3,10 @@ import timeAgo from "../../utils/timeAgo";
 import Spinner from "../Spinner";
 
 const UpdatesNovelItem = ({ novel }) => {
-  const lastChapter = novel?.chapters[novel.chapters.length - 1];
+  const lastChapter = novel?.chapters[novel.chapters.length - 1] || {
+    chapterNumber: 1,
+    title: "Example Title",
+  };
 
   if (!novel) return <Spinner />;
 
@@ -22,7 +25,9 @@ const UpdatesNovelItem = ({ novel }) => {
       </div>
       <div className="item-stats">
         <Link
-          to={`/novel/${novel.slugTitle}/chapters/${lastChapter.chapterNumber}`}
+          to={`/novel/${novel.slugTitle}/chapters/${
+            lastChapter.chapterNumber || 1
+          }`}
         >
           <h4 className="novel-title ">
             {novel.title}
@@ -31,7 +36,10 @@ const UpdatesNovelItem = ({ novel }) => {
               : novel?.title} */}
           </h4>
           <h5 className="chapter-title ">
-            Chapter {lastChapter?.chapterNumber}: {lastChapter?.title}
+            Chapter {lastChapter?.chapterNumber}:{" "}
+            {lastChapter?.title.length > 18
+              ? lastChapter?.title.substring(0, 18) + "..."
+              : lastChapter?.title}
           </h5>
           <div className="novel-stats">
             <span>

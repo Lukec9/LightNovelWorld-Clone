@@ -1110,3 +1110,7 @@ span:has(.react-loading-skeleton) {
 span.vertloading {
   flex-direction: column;
 }
+._close {
+  background-color: transparent;
+  border: 1px solid var(--border-color-4);
+}

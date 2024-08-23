@@ -49,7 +49,7 @@ const HistoryNovelCard = ({ novel }) => {
         <div className="last-read">
           <span className="mobile-d">Last read: </span>
           <span> {timeAgo(new Date(lastReadDate))}</span>
-          <Link>
+          <Link to={`/novel/${novel.slugTitle}/chapters/${lastReadChapter}`}>
             Chapter {lastReadChapter}: {lastReadChapterTitle}{" "}
           </Link>
         </div>

@@ -16,7 +16,6 @@ const AccountCommentsPage = () => {
       try {
         const response = await axiosInstance.get(`/users/${user._id}/comments`);
         setComments(response.data.comments);
-        notify("success", "Got comments!");
       } catch (error) {
         notify("error", "Could not get user comments");
       }

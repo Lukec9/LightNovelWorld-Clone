@@ -1,5 +1,6 @@
 import Bookmark from "../models/bookmark.model.js";
 import Novel from "../models/novel.model.js";
+import UserProgress from "../models/userProgress.model.js";
 
 const addBookmark = async (req, res) => {
   try {
@@ -83,13 +84,79 @@ const removeBookmark = async (req, res) => {
 // };
 
 const getBookmarkedNovels = async (req, res) => {
+  const filterCompletedNovels = async (novels, userId) => {
+    const completedNovelIds = await UserProgress.find({
+      userId,
+      completed: true,
+    }).select("novelId");
+    const completedNovelIdsSet = new Set(
+      completedNovelIds.map(progress => progress.novelId.toString())
+    );
+    return novels.filter(novel =>
+      completedNovelIdsSet.has(novel._id.toString())
+    );
+  };
+
+  const sortByLastUpdated = novels => {
+    return novels.sort((a, b) => b.updatedAt - a.updatedAt);
+  };
+
+  const sortByLastAdded = (bookmarks, filteredNovels) => {
+    const filteredNovelIds = new Set(
+      filteredNovels.map(novel => novel._id.toString())
+    );
+    return bookmarks
+      .filter(bookmark => filteredNovelIds.has(bookmark.novelId._id.toString()))
+      .sort((a, b) => b.createdAt - a.createdAt)
+      .map(bookmark => bookmark.novelId);
+  };
+
+  const sortByLastRead = async (novels, userId) => {
+    const userProgress = await UserProgress.find({ userId }).select(
+      "novelId lastReadDate"
+    );
+    // Create a map for quick access to lastReadDate by novelId
+    const lastReadMap = new Map(
+      userProgress.map(progress => [
+        progress.novelId.toString(),
+        new Date(progress.lastReadDate),
+      ])
+    );
+
+    return novels.sort((a, b) => {
+      const lastReadA = lastReadMap.get(a._id.toString()) || new Date(0);
+      const lastReadB = lastReadMap.get(b._id.toString()) || new Date(0);
+
+      if (lastReadA > lastReadB) return -1; // A comes before B
+      if (lastReadA < lastReadB) return 1; // B comes before A
+      return 0; // Dates are the same, retain original order
+    });
+  };
+
   try {
     const userId = req.user._id;
+    const { sort, filter } = req.query;
 
+    // Fetch bookmarks
     const bookmarks = await Bookmark.find({ userId })
       .populate("novelId")
       .exec();
-    const novels = bookmarks.map(bookmark => bookmark.novelId);
+
+    let novels = bookmarks.map(bookmark => bookmark.novelId);
+
+    // Apply filtering
+    if (filter === "completed") {
+      novels = await filterCompletedNovels(novels, userId);
+    }
+
+    // Apply sorting
+    if (sort === "last updated") {
+      novels = sortByLastUpdated(novels);
+    } else if (sort === "last added") {
+      novels = sortByLastAdded(bookmarks, novels);
+    } else if (sort === "last read") {
+      novels = await sortByLastRead(novels, userId);
+    }
 
     res.status(200).json({ novels });
   } catch (error) {
@@ -97,6 +164,7 @@ const getBookmarkedNovels = async (req, res) => {
     res.status(500).json({ message: "Server error" });
   }
 };
+
 const getBookmarkedNovel = async (req, res) => {
   try {
     const userId = req.user._id;
