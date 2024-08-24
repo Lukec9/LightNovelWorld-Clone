@@ -23,7 +23,9 @@ const HomePage = () => {
         <div
           className="background"
           style={{
-            backgroundImage: `url("https://res.cloudinary.com/dnjmtuolt/image/upload/v1724500149/lnw-slider-banner-bg6_qktsgi.jpg)`,
+            backgroundImage: `url(
+              "https://res.cloudinary.com/dnjmtuolt/image/upload/v1724500149/lnw-slider-banner-bg6_qktsgi.jpg"
+            )`,
           }}
         ></div>
         <div className="head-content">
