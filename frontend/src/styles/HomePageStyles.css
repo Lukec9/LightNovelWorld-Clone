@@ -307,10 +307,13 @@ star-wrap {
   fill: currentColor;
 }
 
-.star-wrap .star-on {
+.star.star-on {
   color: var(--star-color-on);
-  width: 0.825rem;
-  height: 0.825rem;
+}
+
+.star.half {
+  fill: var(--star-color-on);
+  mask: url(#half-mask);
 }
 
 .rating-star + span {

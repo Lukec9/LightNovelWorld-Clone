@@ -3,6 +3,7 @@ import RankingNovelItem from "./RankingNovelItem";
 import notify from "../../utils/toastUtil";
 import axiosInstance from "../../axios";
 import Skeleton from "react-loading-skeleton";
+import { Link } from "react-router-dom";
 
 const NovelRankingSection = () => {
   const [mostRead, setMostReadNovels] = useState([]);
@@ -41,13 +42,13 @@ const NovelRankingSection = () => {
     <section className="container vspace">
       <div className="section-header">
         <h3>Ranking</h3>
-        <a
+        <Link
           className="getmorebtn"
           title="Top Rated Light Novels"
-          href="/ranking-29071230"
+          to="/ranking"
         >
           View More
-        </a>
+        </Link>
       </div>
       <div className="section-body">
         <div className="ranking">

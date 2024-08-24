@@ -4,21 +4,23 @@ import { useAuthContext } from "../../context/AuthContext";
 import "../../styles/AccountPages/AccountReviewsPageStyles.css";
 import notify from "../../utils/toastUtil";
 import axiosInstance from "../../axios";
+import Spinner from "../../components/Spinner";
 
 const AccountReviewsPage = () => {
   const {
     state: { user: user },
   } = useAuthContext();
   const [reviews, setReviews] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const getReviews = async () => {
       try {
+        setLoading(true);
         const response = await axiosInstance.get(`/users/${user._id}/reviews`);
         setReviews(response.data.reviews);
-        notify("success", "Got Reviews!");
-      } catch (error) {
-        notify("error", "Could not get user reviews");
+      } finally {
+        setLoading(false);
       }
     };
     getReviews();
@@ -33,6 +35,10 @@ const AccountReviewsPage = () => {
           </div>
 
           <div className="user-panel-body">
+            {loading && <Spinner />}
+            {!reviews.toString() && !loading && (
+              <h2>No reviews written by user</h2>
+            )}
             <ul className="review-list">
               {reviews.map(review => (
                 <UserReview

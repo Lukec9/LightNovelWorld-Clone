@@ -218,7 +218,6 @@ const NovelChapter = () => {
       }
     } catch (error) {
       notify("error", "An error occurred while creating comment");
-      console.error("Error updating comment:", error);
     } finally {
       setLoading(false);
       closeModal();

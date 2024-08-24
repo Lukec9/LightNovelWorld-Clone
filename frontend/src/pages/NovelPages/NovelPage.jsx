@@ -10,6 +10,7 @@ import CommentSection from "../../components/NovelPagesComp/CommentSection";
 import { useAuthContext } from "../../context/AuthContext";
 import DeleteNovel from "../../components/AdminComp/DeleteNovel";
 import AddChapters from "../../components/AdminComp/AddChapters";
+import StarRating from "../../components/StarRating";
 
 const NovelPage = () => {
   const { nid } = useParams();
@@ -188,6 +189,7 @@ const NovelPage = () => {
   const handlePost = async event => {
     if (loading) return;
     if (!novel) return;
+    if (!user) return notify("error", "Must be logged in");
     event.preventDefault(); // Prevent the default form submission behavior
 
     if (newCommentText.length < 3) {
@@ -218,7 +220,6 @@ const NovelPage = () => {
       }
     } catch (error) {
       notify("error", "An error occurred while creating comment");
-      console.error("Error updating comment:", error);
     } finally {
       setLoading(false);
       closeModal();
@@ -252,7 +253,7 @@ const NovelPage = () => {
   };
   return (
     <>
-      {user.rank === "Admin" && (
+      {user?.rank === "Admin" && (
         <>
           <Link to={`/admin/update/${novel._id}`}>Update Novel</Link>
         </>
@@ -291,76 +292,7 @@ const NovelPage = () => {
                     </svg>
                     Rank {novel?.rank}
                   </div>
-                  <div className="star-rating">
-                    <span className="star-wrap">
-                      <span className="star-box" role="presentation">
-                        <svg className="star star-on">
-                          <use xlinkHref="#star">
-                            <symbol
-                              className="icon"
-                              viewBox="0 0 1024 1024"
-                              id="star"
-                            >
-                              <path d="M512 798.134857L195.584 1024 302.08 637.805714 0 391.168l382.244571-12.873143L512 0l129.755429 378.294857L1024 391.168 721.92 637.805714 828.416 1024z"></path>
-                            </symbol>
-                          </use>
-                        </svg>
-                      </span>
-                      <span className="star-box" role="presentation">
-                        <svg className="star star-on">
-                          <use xlinkHref="#star">
-                            <symbol
-                              className="icon"
-                              viewBox="0 0 1024 1024"
-                              id="star"
-                            >
-                              <path d="M512 798.134857L195.584 1024 302.08 637.805714 0 391.168l382.244571-12.873143L512 0l129.755429 378.294857L1024 391.168 721.92 637.805714 828.416 1024z"></path>
-                            </symbol>
-                          </use>
-                        </svg>
-                      </span>
-                      <span className="star-box" role="presentation">
-                        <svg className="star star-on">
-                          <use xlinkHref="#star">
-                            <symbol
-                              className="icon"
-                              viewBox="0 0 1024 1024"
-                              id="star"
-                            >
-                              <path d="M512 798.134857L195.584 1024 302.08 637.805714 0 391.168l382.244571-12.873143L512 0l129.755429 378.294857L1024 391.168 721.92 637.805714 828.416 1024z"></path>
-                            </symbol>
-                          </use>
-                        </svg>
-                      </span>
-                      <span className="star-box" role="presentation">
-                        <svg className="star star-on">
-                          <use xlinkHref="#star">
-                            <symbol
-                              className="icon"
-                              viewBox="0 0 1024 1024"
-                              id="star"
-                            >
-                              <path d="M512 798.134857L195.584 1024 302.08 637.805714 0 391.168l382.244571-12.873143L512 0l129.755429 378.294857L1024 391.168 721.92 637.805714 828.416 1024z"></path>
-                            </symbol>
-                          </use>
-                        </svg>
-                      </span>
-                      <span className="star-box" role="presentation">
-                        <svg className="star star-on">
-                          <use xlinkHref="#star">
-                            <symbol
-                              className="icon"
-                              viewBox="0 0 1024 1024"
-                              id="star"
-                            >
-                              <path d="M512 798.134857L195.584 1024 302.08 637.805714 0 391.168l382.244571-12.873143L512 0l129.755429 378.294857L1024 391.168 721.92 637.805714 828.416 1024z"></path>
-                            </symbol>
-                          </use>
-                        </svg>
-                      </span>
-                    </span>
-                    <strong>{novel?.rating}</strong>
-                  </div>
+                  <StarRating rating={novel.rating} />
                 </div>
               </div>
               <nav className="links">
@@ -468,7 +400,13 @@ const NovelPage = () => {
                   <small>Bookmarked</small>
                 </span>
                 <span>
-                  <strong className="ongoing">{novel.status}</strong>
+                  <strong
+                    className={
+                      novel.status !== "Ongoing" ? "completed" : "ongoing"
+                    }
+                  >
+                    {novel.status}
+                  </strong>
                   <small>Status</small>
                 </span>
               </div>
@@ -524,7 +462,10 @@ const NovelPage = () => {
                 <p className="latest text1row">
                   Reviews from {novel.reviewCount} readers
                 </p>
-                <p className="update">Average score is {novel.rating}</p>
+                <p className="update">
+                  Average score is{" "}
+                  {!novel.rating ? 0 : novel?.rating.toFixed(2)}
+                </p>
               </div>
               <svg
                 xmlns="http://www.w3.org/2000/svg"

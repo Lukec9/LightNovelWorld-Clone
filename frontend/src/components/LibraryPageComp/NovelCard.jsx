@@ -1,4 +1,5 @@
 import { useEffect, useState, memo } from "react";
+import { Link } from "react-router-dom";
 import timeAgo from "../../utils/timeAgo";
 import notify from "../../utils/toastUtil";
 import axiosInstance from "../../axios";
@@ -104,7 +105,9 @@ const NovelCard = ({ novel, setNovels }) => {
         </div>
         <div className="novel-content">
           <div className="novel-title">
-            <p className="ntitle">{novel.title}</p>
+            <Link to={`/novel/${novel.slugTitle}`} className="ntitle">
+              {novel.title}
+            </Link>
             <p className="lastchap">
               <small>
                 <svg
@@ -211,7 +214,16 @@ const NovelCard = ({ novel, setNovels }) => {
                     ? "I have completed this book"
                     : "I haven't completed it yet"}
                 </span>
-                <i className="icon-flag-checkered" />
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width={16}
+                  height={16}
+                  fill="currentColor"
+                  className="bi bi-flag-fill"
+                  viewBox="0 0 16 16"
+                >
+                  <path d="M14.778.085A.5.5 0 0 1 15 .5V8a.5.5 0 0 1-.314.464L14.5 8l.186.464-.003.001-.006.003-.023.009a12 12 0 0 1-.397.15c-.264.095-.631.223-1.047.35-.816.252-1.879.523-2.71.523-.847 0-1.548-.28-2.158-.525l-.028-.01C7.68 8.71 7.14 8.5 6.5 8.5c-.7 0-1.638.23-2.437.477A20 20 0 0 0 3 9.342V15.5a.5.5 0 0 1-1 0V.5a.5.5 0 0 1 1 0v.282c.226-.079.496-.17.79-.26C4.606.272 5.67 0 6.5 0c.84 0 1.524.277 2.121.519l.043.018C9.286.788 9.828 1 10.5 1c.7 0 1.638-.23 2.437-.477a20 20 0 0 0 1.349-.476l.019-.007.004-.002h.001" />
+                </svg>
               </button>
               {/* <button data-action="favorite" data-lid={3377210}>
               Add to Favorites <i className="icon-star" />
@@ -221,7 +233,18 @@ const NovelCard = ({ novel, setNovels }) => {
               <i className="icon-bell-off" />
             </button> */}
               <button onClick={removeFromLibrary}>
-                Remove from Library <i className="icon-trash-empty" />
+                Remove from Library{" "}
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width={16}
+                  height={16}
+                  fill="currentColor"
+                  className="bi bi-trash"
+                  viewBox="0 0 16 16"
+                >
+                  <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0z" />
+                  <path d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4zM2.5 3h11V2h-11z" />
+                </svg>
               </button>
             </div>
           </div>

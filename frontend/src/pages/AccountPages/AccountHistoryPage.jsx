@@ -32,8 +32,6 @@ const AccountHistoryPage = () => {
         );
 
         setNovels(novelsWithProgress);
-      } catch (error) {
-        console.error("Error fetching user history and progress:", error);
       } finally {
         setLoading(false);
       }
@@ -46,7 +44,8 @@ const AccountHistoryPage = () => {
     return <Spinner />;
   }
 
-  if (!novels) return <p>Read some novels for them to show up here!</p>;
+  if (!novels && !loading)
+    return <p>Read some novels for them to show up here!</p>;
 
   return (
     <div className="user-panel-body">

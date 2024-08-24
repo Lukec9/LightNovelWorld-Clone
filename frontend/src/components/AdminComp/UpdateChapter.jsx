@@ -22,9 +22,7 @@ const UpdateChapter = () => {
         );
         setChapter(response.data);
         setTitle(response.data.title);
-      } catch (error) {
-        console.error("Error fetching chapter:", error);
-      }
+      } catch (error) {}
     };
     fetchChapter();
   }, [novelId, chapterNumber]);
@@ -39,7 +37,6 @@ const UpdateChapter = () => {
     formData.append("title", title);
     formData.append("newChapterNumber", number);
     if (file) formData.append("textFile", file);
-    console.log(formData);
 
     try {
       const response = await axiosInstance.put(

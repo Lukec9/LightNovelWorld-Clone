@@ -36,7 +36,6 @@ const CreateNovel = ({}) => {
       setImgUrl(""); // Clear image preview
       notify("success", "Created novel");
     } catch (err) {
-      console.error("Error creating novel:", err);
       notify("error", err.response?.data);
     }
   };

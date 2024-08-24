@@ -32,11 +32,9 @@ const LoginForm = () => {
 
       setInputs({ password: "", username: "" });
     } catch (error) {
-      console.log(error.response.data);
       const message =
         error.response.data.error || "Could not log user in, please try again";
       notify("error", message);
-      console.error("Error signing up:", message);
     } finally {
       setLoading(false);
     }

@@ -614,9 +614,9 @@ const getNovelComments = async (req, res) => {
 
   // Sorting and pagination
   if (sortBy === "mostLiked") {
-    pipeline.push({ $sort: { likesCount: -1, _id: 1 } });
+    pipeline.push({ $sort: { likesCount: -1, _id: -1 } });
   } else if (sortBy === "newest") {
-    pipeline.push({ $sort: { createdAt: -1, _id: 1 } });
+    pipeline.push({ $sort: { createdAt: -1, _id: -1 } });
   }
 
   pipeline.push({ $skip: skip }, { $limit: Number(pageSize) });
@@ -680,7 +680,7 @@ const getNovelReviews = async (req, res) => {
         path: "userId",
         select: "-hash -salt -lastActivity -about", // Select specific fields from User model
       })
-      .sort({ createdAt: -1 }) // Sort by creation date, newest first
+      .sort({ createdAt: -1, _id: -1 }) // Sort by creation date, newest first
       .skip(skip)
       .limit(limit)
       .lean();

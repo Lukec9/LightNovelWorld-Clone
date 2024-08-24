@@ -46,6 +46,42 @@ const CommentSection = ({
     }
   };
 
+  const fetchChapterComments = useCallback(async () => {
+    if (!onChapter || !novel) return;
+
+    setLoading(true);
+    try {
+      const response = await axiosInstance.get(
+        `/novels/${novel._id}/chapters/${chapterNumber}/comments`,
+        {
+          params: { page, limit: pageSize }, // Adjust limit as needed
+        }
+      );
+
+      if (response.status === 200) {
+        const newComments = response.data.comments;
+
+        // Ensure uniqueness based on `_id`
+        const existingCommentIds = new Set(
+          comments.map(comment => comment._id)
+        );
+        const uniqueNewComments = newComments.filter(
+          comment => !existingCommentIds.has(comment._id)
+        );
+
+        setComments(prevComments =>
+          page === 1
+            ? uniqueNewComments
+            : [...prevComments, ...uniqueNewComments]
+        );
+        setHasMore(uniqueNewComments.length === pageSize); // Adjust based on your limit
+      }
+    } catch (error) {
+      return;
+    } finally {
+      setLoading(false);
+    }
+  }, [page, novel, chapterNumber, onChapter, pageSize]);
   useEffect(() => {
     const loadComments = async () => {
       setLoading(true);
@@ -104,43 +140,6 @@ const CommentSection = ({
     // Reset page to 1 when filter changes
     setPage(1);
   };
-
-  const fetchChapterComments = useCallback(async () => {
-    if (!onChapter || !novel) return;
-
-    setLoading(true);
-    try {
-      const response = await axiosInstance.get(
-        `/novels/${novel._id}/chapters/${chapterNumber}/comments`,
-        {
-          params: { page, limit: pageSize }, // Adjust limit as needed
-        }
-      );
-
-      if (response.status === 200) {
-        const newComments = response.data.comments;
-
-        // Ensure uniqueness based on `_id`
-        const existingCommentIds = new Set(
-          comments.map(comment => comment._id)
-        );
-        const uniqueNewComments = newComments.filter(
-          comment => !existingCommentIds.has(comment._id)
-        );
-
-        setComments(prevComments =>
-          page === 1
-            ? uniqueNewComments
-            : [...prevComments, ...uniqueNewComments]
-        );
-        setHasMore(uniqueNewComments.length === pageSize); // Adjust based on your limit
-      }
-    } catch (error) {
-      return;
-    } finally {
-      setLoading(false);
-    }
-  }, [page, novel, chapterNumber, onChapter, pageSize]);
 
   return (
     <section className="comment-list">
@@ -254,14 +253,16 @@ const CommentSection = ({
           )}
         </ul>
       </div>
-      <div>
-        <button
-          onClick={() => setPage(page + 1)}
-          disabled={!hasMore || loading}
-        >
-          Next
-        </button>
-      </div>
+      {hasMore && (
+        <div>
+          <button
+            onClick={() => setPage(page + 1)}
+            disabled={!hasMore || loading}
+          >
+            Next
+          </button>
+        </div>
+      )}
       {loading && <p>Loading...</p>}
       {error && <p>Error: {error}</p>}
       {loading && <Spinner />} {/* Adjust placement of loading spinner */}

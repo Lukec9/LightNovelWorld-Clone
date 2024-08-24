@@ -46,7 +46,6 @@ const AddChapters = ({ novelId }) => {
       await addChaptersToNovel(novelId, formData);
       notify("success", "Chapters added successfully");
     } catch (error) {
-      console.error("Error adding chapters:", error);
       notify("error", "Failed to add chapters");
     }
   };

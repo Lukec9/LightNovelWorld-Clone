@@ -3,6 +3,7 @@ import timeAgo from "../../utils/timeAgo";
 import notify from "../../utils/toastUtil";
 import axiosInstance from "../../axios";
 import { useAuthContext } from "../../context/AuthContext";
+import StarRating from "../StarRating";
 
 const NovelReview = ({ review, novelTitle, setReviews }) => {
   const {
@@ -75,7 +76,6 @@ const NovelReview = ({ review, novelTitle, setReviews }) => {
       }
     } catch (error) {
       notify("error", "An error occurred while trying to delete review");
-      console.error("Error deleting review:", error);
     }
   };
 
@@ -113,7 +113,6 @@ const NovelReview = ({ review, novelTitle, setReviews }) => {
       }
     } catch (error) {
       notify("error", "Error liking/disliking the review");
-      console.error("Error liking/disliking the review:", error);
     } finally {
       setLoading(false);
     }
@@ -167,28 +166,7 @@ const NovelReview = ({ review, novelTitle, setReviews }) => {
             </span>
           </div>
         </div>
-        <div className="rating-info">
-          <meta itemProp="ratingValue" content={5.0} />
-          <meta itemProp="bestRating" content={5} />
-          <span className="star-wrap">
-            <svg className="star-on">
-              <use xlinkHref="#star" />
-            </svg>
-            <svg className="star-on">
-              <use xlinkHref="#star" />
-            </svg>
-            <svg className="star-on">
-              <use xlinkHref="#star" />
-            </svg>
-            <svg className="star-on">
-              <use xlinkHref="#star" />
-            </svg>
-            <svg className="star-on">
-              <use xlinkHref="#star" />
-            </svg>
-          </span>
-          <strong>{review.rating}</strong>
-        </div>
+        <StarRating rating={review.rating} />
         <div className="review-text" data-spoiler={0}>
           <p itemProp="reviewBody">{review.text}</p>
           <div className="rev-remo">

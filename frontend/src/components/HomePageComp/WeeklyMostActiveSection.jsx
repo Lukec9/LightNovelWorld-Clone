@@ -3,6 +3,7 @@ import NovelItem from "./NovelItem";
 import axiosInstance from "../../axios";
 import notify from "../../utils/toastUtil";
 import Skeleton from "react-loading-skeleton";
+import { Link } from "react-router-dom";
 
 const WeeklyMostActiveSection = () => {
   const [weeklyNovels, setWeeklyNovels] = useState([]);
@@ -18,7 +19,6 @@ const WeeklyMostActiveSection = () => {
         setWeeklyNovels(response.data.novels);
       }
     } catch (error) {
-      console.error("Error fetching compnovels:", error);
       notify("error", "Something went wrong!");
     } finally {
       setLoading(false);
@@ -34,13 +34,13 @@ const WeeklyMostActiveSection = () => {
       {loading && <Skeleton height={"150px"} count={6} />}
       <div className="section-header">
         <h3>Weekly Most Active</h3>
-        <a
+        <Link
           className="getmorebtn"
           title="Most recently added light novels"
-          href="/browse/genre-all-25060123/order-new/status-all"
+          to="/browse"
         >
           View More
-        </a>
+        </Link>
       </div>{" "}
       <div className="section-body">
         <div className="novel-list">

@@ -35,8 +35,6 @@ const ReviewsSection = ({ novel, reviews, setReviews }) => {
         });
         setPage(prevPage => prevPage + 1);
       }
-    } catch (error) {
-      console.error("Error fetching reviews:", error);
     } finally {
       setLoading(false);
     }

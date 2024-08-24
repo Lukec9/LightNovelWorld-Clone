@@ -4,6 +4,7 @@ import axiosInstance from "../../axios";
 import Spinner from "../Spinner";
 import notify from "../../utils/toastUtil";
 import Skeleton from "react-loading-skeleton";
+import { Link } from "react-router-dom";
 
 const NewNovelSection = () => {
   const [newNovels, setNewNovels] = useState([]);
@@ -13,7 +14,7 @@ const NewNovelSection = () => {
     setLoading(true);
     try {
       const response = await axiosInstance.get(
-        "/novels?limit=12&status=Ongoing&sortBy=New"
+        "/novels?limit=12&status=All&sortBy=New"
       );
       if (response && response.data) {
         setNewNovels(response.data.novels);
@@ -34,13 +35,13 @@ const NewNovelSection = () => {
       {loading && <Skeleton height={"150px"} count={6} />}
       <div className="section-header">
         <h3>New Ongoing Release</h3>
-        <a
+        <Link
           className="getmorebtn"
           title="Most recently added light novels"
-          href="/browse/genre-all-25060123/order-new/status-all"
+          to="/browse"
         >
           View More
-        </a>
+        </Link>
       </div>
       <div className="section-body">
         <ul className="novel-list">

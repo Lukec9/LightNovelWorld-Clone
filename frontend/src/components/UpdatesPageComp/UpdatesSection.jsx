@@ -1,14 +1,17 @@
 import { lazy, Suspense, useCallback, useEffect, useState } from "react";
 import axiosInstance from "../../axios";
 import notify from "../../utils/toastUtil";
+import Spinner from "../Spinner";
 
 const UpdatesNovelItem = lazy(() => import("./UpdatesNovelItem"));
 
 const UpdatesSection = () => {
   const [recentChapNovels, setRecentChapNovels] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   const getRecentChapNovels = useCallback(async () => {
     try {
+      setLoading(true);
       const response = await axiosInstance.get(
         "/novels?limit=40&status=All&sortBy=Updates"
       );
@@ -17,6 +20,8 @@ const UpdatesSection = () => {
       }
     } catch (error) {
       notify("error", "Something went wrong!");
+    } finally {
+      setLoading(false);
     }
   }, []);
 
@@ -35,6 +40,7 @@ const UpdatesSection = () => {
         </p>
       </div>{" "}
       <div className="section-body">
+        {loading && <Spinner />}
         <div className="novel-list">
           {recentChapNovels.map((novel, i) => (
             <Suspense key={i}>

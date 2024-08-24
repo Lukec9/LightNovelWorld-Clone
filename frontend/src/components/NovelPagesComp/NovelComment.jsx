@@ -69,7 +69,6 @@ const NovelComment = ({ comment, setComments }) => {
       }
     } catch (error) {
       notify("error", "An error occurred while trying to delete comment");
-      console.error("Error deleting comment:", error);
     }
   };
 
@@ -137,19 +136,21 @@ const NovelComment = ({ comment, setComments }) => {
           <div className="user-avatar tier0" data-ulvlgrp={4}>
             <img
               className="avatar  lazyloaded"
-              src={comment.userId.profilePic}
-              alt={comment.userId.username}
+              src={comment.userId.profilePic || comment.user.profilePic}
+              alt={comment.userId.username || comment.user.username}
             />
             <span className="klvl">15</span>
           </div>
           <div className="user-info">
             <div className="head-items">
               <span className="username" itemProp="name">
-                {comment.userId.username}
+                {comment.userId.username || comment.user.username}
               </span>
             </div>
             <div className="sub-items">
-              <span className="tier tier0">{comment.userId.rank}</span>
+              <span className="tier tier0">
+                {comment.userId.rank || comment.user.rank}
+              </span>
             </div>
           </div>
           <span className="post-date">
@@ -178,19 +179,24 @@ const NovelComment = ({ comment, setComments }) => {
                 Reply
               </a>
             </span>
-            {comment.userId._id === user?._id && <span className="divider" />}
+            {comment.userId._id === user?._id ||
+              (comment.user._id === user?._id && <span className="divider" />)}
             <div className="user-command">
-              {comment.userId._id === user?._id && (
-                <a
-                  onClick={openModal}
-                  className="usercomact"
-                  title="User Action Menu"
-                >
-                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
-                    <path d="M120 256c0 30.9-25.1 56-56 56s-56-25.1-56-56s25.1-56 56-56s56 25.1 56 56zm160 0c0 30.9-25.1 56-56 56s-56-25.1-56-56s25.1-56 56-56s56 25.1 56 56zm104 56c-30.9 0-56-25.1-56-56s25.1-56 56-56s56 25.1 56 56s-25.1 56-56 56z" />
-                  </svg>
-                </a>
-              )}
+              {comment.userId._id === user?._id ||
+                (comment.user._id === user?._id && (
+                  <a
+                    onClick={openModal}
+                    className="usercomact"
+                    title="User Action Menu"
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 0 448 512"
+                    >
+                      <path d="M120 256c0 30.9-25.1 56-56 56s-56-25.1-56-56s25.1-56 56-56s56 25.1 56 56zm160 0c0 30.9-25.1 56-56 56s-56-25.1-56-56s25.1-56 56-56s56 25.1 56 56zm104 56c-30.9 0-56-25.1-56-56s25.1-56 56-56s56 25.1 56 56s-25.1 56-56 56z" />
+                    </svg>
+                  </a>
+                ))}
             </div>
             <span className="spacer" />
             <span className="usrlike">

@@ -116,10 +116,6 @@ const AccountPage = () => {
       }
     } catch (error) {
       notify("error", "An error occurred while updating profile");
-      console.error("Error updating profile:", error);
-      if (axios.isAxiosError(error)) {
-        console.error("Axios error details:", error.response?.data);
-      }
     } finally {
       // Reset the updates object
       updates = {};
@@ -136,10 +132,8 @@ const AccountPage = () => {
         navigate("/");
       } else {
         notify("error", "Failed to log out from server");
-        console.error("Logout failed with status:", response.status);
       }
     } catch (error) {
-      console.error("Logout error:", error);
       notify("error", "An error occurred while logging out");
     }
   };
@@ -155,10 +149,6 @@ const AccountPage = () => {
       }
     } catch (error) {
       notify("error", "An error occurred while updating profile");
-      console.error("Error deleting profile:", error);
-      if (axios.isAxiosError(error)) {
-        console.error("Axios error details:", error.response?.data);
-      }
     }
   };
 

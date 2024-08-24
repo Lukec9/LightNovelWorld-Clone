@@ -53,7 +53,7 @@ const BrowsePage = () => {
           sortBy: activeCategory.order,
           category: activeCategory.category,
           page,
-          limit: 5, // Set limit to whatever number you need
+          limit: 15, // Set limit to whatever number you need
         },
       });
       if (response && response.data) {

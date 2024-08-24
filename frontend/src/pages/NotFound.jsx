@@ -17,10 +17,10 @@ const NotFound = () => {
         </p>
         <hr />
         <div className="mt-2">
-          <Link className="button" href="/search" role="button">
+          <Link className="button" to="/search" role="button">
             Start Search
           </Link>
-          <Link className="button" href="/" role="button">
+          <Link className="button" to="/" role="button">
             Go Homepage
           </Link>
         </div>

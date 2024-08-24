@@ -4,6 +4,7 @@ import axiosInstance from "../../axios";
 import notify from "../../utils/toastUtil";
 import { toast } from "react-toastify";
 import Skeleton from "react-loading-skeleton";
+import { Link } from "react-router-dom";
 
 const CompletedStoriesSection = () => {
   const [compNovels, setCompNovels] = useState([]);
@@ -19,7 +20,6 @@ const CompletedStoriesSection = () => {
         setCompNovels(response.data.novels);
       }
     } catch (error) {
-      console.error("Error fetching compnovels:", error);
       notify("error", "Something went wrong!");
     } finally {
       setLoading(false);
@@ -35,13 +35,13 @@ const CompletedStoriesSection = () => {
       {loading && <Skeleton height={"150px"} count={6} />}
       <div className="section-header">
         <h3>Completed Stories</h3>
-        <a
+        <Link
           className="getmorebtn"
           title="Most recently added light novels"
-          href="/browse/genre-all-25060123/order-new/status-all"
+          to="/browse?status=Completed"
         >
           View More
-        </a>
+        </Link>
       </div>{" "}
       <div className="section-body">
         <div className="novel-list">

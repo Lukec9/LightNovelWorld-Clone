@@ -41,8 +41,13 @@
   align-items: center;
 }
 
-.review-item .star-wrap > span:last-child {
-  margin-left: 0.3rem;
+#reviews .star-wrap > span:last-child {
+  margin-left: 0;
+  margin-right: 0.3rem;
+}
+#reviews .star {
+  height: 1.4rem;
+  width: 1.2rem;
 }
 
 .review-item label {

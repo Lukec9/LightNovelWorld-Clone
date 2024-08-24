@@ -17,7 +17,6 @@ const DeleteNovel = ({ novelId }) => {
       notify("success", "Novel deleted successfully");
       navigate("/novels"); // Redirect to the novels list or another page
     } catch (error) {
-      console.error("Error deleting novel:", error);
       notify("error", "Failed to delete novel");
     }
   };

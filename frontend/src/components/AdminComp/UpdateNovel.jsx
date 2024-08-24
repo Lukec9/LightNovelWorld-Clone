@@ -33,7 +33,6 @@ const UpdateNovel = () => {
         setTags(response.data.novel.tags);
         setImgUrl(response.data.novel.cover); // For previewing the current cover
       } catch (error) {
-        console.error("Error fetching novel:", error);
         notify("error", "Failed to fetch novel details");
       }
     };
@@ -77,7 +76,6 @@ const UpdateNovel = () => {
       notify("success", "Novel updated successfully");
       navigate(`/novel/${novelId}`); // Redirect or refresh the page
     } catch (err) {
-      console.error("Error updating novel:", err);
       notify("error", "Failed to update novel");
     }
   };

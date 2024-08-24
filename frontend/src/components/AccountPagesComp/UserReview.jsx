@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import timeAgo from "../../utils/timeAgo";
 import axiosInstance from "../../axios";
 import notify from "../../utils/toastUtil";
+import StarRating from "../StarRating";
 
 const UserReview = ({ review, user, setReviews }) => {
   const [isModalOpen, setModalOpen] = useState(false);
@@ -58,7 +59,6 @@ const UserReview = ({ review, user, setReviews }) => {
       }
     } catch (error) {
       notify("error", "An error occurred while trying to delete review");
-      console.error("Error deleting review:", error);
     }
   };
 
@@ -107,56 +107,7 @@ const UserReview = ({ review, user, setReviews }) => {
           </div>
         </div>
         <div className="rating-info">
-          <div className="star-rating">
-            <span className="star-wrap">
-              <span className="star-box" role="presentation">
-                <svg className="star star-on">
-                  <use xlinkHref="#star">
-                    <symbol className="icon" viewBox="0 0 1024 1024" id="star">
-                      <path d="M512 798.134857L195.584 1024 302.08 637.805714 0 391.168l382.244571-12.873143L512 0l129.755429 378.294857L1024 391.168 721.92 637.805714 828.416 1024z"></path>
-                    </symbol>
-                  </use>
-                </svg>
-              </span>
-              <span className="star-box" role="presentation">
-                <svg className="star star-on">
-                  <use xlinkHref="#star">
-                    <symbol className="icon" viewBox="0 0 1024 1024" id="star">
-                      <path d="M512 798.134857L195.584 1024 302.08 637.805714 0 391.168l382.244571-12.873143L512 0l129.755429 378.294857L1024 391.168 721.92 637.805714 828.416 1024z"></path>
-                    </symbol>
-                  </use>
-                </svg>
-              </span>
-              <span className="star-box" role="presentation">
-                <svg className="star star-on">
-                  <use xlinkHref="#star">
-                    <symbol className="icon" viewBox="0 0 1024 1024" id="star">
-                      <path d="M512 798.134857L195.584 1024 302.08 637.805714 0 391.168l382.244571-12.873143L512 0l129.755429 378.294857L1024 391.168 721.92 637.805714 828.416 1024z"></path>
-                    </symbol>
-                  </use>
-                </svg>
-              </span>
-              <span className="star-box" role="presentation">
-                <svg className="star star-on">
-                  <use xlinkHref="#star">
-                    <symbol className="icon" viewBox="0 0 1024 1024" id="star">
-                      <path d="M512 798.134857L195.584 1024 302.08 637.805714 0 391.168l382.244571-12.873143L512 0l129.755429 378.294857L1024 391.168 721.92 637.805714 828.416 1024z"></path>
-                    </symbol>
-                  </use>
-                </svg>
-              </span>
-              <span className="star-box" role="presentation">
-                <svg className="star star-on">
-                  <use xlinkHref="#star">
-                    <symbol className="icon" viewBox="0 0 1024 1024" id="star">
-                      <path d="M512 798.134857L195.584 1024 302.08 637.805714 0 391.168l382.244571-12.873143L512 0l129.755429 378.294857L1024 391.168 721.92 637.805714 828.416 1024z"></path>
-                    </symbol>
-                  </use>
-                </svg>
-              </span>
-              <span>{review.rating}</span>
-            </span>
-          </div>
+          <StarRating rating={review.rating} />
         </div>
         <div className="review-text more_active" data-spoiler={0}>
           <p itemProp="reviewBody">{review.text}</p>

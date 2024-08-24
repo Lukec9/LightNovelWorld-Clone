@@ -474,3 +474,43 @@ ul {
   background-color: var(--bg-color-secondary-2);
   color: #fff;
 }
+
+.the-library dialog {
+  width: clamp(300px, 500px, 95%);
+}
+
+.modal-header {
+  transition: 0.2s;
+  margin-bottom: 0.5rem;
+  padding-bottom: 0.5rem;
+  font-size: 1rem;
+  line-height: 1.2rem;
+  font-weight: 700;
+  min-height: 1.3rem;
+  border-bottom: 1px solid var(--border-color-3);
+  color: var(--text-color);
+  padding-right: 1.5rem;
+}
+
+.modal-body {
+  max-height: 60vh;
+  overflow: hidden;
+  position: relative;
+}
+
+.library-action-menu button {
+  padding: 10px 20px;
+  margin-top: 0.75rem;
+  font-size: 1rem;
+  border: 0;
+  border-bottom-width: 0px;
+  border-bottom-style: none;
+  border-bottom-color: currentcolor;
+  text-align: left;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 2px solid transparent;
+  background-color: var(--bg-color-4);
+  color: var(--text-color);
+}

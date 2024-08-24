@@ -1112,5 +1112,32 @@ span.vertloading {
 }
 ._close {
   background-color: transparent;
-  border: 1px solid var(--border-color-4);
+  border: none;
+  color: var(--text-color);
+  position: absolute;
+  right: 10px;
+  width: 20px;
+  height: 20px;
+}
+
+dialog {
+  font-size: 18px;
+}
+
+.modal-body h1 {
+  margin-block: 0;
+  font-size: 18px;
+}
+
+.library-action-menu {
+  display: flex;
+  flex-direction: column;
+}
+
+.vspace .section-body {
+  width: 100%;
+}
+
+.fullw {
+  width: 100%;
 }

@@ -50,7 +50,6 @@ const SignupForm = () => {
         error.response.data.message ||
         "Could not create user, please try again";
       notify("error", message);
-      console.error("Error signing up:", message);
     } finally {
       setLoading(false);
     }

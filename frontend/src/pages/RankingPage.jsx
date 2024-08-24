@@ -20,7 +20,6 @@ const RankingPage = () => {
         setRankingNovels(response.data.novels);
       }
     } catch (error) {
-      console.error("Error fetching novels:", error?.response?.data);
       notify("error", "Something went wrong!");
     }
   };
