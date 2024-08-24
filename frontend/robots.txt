@@ -1,0 +1,21 @@
+# Allow all search engines to crawl the website
+User-agent: *
+
+# Disallow crawling of certain admin pages (only accessible by admins)
+Disallow: /admin/
+
+# Disallow crawling of authentication pages (login, signup)
+Disallow: /auth/
+
+# Disallow user-specific pages like account details, inbox, etc.
+Disallow: /account/
+Disallow: /account/inbox/
+Disallow: /account/history/
+Disallow: /account/comments/
+Disallow: /account/reviews/
+
+# Allow crawling of other pages
+Allow: /
+
+# Specify the location of the sitemap if you have one
+Sitemap: https://lnworld-clone.onrender.com/sitemap.xml

@@ -8,6 +8,7 @@ import session from "express-session";
 import helmet from "helmet";
 import mongoSanitize from "express-mongo-sanitize";
 import cors from "cors";
+import path from "path";
 
 import connectDB from "./db/connectDB.js";
 import User from "./models/user.model.js";
@@ -25,10 +26,14 @@ const app = express();
 connectDB();
 
 const PORT = process.env.PORT || 5000;
+const __dirname = path.resolve();
 
 app.use(
   cors({
-    origin: "http://localhost:3000",
+    origin:
+      process.env.NODE_ENV !== "production"
+        ? "http://localhost:3000"
+        : "https://lnworld-clone.onrender.com",
     credentials: true,
   })
 );
@@ -59,7 +64,7 @@ const sessionConfig = {
   saveUninitialized: false,
   cookie: {
     httpOnly: true,
-    // secure: true,
+    secure: process.env.NODE_ENV === "production" ? true : false,
     sameSite: "None",
     expires: Date.now() + 1000 * 60 * 60 * 24 * 7,
     maxAge: 1000 * 60 * 60 * 24 * 7,
@@ -101,6 +106,14 @@ app.use("/api/novels", novelRoutes);
 
 updateViews.start();
 updateRanking.start();
+
+if (process.env.NODE_ENV === "production") {
+  app.use(express.static(path.join(__dirname, "/frontend/dist")));
+
+  app.get("*", (req, res) => {
+    res.sendFile(path.resolve(__dirname, "frontend", "dist", "index.html"));
+  });
+}
 
 app.listen(PORT, (req, res) => {
   console.log("Listening on localhost:5000");
