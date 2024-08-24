@@ -65,7 +65,7 @@ const sessionConfig = {
   cookie: {
     httpOnly: true,
     secure: process.env.NODE_ENV === "production" ? true : false,
-    sameSite: "None",
+    sameSite: "",
     expires: Date.now() + 1000 * 60 * 60 * 24 * 7,
     maxAge: 1000 * 60 * 60 * 24 * 7,
   },
@@ -77,23 +77,11 @@ app.use(
     contentSecurityPolicy: {
       directives: {
         ...helmet.contentSecurityPolicy.getDefaultDirectives(),
-        "default-src": ["'self'"], // Default source for all content
-        "img-src": ["'self'", "https://res.cloudinary.com/dnjmtuolt"], // Allow images from your Cloudinary account
-        "media-src": ["'self'", "https://res.cloudinary.com/dnjmtuolt"], // Allow media files from your Cloudinary account
-        "connect-src": ["'self'", "https://res.cloudinary.com/dnjmtuolt"], // Allow connections to your Cloudinary account (for APIs)
-        "script-src": ["'self'"], // Allow scripts from your own domain (adjust as needed)
-        "style-src": ["'self'", "'unsafe-inline'"], // Allow styles from your own domain and inline styles
-        "font-src": ["'self'"], // Allow fonts from your own domain
-        "manifest-src": ["'self'"], // Allow manifests from your own domain
-        "worker-src": ["'self'"], // Allow web workers from your own domain
-        "child-src": ["'self'"], // Allow iframes from your own domain
-        "object-src": ["'none'"], // Disallow object embeddings
-        "frame-src": ["'none'"], // Disallow framing
+        "img-src": ["'self'", "https://res.cloudinary.com"],
       },
     },
   })
 );
-
 app.use(passport.initialize());
 app.use(passport.session());
 passport.use(new LocalStrategy(User.authenticate()));

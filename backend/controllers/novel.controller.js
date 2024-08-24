@@ -1574,21 +1574,21 @@ const getRankings = async (req, res) => {
     // Get top novels by comments
     const topByComments = await Novel.find({})
       .sort({ commentsCount: -1 })
-      .limit(100)
+      .limit(12)
       .select("-chapters")
       .exec();
 
     // Get top novels by views
     const topByViews = await Novel.find({})
       .sort({ views: -1 })
-      .limit(100)
+      .limit(12)
       .select("-chapters")
       .exec();
 
     // Get top novels by ratings
     const topByRatings = await Novel.find({})
       .sort({ rating: -1 })
-      .limit(100)
+      .limit(12)
       .select("-chapters")
       .exec();
 

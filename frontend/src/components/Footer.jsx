@@ -1,12 +1,20 @@
 import "../styles/FooterStyles.css";
+import { useTheme } from "../context/ThemeContext.jsx";
 
 const Footer = () => {
+  const { theme } = useTheme();
+
+  const url =
+    theme === "dark"
+      ? "https://res.cloudinary.com/dnjmtuolt/image/upload/v1723718988/lnworld/logo-dark_xqkszr.webp"
+      : "https://res.cloudinary.com/dnjmtuolt/image/upload/v1723719126/lnworld/logo_jtsphq.png";
+
   return (
     <footer>
       <div className="wrapper">
         <div className="logo">
-          <img src="/assets/logo-dark.webp" alt="" />
-          <span> © 2023 lightnovelworld.com</span>
+          <img src={url} alt="" />
+          <span> © 2024 lightnovelworld.com</span>
         </div>
         <div className="nav-grid">
           <nav className="links">
