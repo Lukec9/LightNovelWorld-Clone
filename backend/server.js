@@ -15,6 +15,7 @@ import User from "./models/user.model.js";
 
 import updateViews from "./jobs/updateViews.js";
 import updateRanking from "./jobs/updateRanking.js";
+import sendGet from "./jobs/sendGet.js";
 
 import userRoutes from "./routes/user.routes.js";
 import novelRoutes from "./routes/novel.routes.js";
@@ -90,6 +91,7 @@ app.use("/api/novels", novelRoutes);
 
 updateViews.start();
 updateRanking.start();
+sendGet.start();
 
 if (process.env.NODE_ENV === "production") {
   app.use(express.static(path.join(__dirname, "/frontend/dist")));
