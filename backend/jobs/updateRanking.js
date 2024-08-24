@@ -139,8 +139,6 @@ const start = () => {
   cron.schedule("0 * * * *", updateRankings);
   cron.schedule("0 * * * *", novelRanks);
   cron.schedule("0 * * * *", updateAllNovelsRatings);
-
-  console.log("Cron job started: Rankings update every Sunday at midnight");
 };
 
 export default { start };
