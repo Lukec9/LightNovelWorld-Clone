@@ -30,10 +30,7 @@ const __dirname = path.resolve();
 
 app.use(
   cors({
-    origin:
-      process.env.NODE_ENV !== "production"
-        ? "http://localhost:3000"
-        : "https://lnworld-clone.onrender.com",
+    origin: "https://lnworld-clone.onrender.com",
     credentials: true,
   })
 );
@@ -64,7 +61,7 @@ const sessionConfig = {
   saveUninitialized: false,
   cookie: {
     httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
+    secure: true,
     sameSite: "Lax",
     expires: Date.now() + 1000 * 60 * 60 * 24 * 7,
     maxAge: 1000 * 60 * 60 * 24 * 7,
