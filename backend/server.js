@@ -31,7 +31,10 @@ const __dirname = path.resolve();
 
 app.use(
   cors({
-    origin: "https://lnworld-clone.onrender.com",
+    origin:
+      process.env.NODE_ENV !== "production"
+        ? "http://localhost:3000"
+        : "https://lnworld-clone.onrender.com",
     credentials: true,
   })
 );
@@ -74,7 +77,18 @@ app.use(
     contentSecurityPolicy: {
       directives: {
         ...helmet.contentSecurityPolicy.getDefaultDirectives(),
+        "default-src": ["'self'"],
         "img-src": ["'self'", "https://res.cloudinary.com"],
+        "media-src": ["'self'", "https://res.cloudinary.com"],
+        "connect-src": ["'self'", "https://res.cloudinary.com"],
+        "script-src": ["'self'"],
+        "style-src": ["'self'", "'unsafe-inline'"],
+        "font-src": ["'self'"],
+        "manifest-src": ["'self'"],
+        "worker-src": ["'self'"],
+        "child-src": ["'self'"],
+        "object-src": ["'none'"],
+        "frame-src": ["'none'"],
       },
     },
   })
